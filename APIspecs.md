@@ -83,6 +83,10 @@ In the Activity's onCreate method:
 GeoJasonLayer layer = new GeoJsonLayer(map);
 layer.addToMap(jstr);
 ```
+
+Result: 
+![Default styling](https://github.com/microsoft/BingMapsNativeModules/blob/t-elbart/APIspecs/defaultStyle.png?raw=true)
+
 Or to change the style before adding to the map:
 
 ```Java
@@ -94,5 +98,8 @@ layer.setStrokeWidth(3);
 layer.setStrokeDashed(true);
 layer.addToMap(jstr);
 ```
+
+Result:
+![New styling](https://github.com/microsoft/BingMapsNativeModules/blob/t-elbart/APIspecs/withStyle.png?raw=true)
 
 
