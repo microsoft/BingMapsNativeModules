@@ -1,4 +1,5 @@
 
+
 # GeoJsonParser API
 
 This API will be used to read [GeoJSON](https://geojson.org/) data and display these shapes on a map. The API will parse the GeoJSON data and return a MapGeoJsonLayer.
@@ -7,16 +8,18 @@ This API will be used to read [GeoJSON](https://geojson.org/) data and display t
 public class GeoJsonParser
 ```
 ## Method
+
 ### Parse
-This method takes in a GeoJSON formatted String and creates a MapGeoJsonLayer from it. The String is parsed for polygons, polylines, and points. All shapes defined in the GeoJSON String are added to a single layer.
+
+This method takes in a GeoJSON formatted String and creates a MapGeoJsonLayer from it. The String is parsed for polygons, polylines, and points. All shapes defined in the GeoJSON String are added to a single layer. Throws an IOException for an invalid GeoJSON input string.
 
 ```Java
-static MapGeoJsonLayer parse(String jString)
+static MapGeoJsonLayer parse(String geojson) throws IOException
 ```
 
 ## Examples
 
-Parse the following GeoJSON string (called `jstr`) and add to map:
+Parse the following GeoJSON string (called `geojson`) and add to map:
 ```
 {
   "type": "GeometryCollection",
@@ -40,7 +43,7 @@ Parse the following GeoJSON string (called `jstr`) and add to map:
 In the Activity's onCreate method:
 ```Java
 // MapView map = ...
-MapGeoJsonLayer layer = GeoJsonParser.parse(jstr);
+MapGeoJsonLayer layer = GeoJsonParser.parse(geojson);
 map.getLayers().add(layer);
 ```
 

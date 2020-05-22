@@ -1,3 +1,4 @@
+
 # MapGeoJsonLayer API
 
 Contains shapes to display on the map, as defined in a GeoJson string. Optionally, the overall style of the shapes in the layer can be set programmatically (the same style will be applied to all applicable shapes).
@@ -22,7 +23,7 @@ void setFillColor(int fillColor)
 Whether the points are rendered or not.
 
 ```Java
-boolean arePointsVisible()
+boolean getPointsVisible()
 void setPointsVisible(boolean visible)
 ```
 
@@ -31,21 +32,21 @@ void setPointsVisible(boolean visible)
 Whether the polygons are rendered or not.
 
 ```Java
-boolean arePolygonsVisisble()
+boolean getPolygonsVisible()
 void setPolygonsVisible(boolean visible)
 ```
 
 ### PolylinesVisible
 
-Whether the polylines are rendered or not.
+Whether the [polylines](https://docs.microsoft.com/en-us/bingmaps/sdk-native/map-control-api/mappolyline-class) are rendered or not.
 
 ```Java
-boolean arePolylinesVisible()
+boolean getPolylinesVisible()
 void setPolylinesVisible(boolean visible)
 ```
 
 ### StrokeColor
-The color in ARGB format to use to draw [polylines](https://docs.microsoft.com/en-us/bingmaps/sdk-native/map-control-api/mappolyline-class) and the border of [polygons](https://docs.microsoft.com/en-us/bingmaps/sdk-native/map-control-api/mappolygon-class). The default color is blue (0xff0000ff).
+The color in ARGB format to use to draw polylines and the border of polygons. The default color is blue (0xff0000ff).
 
 ```Java
 int getStrokeColor()
@@ -57,7 +58,7 @@ void setStrokeColor(int strokeColor)
 Indicates whether the lines are dashed in polylines and polygons.
 
 ```Java
-boolean isStrokeDashed()
+boolean getStrokeDashed()
 void setStrokeDashed(boolean isDashed)
 ```
 
@@ -73,7 +74,7 @@ void setStrokeWidth(float strokeWidth)
 
 ## Examples
 
-Parse the following GeoJSON string (called `jstr`) and add to map:
+Parse the following GeoJSON string (called `geojson`) and add to map:
 ```
 {
   "type": "GeometryCollection",
@@ -98,7 +99,7 @@ In the Activity's onCreate method:
 
 ```Java
 // MapView map = ...
-MapGeoJsonLayer layer = GeoJsonParser.parse(jstr);
+MapGeoJsonLayer layer = GeoJsonParser.parse(geojson);
 map.getLayers().add(layer);
 ```
 
@@ -110,7 +111,7 @@ Or to change the style before adding to the map:
 
 ```Java
 // MapView map = ...
-MapGeoJsonLayer layer = GeoJsonParser.parse(jstr);
+MapGeoJsonLayer layer = GeoJsonParser.parse(geojson);
 layer.setFillColor(Color.RED);
 layer.setStrokeColor(Color.GREEN);
 layer.setStrokeWidth(3);
