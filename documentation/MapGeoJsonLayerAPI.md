@@ -95,6 +95,7 @@ Parse the following GeoJSON string (called `jstr`) and add to map:
 ```
 
 In the Activity's onCreate method:
+
 ```Java
 // MapView map = ...
 MapGeoJsonLayer layer = GeoJsonParser.parse(jstr);
@@ -103,7 +104,7 @@ map.getLayers().add(layer);
 
 
 Result: 
-![Default styling](https://github.com/microsoft/BingMapsNativeModules/blob/t-elbart/APIspecs/defaultStyle.png?raw=true)
+![Default styling](https://github.com/microsoft/BingMapsNativeModules/blob/t-elbart/APIspecs/documentation/defaultStyle.png?raw=true)
 
 Or to change the style before adding to the map:
 
@@ -118,7 +119,22 @@ map.getLayers().add(layer);
 ```
 
 Result:
-![New styling](https://github.com/microsoft/BingMapsNativeModules/blob/t-elbart/APIspecs/withStyle.png?raw=true)
+![New styling](https://github.com/microsoft/BingMapsNativeModules/blob/t-elbart/APIspecs/documentation/withStyle.png?raw=true)
+
+
+Filter out points:
+
+```Java
+// MapView map = ...
+MapGeoJsonLayer layer = GeoJsonParser.parse(jstr);
+layer.setPointsVisible(false);
+map.getLayers().add(layer);
+```
+
+Result:
+
+![Filter points](https://github.com/microsoft/BingMapsNativeModules/blob/t-elbart/APIspecs/documentation/filterPoints.png?raw=true)
+
 
 ## See Also
 - [MapElementLayer](https://docs.microsoft.com/en-us/bingmaps/sdk-native/map-control-api/mapelementlayer-class)
