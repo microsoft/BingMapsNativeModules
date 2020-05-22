@@ -127,7 +127,7 @@ Filter out points:
 
 ```Java
 // MapView map = ...
-MapGeoJsonLayer layer = GeoJsonParser.parse(jstr);
+MapGeoJsonLayer layer = GeoJsonParser.parse(geojson);
 layer.setPointsVisible(false);
 map.getLayers().add(layer);
 ```
