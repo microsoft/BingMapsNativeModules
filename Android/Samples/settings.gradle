@@ -1,0 +1,3 @@
+rootProject.name='MapsModules'
+include ':app'
+include ':libraries:geojson'
