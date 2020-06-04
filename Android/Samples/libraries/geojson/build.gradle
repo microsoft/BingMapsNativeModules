@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
+apply plugin: "com.github.sherter.google-java-format"
 
 group = 'com.microsoft.maps.geojson'
 version = '1.0'
@@ -7,6 +8,9 @@ version = '1.0'
 uploadArchives {
     repositories {
         mavenLocal()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
 }
 

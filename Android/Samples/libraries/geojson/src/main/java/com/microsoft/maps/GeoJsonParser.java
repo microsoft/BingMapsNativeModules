@@ -1,17 +1,12 @@
 package com.microsoft.maps;
 
-import android.opengl.GLException;
-import android.util.Log;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-
+import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xml.sax.helpers.XMLReaderFactory;
-
-import java.util.ArrayList;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * Class that parses GeoJSON and returns a new MapElementLayer containing all the shapes outlined in
@@ -19,7 +14,7 @@ import java.util.zip.GZIPOutputStream;
  *
  * <p>Created by Elizabeth Bartusiak (t-elbart) on 05/22/2020
  *
- * <p>TODO: return a MapGeoJsonLayer instead of MapElementLayer TODO: Make parser asynchronous
+ * <p>TODO: return a MapGeoJsonLayer instead of MapElementLayer
  */
 public class GeoJsonParser {
 
@@ -59,7 +54,12 @@ public class GeoJsonParser {
    * @return MapElementLayer containing all objects
    * @throws GeoJsonParseException
    */
-  public static MapElementLayer parse(String geojson) throws GeoJsonParseException {
+  @NonNull
+  public static MapElementLayer parse(@NonNull String geojson) throws GeoJsonParseException {
+    if (geojson == null) {
+      throw new IllegalArgumentException("Input String cannot be null.");
+    }
+
     GeoJsonParser instance = new GeoJsonParser();
     try {
       return instance.internalParse(geojson, DEFAULT_MAP_FACTORIES);
@@ -69,13 +69,13 @@ public class GeoJsonParser {
   }
 
   @VisibleForTesting
-  MapElementLayer internalParse(String geojson, MapFactories factory)
+  @NonNull
+  MapElementLayer internalParse(@NonNull String geojson, @NonNull MapFactories factory)
       throws JSONException, GeoJsonParseException {
     mLayer = factory.createMapElementLayer();
     mFactory = factory;
 
     JSONObject object = new JSONObject(geojson);
-    ;
     String type = object.getString("type");
 
     if (type.equals("FeatureCollection")) {
@@ -83,8 +83,7 @@ public class GeoJsonParser {
     } else {
       if (type.equals("Feature")) {
         if (object.isNull("geometry")) {
-          String message = "Feature geometry cannot be null.";
-          throw new GeoJsonParseException(message);
+          throw new GeoJsonParseException("Feature geometry cannot be null.");
         }
         object = object.getJSONObject("geometry");
       }
@@ -93,7 +92,8 @@ public class GeoJsonParser {
     return mLayer;
   }
 
-  private void switchToType(JSONObject object) throws JSONException, GeoJsonParseException {
+  private void switchToType(@NonNull JSONObject object)
+      throws JSONException, GeoJsonParseException {
     String type = object.getString("type");
     switch (type) {
       case "Polygon":
@@ -118,36 +118,36 @@ public class GeoJsonParser {
         parseGeometryCollection(object);
         break;
       default:
-        String message = "Expected a GeoJSON Geometry Type, instead saw: \"" + type + "\"";
-        throw new GeoJsonParseException(message);
+        throw new GeoJsonParseException(
+            "Expected a GeoJSON Geometry Type, instead saw: \"" + "type" + "\"");
     }
   }
 
-  private JSONArray getCoordinates(JSONObject object) throws JSONException {
+  @NonNull
+  private JSONArray getCoordinates(@NonNull JSONObject object) throws JSONException {
     return object.getJSONArray("coordinates");
   }
 
-  private void parseGeometryCollection(JSONObject object)
+  private void parseGeometryCollection(@NonNull JSONObject object)
       throws JSONException, GeoJsonParseException {
     JSONArray array = object.getJSONArray("geometries");
-
     for (int i = 0; i < array.length(); i++) {
       JSONObject shape = array.getJSONObject(i);
       switchToType(shape);
     }
   }
 
-  private void parseFeatureCollection(JSONObject object)
+  private void parseFeatureCollection(@NonNull JSONObject object)
       throws JSONException, GeoJsonParseException {
     JSONArray array = object.getJSONArray("features");
-
     for (int i = 0; i < array.length(); i++) {
       JSONObject shape = array.getJSONObject(i).getJSONObject("geometry");
       switchToType(shape);
     }
   }
 
-  private void parsePolygon(JSONArray jsonRings) throws JSONException, GeoJsonParseException {
+  private void parsePolygon(@NonNull JSONArray jsonRings)
+      throws JSONException, GeoJsonParseException {
     ArrayList<Geopath> rings = new ArrayList<>(jsonRings.length());
     for (int i = 0; i < jsonRings.length(); i++) {
       JSONArray pathArray = jsonRings.getJSONArray(i);
@@ -158,16 +158,17 @@ public class GeoJsonParser {
     mLayer.getElements().add(poly);
   }
 
-  private void parseMultiPolygon(JSONObject shape) throws JSONException, GeoJsonParseException {
+  private void parseMultiPolygon(@NonNull JSONObject shape)
+      throws JSONException, GeoJsonParseException {
     JSONArray coordinates = shape.getJSONArray("coordinates");
-
     for (int k = 0; k < coordinates.length(); k++) {
       JSONArray jsonRings = coordinates.getJSONArray(k);
       parsePolygon(jsonRings);
     }
   }
 
-  private void parsePoint(JSONArray coordinates) throws JSONException, GeoJsonParseException {
+  private void parsePoint(@NonNull JSONArray coordinates)
+      throws JSONException, GeoJsonParseException {
     Geoposition position = parseGeoposition(coordinates);
     Geopoint point = new Geopoint(position);
     MapIcon pushpin = mFactory.createMapIcon();
@@ -175,31 +176,33 @@ public class GeoJsonParser {
     mLayer.getElements().add(pushpin);
   }
 
-  private void parseMultiPoint(JSONObject shape) throws JSONException, GeoJsonParseException {
+  private void parseMultiPoint(@NonNull JSONObject shape)
+      throws JSONException, GeoJsonParseException {
     JSONArray coordinates = shape.getJSONArray("coordinates");
-
     for (int i = 0; i < coordinates.length(); i++) {
       JSONArray latLong = coordinates.getJSONArray(i);
       parsePoint(latLong);
     }
   }
 
-  private void parseLineString(JSONArray pathArray) throws JSONException, GeoJsonParseException {
+  private void parseLineString(@NonNull JSONArray pathArray)
+      throws JSONException, GeoJsonParseException {
     MapPolyline line = mFactory.createMapPolyline();
     line.setPath(parsePath(pathArray));
     mLayer.getElements().add(line);
   }
 
-  private void parseMultiLineString(JSONObject shape) throws JSONException, GeoJsonParseException {
+  private void parseMultiLineString(@NonNull JSONObject shape)
+      throws JSONException, GeoJsonParseException {
     JSONArray coordinates = shape.getJSONArray("coordinates");
-
     for (int i = 0; i < coordinates.length(); i++) {
       JSONArray pathArray = coordinates.getJSONArray(i);
       parseLineString(pathArray);
     }
   }
 
-  private Geoposition parseGeoposition(JSONArray coordinates)
+  @NonNull
+  private Geoposition parseGeoposition(@NonNull JSONArray coordinates)
       throws JSONException, GeoJsonParseException {
     if (coordinates.length() >= 2) {
       double longitude = coordinates.getDouble(0);
@@ -211,15 +214,15 @@ public class GeoJsonParser {
       }
       return new Geoposition(latitude, longitude);
     } else {
-      String message =
-          "coordinates array must contain at least latitude and longitude,"
-              + " instead saw: "
-              + coordinates.toString();
-      throw new GeoJsonParseException(message);
+      throw new GeoJsonParseException(
+          "coordinates array must contain at least latitude and longitude, instead saw: "
+              + coordinates.toString());
     }
   }
 
-  private Geopath parsePath(JSONArray pathArray) throws JSONException, GeoJsonParseException {
+  @NonNull
+  private Geopath parsePath(@NonNull JSONArray pathArray)
+      throws JSONException, GeoJsonParseException {
     ArrayList<Geoposition> path = new ArrayList<>(pathArray.length());
     for (int j = 0; j < pathArray.length(); j++) {
       JSONArray latLong = pathArray.getJSONArray(j);

@@ -1,23 +1,19 @@
 package com.microsoft.modules;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-
-import com.microsoft.maps.MapElementLayer;
-import com.microsoft.maps.MapRenderMode;
-import com.microsoft.maps.MapStyleSheets;
-import com.microsoft.maps.MapView;
-import com.microsoft.maps.Geopoint;
-import com.microsoft.maps.MapAnimationKind;
-import com.microsoft.maps.MapScene;
-
+import androidx.appcompat.app.AppCompatActivity;
 import com.microsoft.maps.GeoJsonParseException;
 import com.microsoft.maps.GeoJsonParser;
-
+import com.microsoft.maps.Geopoint;
+import com.microsoft.maps.MapAnimationKind;
+import com.microsoft.maps.MapElementLayer;
+import com.microsoft.maps.MapRenderMode;
+import com.microsoft.maps.MapScene;
+import com.microsoft.maps.MapStyleSheets;
+import com.microsoft.maps.MapView;
 import java.io.InputStream;
 import java.util.Scanner;
 

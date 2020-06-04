@@ -1,7 +1,17 @@
 package com.microsoft.maps;
 
-import androidx.annotation.NonNull;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.TestCase.assertEquals;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
+import androidx.annotation.NonNull;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Scanner;
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,20 +21,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.TestCase.assertEquals;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
 /** Unit tests to check the parser. */
 public class GeoJsonParserTest {
@@ -214,9 +210,6 @@ public class GeoJsonParserTest {
             })
         .when(mCollection)
         .add(Mockito.any(MapElement.class));
-
-    // CHECK POLYLINE CORRECT
-
     mLayer = new GeoJsonParser().internalParse(geojson, DEFAULT_MAP_FACTORIES);
     verify(mCollection, times(1)).add(Mockito.any(MapElement.class));
   }
