@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -16,21 +15,16 @@ import com.microsoft.maps.Geopoint;
 import com.microsoft.maps.MapAnimationKind;
 import com.microsoft.maps.MapScene;
 
-
 import com.microsoft.maps.GeoJsonParseException;
 import com.microsoft.maps.GeoJsonParser;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private static final Geopoint LAKE_WASHINGTON = new Geopoint(47.609466, -122.265185);
-  //private static final Geopoint LAKE_WASHINGTON = new Geopoint(36.792082117666844, -76.450542652561595);
-
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -97,39 +91,31 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPreExecute() {
       super.onPreExecute();
-
       Toast.makeText(getApplicationContext(), "Loading data...", Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onPostExecute(Object o) {
       super.onPostExecute(o);
-      mMapView.getLayers().add(mParsedLayer);
+
+      if (mParsedLayer != null) {
+        mMapView.getLayers().add(mParsedLayer);
+      } else {
+        Toast.makeText(
+                getApplicationContext(), "An error occurred loading data.", Toast.LENGTH_LONG)
+            .show();
+      }
     }
 
     @Override
     protected Void doInBackground(Object[] objects) {
-
-      String geojson;
-      InputStream is = null;
+      InputStream is = getResources().openRawResource(R.raw.geojson);
+      String geojson = new Scanner(is).useDelimiter("\\A").next();
       try {
-        is = getResources().openRawResource(R.raw.countries);
-        int size = is.available();
-        byte[] buffer = new byte[size];
-        is.read(buffer);
-        geojson = new String(buffer, "UTF-8");
         mParsedLayer = GeoJsonParser.parse(geojson);
-
-      } catch (IOException | GeoJsonParseException e) {
+      } catch (GeoJsonParseException e) {
         e.printStackTrace();
-      } finally {
-          try {
-              is.close();
-          } catch (IOException e) {
-              e.printStackTrace();
-          }
       }
-
       return null;
     }
   }

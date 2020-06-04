@@ -24,6 +24,10 @@ android {
             it.buildConfigField "String", "CREDENTIALS_KEY", "\"$credentialsKey\""
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 
 }
 
