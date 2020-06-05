@@ -43,10 +43,10 @@ public class GeoJsonParserTest {
     MapPolygon polygon = (MapPolygon) elementCollection.getElements().get(0);
     assertNotNull(polygon);
     assertEquals(1, polygon.getPaths().size());
-    double[][] points = {{30, 10}, {40, 40}, {20, 40}, {10, 20}, {30, 10}};
+    double[][] expectedPoints = {{30, 10}, {40, 40}, {20, 40}, {10, 20}, {30, 10}};
     int index = 0;
     for (Geoposition position : polygon.getPaths().get(0)) {
-      checkPosition(position, points[index]);
+      checkPosition(expectedPoints[index], position);
       index++;
     }
   }
@@ -69,7 +69,7 @@ public class GeoJsonParserTest {
     MapPolygon polygon = (MapPolygon) elementCollection.getElements().get(0);
     assertNotNull(polygon);
     assertEquals(2, polygon.getPaths().size());
-    double[][][] points = {
+    double[][][] expectedPoints = {
       {{35, 10}, {45, 45}, {15, 40}, {10, 20}, {35, 10}},
       {{20, 30}, {35, 35}, {30, 20}, {20, 30}}
     };
@@ -77,7 +77,7 @@ public class GeoJsonParserTest {
       Geopath path = polygon.getPaths().get(ring);
       int index = 0;
       for (Geoposition position : path) {
-        checkPosition(position, points[ring][index]);
+        checkPosition(expectedPoints[ring][index], position);
         index++;
       }
     }
@@ -100,10 +100,10 @@ public class GeoJsonParserTest {
     MapPolyline polyline = (MapPolyline) elementCollection.getElements().get(0);
     assertNotNull(polyline);
     assertEquals(3, polyline.getPath().size());
-    double[][] points = {{30, 10, 3}, {10, 30, 9}, {40, 40, 0}};
+    double[][] expectedPoints = {{30, 10, 3}, {10, 30, 9}, {40, 40, 0}};
     int index = 0;
     for (Geoposition position : polyline.getPath()) {
-      checkPosition(position, points[index]);
+      checkPosition(expectedPoints[index], position);
       index++;
     }
   }
@@ -119,8 +119,8 @@ public class GeoJsonParserTest {
     assertEquals(1, elementCollection.getElements().size());
     MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
     assertNotNull(icon);
-    double[] points = {30, 10, 0};
-    checkPosition(icon.getLocation().getPosition(), points);
+    double[] expectedPoints = {30, 10, 0};
+    checkPosition(expectedPoints, icon.getLocation().getPosition());
   }
 
   @Test
@@ -142,31 +142,17 @@ public class GeoJsonParserTest {
     MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
     assertNotNull(elementCollection);
     assertEquals(2, elementCollection.getElements().size());
+    double[][] expectedPoints = {{30, 20}, {45, 40}, {10, 40}, {30, 20}};
     for (int i = 0; i < elementCollection.getElements().size(); i++) {
       MapPolygon polygon = (MapPolygon) elementCollection.getElements().get(i);
       assertNotNull(polygon);
       assertEquals(1, polygon.getPaths().size());
-      double[][] points = {{30, 20}, {45, 40}, {10, 40}, {30, 20}};
       if (i == 1) {
-        points = new double[5][2];
-        points[0][0] = 15.0;
-        points[0][1] = 5.0;
-
-        points[1][0] = 40.0;
-        points[1][1] = 10.0;
-
-        points[2][0] = 10.0;
-        points[2][1] = 20.0;
-
-        points[3][0] = 5.0;
-        points[3][1] = 10.0;
-
-        points[4][0] = 15.0;
-        points[4][1] = 5.0;
+        expectedPoints = new double[][] {{15, 5}, {40, 10}, {10, 20}, {5, 10}, {15, 5}};
       }
       int index = 0;
       for (Geoposition position : polygon.getPaths().get(0)) {
-        checkPosition(position, points[index]);
+        checkPosition(expectedPoints[index], position);
         index++;
       }
     }
@@ -187,22 +173,19 @@ public class GeoJsonParserTest {
     MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
     assertNotNull(elementCollection);
     assertEquals(2, elementCollection.getElements().size());
+    double[][] expectedPoints = {{10, 10}, {20, 20}, {10, 40}};
     for (int i = 0; i < elementCollection.getElements().size(); i++) {
       MapPolyline polyline = (MapPolyline) elementCollection.getElements().get(i);
       assertNotNull(polyline);
       assertEquals(3, polyline.getPath().size());
-      double[][] points = {{10, 10}, {20, 20}, {10, 40}};
 
       if (i == 1) {
-        points[0][0] = points[0][1] = 40.0;
-        points[1][0] = points[1][1] = 30.0;
-        points[2][0] = 40.0;
-        points[2][1] = 20.0;
+        expectedPoints = new double[][] {{40, 40}, {30, 30}, {40, 20}};
       }
 
       int index = 0;
       for (Geoposition position : polyline.getPath()) {
-        checkPosition(position, points[index]);
+        checkPosition(expectedPoints[index], position);
         index++;
       }
     }
@@ -222,11 +205,11 @@ public class GeoJsonParserTest {
     MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
     assertNotNull(elementCollection);
     assertEquals(4, elementCollection.getElements().size());
-    double[][] points = {{10, 40}, {40, 30}, {20, 20}, {30, 10}};
+    double[][] expectedPoints = {{10, 40}, {40, 30}, {20, 20}, {30, 10}};
     for (int i = 0; i < elementCollection.getElements().size(); i++) {
       MapIcon icon = (MapIcon) elementCollection.getElements().get(i);
       assertNotNull(icon);
-      checkPosition(icon.getLocation().getPosition(), points[i]);
+      checkPosition(expectedPoints[i], icon.getLocation().getPosition());
     }
   }
 
@@ -257,15 +240,14 @@ public class GeoJsonParserTest {
     MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
     assertNotNull(icon);
 
-    double[] points = {40, 10};
-    checkPosition(icon.getLocation().getPosition(), points);
+    double[] expectedPoints = {40, 10};
+    checkPosition(expectedPoints, icon.getLocation().getPosition());
 
     MapPolyline line = (MapPolyline) elementCollection.getElements().get(1);
     assertNotNull(line);
-    points[0] = 10;
-    points[1] = 20;
+    expectedPoints = new double[] {10, 20};
     for (Geoposition position : line.getPath()) {
-      checkPosition(position, points);
+      checkPosition(expectedPoints, position);
     }
   }
 
@@ -291,8 +273,8 @@ public class GeoJsonParserTest {
     MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
     assertNotNull(icon);
 
-    double[] points = {102, 0.5};
-    checkPosition(icon.getLocation().getPosition(), points);
+    double[] expectedPoints = {102, 0.5};
+    checkPosition(expectedPoints, icon.getLocation().getPosition());
   }
 
   @Test
@@ -329,14 +311,32 @@ public class GeoJsonParserTest {
     MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
     assertNotNull(elementCollection);
     assertEquals(2, elementCollection.getElements().size());
-    double[][] points = {{102, 0.5}, {104, 0}};
+    double[][] expectedPoints = {{102, 0.5}, {104, 0}};
     for (int i = 0; i < elementCollection.getElements().size(); i++) {
       MapIcon icon = (MapIcon) elementCollection.getElements().get(i);
       assertNotNull(icon);
-      checkPosition(icon.getLocation().getPosition(), points[i]);
+      checkPosition(expectedPoints[i], icon.getLocation().getPosition());
     }
   }
 
+  @Test
+  public void throwExceptionLongCoordArray_isCorrect() throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": [30, 45, 2, 5]\n" + "}";
+
+    MapElementLayer layer = new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
+    assertNotNull(icon);
+    double[] expectedPoints = {30, 45, 2};
+    checkPosition(expectedPoints, icon.getLocation().getPosition());
+  }
+
+  /**
+   * Tests the public method to catch null. Note: parse(null) will not call internalParse with null.
+   */
   @Test(expected = IllegalArgumentException.class)
   public void throwExceptionNullGeoJSON_isCorrect() throws GeoJsonParseException {
     GeoJsonParser.parse(null);
@@ -363,16 +363,205 @@ public class GeoJsonParserTest {
   }
 
   @Test(expected = GeoJsonParseException.class)
-  public void throwExceptionBadCoordinates_isCorrect() throws GeoJsonParseException, JSONException {
+  public void throwExceptionNoCoordinatesInArray_isCorrect()
+      throws GeoJsonParseException, JSONException {
     String geojson = "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": []\n" + "}";
     new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
   }
 
-  private void checkPosition(@NonNull Geoposition position, @NonNull double[] points) {
-    assertEquals(points[0], position.getLongitude(), 0);
-    assertEquals(points[1], position.getLatitude(), 0);
-    if (points.length > 2) {
-      assertEquals(points[2], position.getAltitude(), 0);
+  @Test(expected = JSONException.class)
+  public void throwExceptionStringCoordinates_isCorrect()
+      throws GeoJsonParseException, JSONException {
+    String geojson = "{\n" + "    \"type\": \"Point\" }";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwExceptionNoCoordinates_isCorrect() throws GeoJsonParseException, JSONException {
+    String geojson = "{\n" + "    \"type\": \"Point\" }";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwExceptionEmptyJSON_isCorrect() throws GeoJsonParseException, JSONException {
+    String geojson = "";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwExceptionIllFormedJSON_isCorrect() throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": {\\ \"Point\", \n" + "    \"coordinates\": [30, 10]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwExceptionBracketOnlyJSON_isCorrect()
+      throws GeoJsonParseException, JSONException {
+    String geojson = "{}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void throwExceptionNullType_isCorrect() throws GeoJsonParseException, JSONException {
+    String geojson = "{\n" + "    \"type\": \"null\", \n" + "    \"coordinates\": [30, 10]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwExceptionNullCoordArray_isCorrect() throws GeoJsonParseException, JSONException {
+    String geojson = "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": null\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwExceptionNullLongitude_isCorrect() throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": [null, 6]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwExceptionNullLatitude_isCorrect() throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": [6, null]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwExceptionNullAltitude_isCorrect() throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": [6, 3, null]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwExceptionNaNLongitude_isCorrect() throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": [NaN, 4, 4]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwExceptionNaNLatitude_isCorrect() throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": [6, NaN, 4]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwExceptionNaNAltitude_isCorrect() throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": [6, 3, NaN]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwExceptionBooleanCoordinates_isCorrect()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": [true, false]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwExceptionObjectCoordinates_isCorrect()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": [{}, {}]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwExceptionArrayCoordinates_isCorrect()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": [[], []]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void throwExceptionTooLowLongitude_isCorrect()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": [-181, 5]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void throwExceptionTooHighLongitude_isCorrect()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": [181, 5]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void throwExceptionTooLowLatitude_isCorrect() throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": [5, -90.005]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void throwExceptionTooHighLatitude_isCorrect()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n" + "    \"type\": \"Point\", \n" + "    \"coordinates\": [5, 90.005]\n" + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void throwExceptionFeatureCollectionNotFeature_isCorrect()
+      throws JSONException, GeoJsonParseException {
+    String geojson =
+        "{\n"
+            + "  \"type\": \"FeatureCollection\",\n"
+            + "  \"features\": [\n"
+            + "    {\n"
+            + "      \"type\": \"Point\",\n"
+            + "      \"geometry\": {\n"
+            + "        \"type\": \"Point\",\n"
+            + "        \"coordinates\": [102.0, 0.5]\n"
+            + "      },\n"
+            + "      \"properties\": {\n"
+            + "        \"prop0\": \"value0\"\n"
+            + "      }\n"
+            + "    }\n"
+            + "  ]\n"
+            + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void throwExceptionGeometryCollectionContainsFeature_isCorrect()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "    \"type\": \"GeometryCollection\",\n"
+            + "    \"geometries\": [\n"
+            + "     {\n"
+            + "        \"type\": \"Feature\",\n"
+            + "        \"geometry\": {\n"
+            + "           \"type\": \"Point\",\n"
+            + "           \"coordinates\": [102.0, 0.5]\n"
+            + "         },\n"
+            + "           \"properties\": {\n"
+            + "           \"prop0\": \"value0\"\n"
+            + "         }\n"
+            + "     }"
+            + "    ]\n"
+            + "}";
+
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  private static void checkPosition(
+      @NonNull double[] expectedPoints, @NonNull Geoposition position) {
+    assertEquals(expectedPoints[0], position.getLongitude(), 0);
+    assertEquals(expectedPoints[1], position.getLatitude(), 0);
+    if (expectedPoints.length > 2) {
+      assertEquals(expectedPoints[2], position.getAltitude(), 0);
     } else {
       assertEquals(0.0, position.getAltitude(), 0);
     }

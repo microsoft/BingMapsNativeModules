@@ -29,8 +29,10 @@ class MockMapFactories implements MapFactories {
   @Override
   public MapIcon createMapIcon() {
     MapIcon icon = Mockito.mock(MapIcon.class);
-    final AtomicReference<Geopoint> location = new AtomicReference<>();
 
+    // location must be final for use within the 'doAnswer' clause
+    // AtomicReference used as a wrapper class to capture changes to location
+    final AtomicReference<Geopoint> location = new AtomicReference<>();
     doAnswer(
             invocation -> {
               location.set(invocation.getArgument(0));
@@ -47,6 +49,8 @@ class MockMapFactories implements MapFactories {
   public MapPolyline createMapPolyline() {
     MapPolyline polyline = Mockito.mock(MapPolyline.class);
 
+    // paths must be final for use within the 'doAnswer' clause
+    // AtomicReference used as a wrapper class to capture changes to paths
     final AtomicReference<Geopath> paths = new AtomicReference();
     doAnswer(
             invocation -> {
@@ -63,8 +67,10 @@ class MockMapFactories implements MapFactories {
   @Override
   public MapPolygon createMapPolygon() {
     MapPolygon polygon = Mockito.mock(MapPolygon.class);
-    final AtomicReference<ArrayList<Geopath>> paths = new AtomicReference(new ArrayList<Geopath>());
 
+    // paths must be final for use within the 'doAnswer' clause
+    // AtomicReference used as a wrapper class to capture changes to paths
+    final AtomicReference<ArrayList<Geopath>> paths = new AtomicReference(new ArrayList<Geopath>());
     doAnswer(
             invocation -> {
               paths.set(invocation.getArgument(0));

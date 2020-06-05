@@ -4,11 +4,10 @@ import java.util.ArrayList;
 
 public class MockMapElementCollection extends MapElementCollection {
 
-  private ArrayList<MapElement> mElements;
+  private ArrayList<MapElement> mElements = new ArrayList<>();
 
   public MockMapElementCollection(MapElementLayer layer) {
     super(layer);
-    mElements = new ArrayList<>();
   }
 
   @Override

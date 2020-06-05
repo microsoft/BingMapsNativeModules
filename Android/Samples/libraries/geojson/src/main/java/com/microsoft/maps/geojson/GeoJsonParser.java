@@ -126,7 +126,7 @@ public class GeoJsonParser {
         break;
       default:
         throw new GeoJsonParseException(
-            "Expected a GeoJSON Geometry Type, instead saw: \"" + "type" + "\"");
+            "Expected a GeoJSON Geometry type, instead saw: \"" + type + "\"");
     }
   }
 
@@ -148,7 +148,12 @@ public class GeoJsonParser {
       throws JSONException, GeoJsonParseException {
     JSONArray array = object.getJSONArray("features");
     for (int i = 0; i < array.length(); i++) {
-      JSONObject shape = array.getJSONObject(i).getJSONObject("geometry");
+      JSONObject element = array.getJSONObject(i);
+      String feature = element.getString("type");
+      if(!feature.equals("Feature")){
+        throw new GeoJsonParseException("GeoJSON Features must have type \"Feature\" instead saw: " + feature);
+      }
+      JSONObject shape = element.getJSONObject("geometry");
       switchToType(shape);
     }
   }
@@ -213,7 +218,16 @@ public class GeoJsonParser {
       throws JSONException, GeoJsonParseException {
     if (coordinates.length() >= 2) {
       double longitude = coordinates.getDouble(0);
+      if (longitude < -180 || longitude > 180) {
+        throw new GeoJsonParseException(
+            "Longitude must be in the range [-180, 180], instead saw: " + longitude);
+      }
+
       double latitude = coordinates.getDouble(1);
+      if (latitude < -90 || latitude > 90) {
+        throw new GeoJsonParseException(
+            "Latitude must be in the range [-90, 90], instead saw: " + latitude);
+      }
 
       if (coordinates.length() > 2) {
         double altitude = coordinates.getDouble(2);
