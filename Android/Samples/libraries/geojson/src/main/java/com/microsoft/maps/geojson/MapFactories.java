@@ -1,7 +1,6 @@
 package com.microsoft.maps.geojson;
 
 import androidx.annotation.VisibleForTesting;
-
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;

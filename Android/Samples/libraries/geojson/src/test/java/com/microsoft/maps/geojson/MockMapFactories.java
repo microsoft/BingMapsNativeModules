@@ -1,5 +1,7 @@
 package com.microsoft.maps.geojson;
 
+import static org.mockito.Mockito.doAnswer;
+
 import com.microsoft.maps.Geopath;
 import com.microsoft.maps.Geopoint;
 import com.microsoft.maps.MapElementLayer;
@@ -7,13 +9,9 @@ import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.MockMapElementCollection;
-
-import org.mockito.Mockito;
-
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static org.mockito.Mockito.doAnswer;
+import org.mockito.Mockito;
 
 class MockMapFactories implements MapFactories {
 

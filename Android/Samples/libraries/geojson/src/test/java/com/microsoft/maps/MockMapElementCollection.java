@@ -1,9 +1,5 @@
 package com.microsoft.maps;
 
-import com.microsoft.maps.MapElement;
-import com.microsoft.maps.MapElementCollection;
-import com.microsoft.maps.MapElementLayer;
-
 import java.util.ArrayList;
 
 public class MockMapElementCollection extends MapElementCollection {
@@ -23,6 +19,4 @@ public class MockMapElementCollection extends MapElementCollection {
   public ArrayList<MapElement> getElements() {
     return mElements;
   }
-
-
 }

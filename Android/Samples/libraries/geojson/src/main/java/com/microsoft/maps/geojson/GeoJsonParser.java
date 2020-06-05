@@ -2,7 +2,6 @@ package com.microsoft.maps.geojson;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-
 import com.microsoft.maps.AltitudeReferenceSystem;
 import com.microsoft.maps.Geopath;
 import com.microsoft.maps.Geopoint;
@@ -11,7 +10,6 @@ import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
-
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;

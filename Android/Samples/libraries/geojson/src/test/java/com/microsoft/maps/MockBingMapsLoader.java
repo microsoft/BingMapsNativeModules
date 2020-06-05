@@ -2,9 +2,9 @@ package com.microsoft.maps;
 
 public class MockBingMapsLoader {
 
-  private MockBingMapsLoader(){}
+  private MockBingMapsLoader() {}
 
-  public static void mockInitialize(){
+  public static void mockInitialize() {
     BingMapsLoader.mockInitialize();
   }
 }

@@ -1,7 +1,9 @@
 package com.microsoft.maps.geojson;
 
-import androidx.annotation.NonNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import androidx.annotation.NonNull;
 import com.microsoft.maps.Geopath;
 import com.microsoft.maps.Geoposition;
 import com.microsoft.maps.MapElementLayer;
@@ -10,10 +12,6 @@ import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.MockBingMapsLoader;
 import com.microsoft.maps.MockMapElementCollection;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
