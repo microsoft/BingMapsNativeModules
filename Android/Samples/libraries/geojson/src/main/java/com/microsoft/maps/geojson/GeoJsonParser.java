@@ -150,8 +150,9 @@ public class GeoJsonParser {
     for (int i = 0; i < array.length(); i++) {
       JSONObject element = array.getJSONObject(i);
       String feature = element.getString("type");
-      if(!feature.equals("Feature")){
-        throw new GeoJsonParseException("GeoJSON Features must have type \"Feature\" instead saw: " + feature);
+      if (!feature.equals("Feature")) {
+        throw new GeoJsonParseException(
+            "GeoJSON Features must have type \"Feature\" instead saw: " + feature);
       }
       JSONObject shape = element.getJSONObject("geometry");
       switchToType(shape);
