@@ -149,13 +149,7 @@ public class GeoJsonParser {
   private void parseFeatureCollection(@NonNull JSONObject object)
       throws JSONException, GeoJsonParseException {
 
-    if (object.has("coordinates")) {
-      throw new GeoJsonParseException("FeatureCollection cannot contain a \"coordinates\" member.");
-    }
-    if (object.has("geometries")) {
-      throw new GeoJsonParseException("FeatureCollection cannot contain a \"geometries\" member.");
-    }
-    verifyNoMembers(object, new String[] {"geometry", "properties"});
+    verifyNoMembers(object, new String[] {"geometry", "properties", "coordinates", "geometries"});
     JSONArray array = object.getJSONArray("features");
     for (int i = 0; i < array.length(); i++) {
       JSONObject element = array.getJSONObject(i);
@@ -176,7 +170,7 @@ public class GeoJsonParser {
     for (int i = 0; i < jsonRings.length(); i++) {
       JSONArray pathArray = jsonRings.getJSONArray(i);
       GeopathIndexed path = parsePath(pathArray);
-      verifyFirstLastSame(path);
+      verifyPolygonRing(path);
       rings.add(path);
     }
     MapPolygon poly = mFactory.createMapPolygon();
@@ -184,8 +178,13 @@ public class GeoJsonParser {
     mLayer.getElements().add(poly);
   }
 
-  private static void verifyFirstLastSame(@NonNull GeopathIndexed path)
-      throws GeoJsonParseException {
+  private static void verifyPolygonRing(@NonNull GeopathIndexed path) throws GeoJsonParseException {
+    if (path.size() < 4) {
+      throw new GeoJsonParseException(
+          "Polygon ring must have at least 4 positions, "
+              + "and the first and last position must be the same.");
+    }
+
     Geoposition firstPosition = path.get(0);
     Geoposition lastPosition = path.get(path.size() - 1);
     if (firstPosition.getLatitude() != lastPosition.getLatitude()
