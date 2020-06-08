@@ -545,6 +545,150 @@ public class GeoJsonParserTest {
     new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
   }
 
+  @Test(expected = GeoJsonParseException.class)
+  public void testPolygonFirstLastPositionUnequalLengthsThrowsException()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "    \"type\": \"Polygon\", \n"
+            + "    \"coordinates\": [\n"
+            + "        [[30, 10, 5], [40, 40], [20, 40], [10, 20], [30, 10]]\n"
+            + "    ]\n"
+            + "}";
+
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void testPolygonFirstLastLatitudeUnequalThrowsException()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "    \"type\": \"Polygon\", \n"
+            + "    \"coordinates\": [\n"
+            + "        [[30, 10], [40, 40], [20, 40], [10, 20], [30, 50]]\n"
+            + "    ]\n"
+            + "}";
+
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void testPolygonFirstLastLongitudeUnequalThrowsException()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "    \"type\": \"Polygon\", \n"
+            + "    \"coordinates\": [\n"
+            + "        [[50, 10], [40, 40], [20, 40], [10, 20], [30, 10]]\n"
+            + "    ]\n"
+            + "}";
+
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void testPolygonFirstLastAltitudeUnequalThrowsException()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "    \"type\": \"Polygon\", \n"
+            + "    \"coordinates\": [\n"
+            + "        [[30, 10, 5], [40, 40], [20, 40], [10, 20], [30, 10, 45]]\n"
+            + "    ]\n"
+            + "}";
+
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void testFeatureCollectionContainsGeometriesThrowsException()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "  \"type\": \"FeatureCollection\",\n"
+            + "  \"geometries\": [],"
+            + "  \"features\": [\n"
+            + "    {\n"
+            + "      \"type\": \"Feature\",\n"
+            + "      \"geometry\": {\n"
+            + "        \"type\": \"Point\",\n"
+            + "        \"coordinates\": [102.0, 0.5]\n"
+            + "      },\n"
+            + "      \"properties\": {\n"
+            + "        \"prop0\": \"value0\"\n"
+            + "      }\n"
+            + "    }\n"
+            + "  ]\n"
+            + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void testFeatureCollectionContainsCoordinatesThrowsException()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "  \"type\": \"FeatureCollection\",\n"
+            + "  \"coordinates\": [],"
+            + "  \"features\": [\n"
+            + "    {\n"
+            + "      \"type\": \"Feature\",\n"
+            + "      \"geometry\": {\n"
+            + "        \"type\": \"Point\",\n"
+            + "        \"coordinates\": [102.0, 0.5]\n"
+            + "      },\n"
+            + "      \"properties\": {\n"
+            + "        \"prop0\": \"value0\"\n"
+            + "      }\n"
+            + "    }\n"
+            + "  ]\n"
+            + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void testPolygonHasFeaturesMemberThrowsException()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "    \"type\": \"Polygon\", \n"
+            + "    \"features\": [],\n"
+            + "    \"coordinates\": [\n"
+            + "        [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]\n"
+            + "    ]\n"
+            + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void testPolygonHasGeometryMemberThrowsException()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "    \"type\": \"Polygon\", \n"
+            + "    \"geometry\": {},\n"
+            + "    \"coordinates\": [\n"
+            + "        [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]\n"
+            + "    ]\n"
+            + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void testPolygonHasPropertiesMemberThrowsException()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "    \"type\": \"Polygon\", \n"
+            + "    \"properties\": {},\n"
+            + "    \"coordinates\": [\n"
+            + "        [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]\n"
+            + "    ]\n"
+            + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
   private static void checkPosition(
       @NonNull double[] expectedPoints, @NonNull Geoposition position) {
     assertEquals(expectedPoints[0], position.getLongitude(), 0);
