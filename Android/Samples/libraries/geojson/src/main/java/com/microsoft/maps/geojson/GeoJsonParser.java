@@ -92,7 +92,7 @@ public class GeoJsonParser {
         if (object.isNull("geometry")) {
           throw new GeoJsonParseException("Feature geometry cannot be null.");
         }
-        verifyNoFeaturesMember(object);
+        verifyNoMembers(object, new String[] {"features"});
         object = object.getJSONObject("geometry");
       }
       switchToType(object);
@@ -105,44 +105,31 @@ public class GeoJsonParser {
     String type = object.getString("type");
     switch (type) {
       case "Polygon":
-        verifyNoFeaturesMember(object);
-        verifyNoGeometryPropertiesMembers(object);
         parsePolygon(getCoordinates(object));
         break;
       case "Point":
-        verifyNoFeaturesMember(object);
-        verifyNoGeometryPropertiesMembers(object);
         parsePoint(getCoordinates(object));
         break;
       case "MultiPoint":
-        verifyNoFeaturesMember(object);
-        verifyNoGeometryPropertiesMembers(object);
         parseMultiPoint(object);
         break;
       case "LineString":
-        verifyNoFeaturesMember(object);
-        verifyNoGeometryPropertiesMembers(object);
         parseLineString(getCoordinates(object));
         break;
       case "MultiLineString":
-        verifyNoFeaturesMember(object);
-        verifyNoGeometryPropertiesMembers(object);
         parseMultiLineString(object);
         break;
       case "MultiPolygon":
-        verifyNoFeaturesMember(object);
-        verifyNoGeometryPropertiesMembers(object);
         parseMultiPolygon(object);
         break;
       case "GeometryCollection":
-        verifyNoFeaturesMember(object);
-        verifyNoGeometryPropertiesMembers(object);
         parseGeometryCollection(object);
         break;
       default:
         throw new GeoJsonParseException(
             "Expected a GeoJSON Geometry type, instead saw: \"" + type + "\"");
     }
+    verifyNoMembers(object, new String[] {"geometry", "properties", "features"});
   }
 
   @NonNull
@@ -168,8 +155,7 @@ public class GeoJsonParser {
     if (object.has("geometries")) {
       throw new GeoJsonParseException("FeatureCollection cannot contain a \"geometries\" member.");
     }
-    verifyNoGeometryPropertiesMembers(object);
-    verifyNoGeometryPropertiesMembers(object);
+    verifyNoMembers(object, new String[] {"geometry", "properties"});
     JSONArray array = object.getJSONArray("features");
     for (int i = 0; i < array.length(); i++) {
       JSONObject element = array.getJSONObject(i);
@@ -178,7 +164,7 @@ public class GeoJsonParser {
         throw new GeoJsonParseException(
             "GeoJSON Features must have type \"Feature\" instead saw: " + feature);
       }
-      verifyNoFeaturesMember(element);
+      verifyNoMembers(element, new String[] {"features"});
       JSONObject shape = element.getJSONObject("geometry");
       switchToType(shape);
     }
@@ -189,34 +175,24 @@ public class GeoJsonParser {
     ArrayList<Geopath> rings = new ArrayList<>(jsonRings.length());
     for (int i = 0; i < jsonRings.length(); i++) {
       JSONArray pathArray = jsonRings.getJSONArray(i);
-      JSONArray first = pathArray.getJSONArray(0);
-      JSONArray last = pathArray.getJSONArray(pathArray.length() - 1);
-      verifyFirstLastSame(first, last);
-      rings.add(parsePath(pathArray));
+      GeopathIndexed path = parsePath(pathArray);
+      verifyFirstLastSame(path);
+      rings.add(path);
     }
     MapPolygon poly = mFactory.createMapPolygon();
     poly.setPaths(rings);
     mLayer.getElements().add(poly);
   }
 
-  private void verifyFirstLastSame(JSONArray first, JSONArray last)
-      throws GeoJsonParseException, JSONException {
-    final String errorMessage =
-        "First and last coordinate pair of each ring must be the same, instead saw: "
-            + "\nfirst -> "
-            + first.toString()
-            + "\nlast -> "
-            + last.toString();
-    if (first.length() != last.length()) {
-      throw new GeoJsonParseException(errorMessage);
-    }
-    Geoposition firstPosition = parseGeoposition(first);
-    Geoposition lastPosition = parseGeoposition(last);
-
+  private static void verifyFirstLastSame(@NonNull GeopathIndexed path)
+      throws GeoJsonParseException {
+    Geoposition firstPosition = path.get(0);
+    Geoposition lastPosition = path.get(path.size() - 1);
     if (firstPosition.getLatitude() != lastPosition.getLatitude()
         || firstPosition.getLongitude() != lastPosition.getLongitude()
         || firstPosition.getAltitude() != lastPosition.getAltitude()) {
-      throw new GeoJsonParseException(errorMessage);
+      throw new GeoJsonParseException(
+          "First and last coordinate pair of each polygon ring must be the same.");
     }
   }
 
@@ -232,7 +208,12 @@ public class GeoJsonParser {
   private void parsePoint(@NonNull JSONArray coordinates)
       throws JSONException, GeoJsonParseException {
     Geoposition position = parseGeoposition(coordinates);
-    Geopoint point = new Geopoint(position);
+    Geopoint point;
+    if (coordinates.length() > 2) {
+      point = new Geopoint(position, AltitudeReferenceSystem.ELLIPSOID);
+    } else {
+      point = new Geopoint(position);
+    }
     MapIcon pushpin = mFactory.createMapIcon();
     pushpin.setLocation(point);
     mLayer.getElements().add(pushpin);
@@ -263,23 +244,13 @@ public class GeoJsonParser {
     }
   }
 
-  private void verifyNoGeometryPropertiesMembers(@NonNull JSONObject object)
-      throws GeoJsonParseException, JSONException {
-    if (object.has("geometry")) {
-      String type = object.getString("type");
-      throw new GeoJsonParseException(type + " cannot have a \"geometry\" member.");
-    }
-    if (object.has("properties")) {
-      String type = object.getString("type");
-      throw new GeoJsonParseException(type + " cannot have a \"properties\" member.");
-    }
-  }
-
-  private void verifyNoFeaturesMember(@NonNull JSONObject object)
-      throws GeoJsonParseException, JSONException {
-    if (object.has("features")) {
-      String type = object.getString("type");
-      throw new GeoJsonParseException(type + " cannot have a \"features\" member.");
+  private static void verifyNoMembers(@NonNull JSONObject object, @NonNull String[] members)
+      throws JSONException, GeoJsonParseException {
+    for (String str : members) {
+      if (object.has(str)) {
+        String type = object.getString("type");
+        throw new GeoJsonParseException(type + " cannot have a \"" + str + "\" member.");
+      }
     }
   }
 
@@ -312,14 +283,18 @@ public class GeoJsonParser {
   }
 
   @NonNull
-  private Geopath parsePath(@NonNull JSONArray pathArray)
+  private GeopathIndexed parsePath(@NonNull JSONArray pathArray)
       throws JSONException, GeoJsonParseException {
     ArrayList<Geoposition> path = new ArrayList<>(pathArray.length());
+    AltitudeReferenceSystem ref = AltitudeReferenceSystem.SURFACE;
     for (int j = 0; j < pathArray.length(); j++) {
       JSONArray latLong = pathArray.getJSONArray(j);
       Geoposition position = parseGeoposition(latLong);
+      if (latLong.length() > 2) {
+        ref = AltitudeReferenceSystem.ELLIPSOID;
+      }
       path.add(position);
     }
-    return new Geopath(path, AltitudeReferenceSystem.ELLIPSOID);
+    return new GeopathIndexed(path, ref);
   }
 }

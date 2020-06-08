@@ -574,7 +574,8 @@ public class GeoJsonParserTest {
   }
 
   @Test(expected = GeoJsonParseException.class)
-  public void testPolygonFirstLastLongitudeUnequal() throws GeoJsonParseException, JSONException {
+  public void testPolygonFirstLastLongitudeUnequalThrowsException()
+      throws GeoJsonParseException, JSONException {
     String geojson =
         "{\n"
             + "    \"type\": \"Polygon\", \n"
@@ -587,7 +588,8 @@ public class GeoJsonParserTest {
   }
 
   @Test(expected = GeoJsonParseException.class)
-  public void testPolygonFirstLastAltitudeUnequal() throws GeoJsonParseException, JSONException {
+  public void testPolygonFirstLastAltitudeUnequalThrowsException()
+      throws GeoJsonParseException, JSONException {
     String geojson =
         "{\n"
             + "    \"type\": \"Polygon\", \n"
