@@ -18,6 +18,7 @@ public class MapGeoJsonLayer extends MapElementLayer {
   private int mFillColor = Color.BLUE;
   private int mStrokeColor = Color.BLUE;
   private boolean mIsStrokeDashed;
+  private float mStrokeWidth = 1;
 
   public MapGeoJsonLayer() {
     super();
