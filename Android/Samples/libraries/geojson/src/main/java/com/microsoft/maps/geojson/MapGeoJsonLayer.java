@@ -21,10 +21,6 @@ public class MapGeoJsonLayer extends MapElementLayer {
   private float mStrokeWidth = 1;
   private boolean mIsStrokeDashed;
 
-  private boolean mArePointsVisible = true;
-  private boolean mArePolygonsVisible = true;
-  private boolean mArePolylinesVisible = true;
-
   public MapGeoJsonLayer() {
     super();
     mElements = this.getElements();
