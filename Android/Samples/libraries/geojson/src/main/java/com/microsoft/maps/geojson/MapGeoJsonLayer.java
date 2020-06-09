@@ -3,6 +3,7 @@ package com.microsoft.maps.geojson;
 import android.graphics.Color;
 import com.microsoft.maps.MapElement;
 import com.microsoft.maps.MapElementLayer;
+import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 
@@ -18,7 +19,11 @@ public class MapGeoJsonLayer extends MapElementLayer {
   private int mFillColor = Color.BLUE;
   private int mStrokeColor = Color.BLUE;
   private boolean mIsStrokeDashed;
-  private float mStrokeWidth = 1;
+  private int mStrokeWidth = 1;
+
+  private boolean mArePolygonsVisible;
+  private boolean mArePolylinesVisible;
+  private boolean mAreIconsVisible;
 
   public MapGeoJsonLayer() {
     super();
@@ -98,6 +103,108 @@ public class MapGeoJsonLayer extends MapElementLayer {
           ((MapPolygon) element).setStrokeDashed(isStrokeDashed);
         } else if (element instanceof MapPolyline) {
           ((MapPolyline) element).setStrokeDashed(isStrokeDashed);
+        }
+      }
+    }
+  }
+
+  /**
+   * Gets the line width of polylines and the outline of polygons.
+   *
+   * @return int value of line width
+   */
+  public int getStrokeWidth() {
+    return mStrokeWidth;
+  }
+
+  /**
+   * Sets the line width for polylines and the outline of polygons.
+   *
+   * @param strokeWidth int value of line width
+   */
+  public void setStrokeWidth(int strokeWidth) {
+    if (mStrokeWidth != strokeWidth) {
+      mStrokeWidth = strokeWidth;
+      for (MapElement element : getElements()) {
+        if (element instanceof MapPolygon) {
+          ((MapPolygon) element).setStrokeWidth(strokeWidth);
+        } else if (element instanceof MapPolyline) {
+          ((MapPolyline) element).setStrokeWidth(strokeWidth);
+        }
+      }
+    }
+  }
+
+  /**
+   * Tells whether polygons are visible or not.
+   *
+   * @return boolean true if polygons visible, false otherwise
+   */
+  public boolean getPolygonsVisible() {
+    return mArePolygonsVisible;
+  }
+
+  /**
+   * Sets whether polygons are visible or not.
+   *
+   * @param visible boolean value for whether polygons are visible or not
+   */
+  public void setPolygonsVisible(boolean visible) {
+    if (mArePolygonsVisible != visible) {
+      mArePolygonsVisible = visible;
+      for (MapElement element : getElements()) {
+        if (element instanceof MapPolygon) {
+          element.setVisible(visible);
+        }
+      }
+    }
+  }
+
+  /**
+   * Tells whether polylines are visible or not.
+   *
+   * @return boolean true if polylines visible, false otherwise
+   */
+  public boolean getPolylinesVisible() {
+    return mArePolylinesVisible;
+  }
+
+  /**
+   * Sets whether polylines are visible or not.
+   *
+   * @param visible boolean value for whether polylines are visible or not
+   */
+  public void setPolylinesVisible(boolean visible) {
+    if (mArePolylinesVisible != visible) {
+      mArePolylinesVisible = visible;
+      for (MapElement element : getElements()) {
+        if (element instanceof MapPolyline) {
+          element.setVisible(visible);
+        }
+      }
+    }
+  }
+
+  /**
+   * Tells whether icons are visible or not.
+   *
+   * @return boolean true if icons visible, false otherwise
+   */
+  public boolean getIconsVisible() {
+    return mArePolylinesVisible;
+  }
+
+  /**
+   * Sets whether icons are visible or not.
+   *
+   * @param visible boolean value for whether icons are visible or not
+   */
+  public void setIconsVisible(boolean visible) {
+    if (mAreIconsVisible != visible) {
+      mAreIconsVisible = visible;
+      for (MapElement element : getElements()) {
+        if (element instanceof MapIcon) {
+          element.setVisible(visible);
         }
       }
     }

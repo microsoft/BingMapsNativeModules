@@ -86,6 +86,93 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
         .setStrokeDashed(Mockito.anyBoolean());
 
     doAnswer(invocation -> isStrokeDashed.get()).when(layer).getStrokeDashed();
+
+    final AtomicReference<Integer> strokeWidth = new AtomicReference();
+    // set the default value
+    strokeWidth.set(1);
+    doAnswer(
+        invocation -> {
+          int width = invocation.getArgument(0);
+          if (strokeWidth.get() != width) {
+            strokeWidth.set(width);
+            for (MapElement element : mockElementCollection.getElements()) {
+              if (element instanceof MapPolygon) {
+                ((MapPolygon) element).setStrokeWidth(width);
+              } else if (element instanceof MapPolyline) {
+                ((MapPolyline) element).setStrokeWidth(width);
+              }
+            }
+          }
+          return true;
+        })
+        .when(layer)
+        .setStrokeWidth(Mockito.anyInt());
+
+    doAnswer(invocation -> strokeWidth.get()).when(layer).getStrokeWidth();
+
+    final AtomicReference<Boolean> polygonsVisible = new AtomicReference();
+    // set the default value
+    polygonsVisible.set(true);
+    doAnswer(
+        invocation -> {
+          boolean arg = invocation.getArgument(0);
+          if (polygonsVisible.get() != arg) {
+            polygonsVisible.set(arg);
+            for (MapElement element : mockElementCollection.getElements()) {
+              if (element instanceof MapPolygon) {
+                element.setVisible(arg);
+              }
+            }
+          }
+          return true;
+        })
+        .when(layer)
+        .setPolygonsVisible(Mockito.anyBoolean());
+
+    doAnswer(invocation -> polygonsVisible.get()).when(layer).getPolygonsVisible();
+
+    final AtomicReference<Boolean> polylinesVisible = new AtomicReference();
+    // set the default value
+    polylinesVisible.set(true);
+    doAnswer(
+        invocation -> {
+          boolean arg = invocation.getArgument(0);
+          if (polylinesVisible.get() != arg) {
+            polylinesVisible.set(arg);
+            for (MapElement element : mockElementCollection.getElements()) {
+              if (element instanceof MapPolyline) {
+                element.setVisible(arg);
+              }
+            }
+          }
+          return true;
+        })
+        .when(layer)
+        .setPolylinesVisible(Mockito.anyBoolean());
+
+    doAnswer(invocation -> polylinesVisible.get()).when(layer).getPolylinesVisible();
+
+    final AtomicReference<Boolean> iconsVisible = new AtomicReference();
+    // set the default value
+    iconsVisible.set(true);
+    doAnswer(
+        invocation -> {
+          boolean arg = invocation.getArgument(0);
+          if (iconsVisible.get() != arg) {
+            iconsVisible.set(arg);
+            for (MapElement element : mockElementCollection.getElements()) {
+              if (element instanceof MapIcon) {
+                element.setVisible(arg);
+              }
+            }
+          }
+          return true;
+        })
+        .when(layer)
+        .setIconsVisible(Mockito.anyBoolean());
+
+    doAnswer(invocation -> iconsVisible.get()).when(layer).getIconsVisible();
+
     return layer;
   }
 
@@ -97,7 +184,21 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
 
   @Override
   public MapIcon createMapIcon() {
-    return null;
+    MapIcon icon = Mockito.mock(MapIcon.class);
+
+    final AtomicReference<Boolean> isVisible = new AtomicReference();
+    isVisible.set(true);
+    doAnswer(
+        invocation -> {
+          isVisible.set(invocation.getArgument(0));
+          return true;
+        })
+        .when(icon)
+        .setVisible(Mockito.anyBoolean());
+
+    doAnswer(invocation -> isVisible.get()).when(icon).isVisible();
+
+    return icon;
   }
 
   @Override
@@ -127,6 +228,29 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
         .setStrokeDashed(Mockito.anyBoolean());
 
     doAnswer(invocation -> isStrokeDashed.get()).when(polyine).isStrokeDashed();
+
+    final AtomicReference<Integer> strokeWidth = new AtomicReference();
+    doAnswer(
+        invocation -> {
+          strokeWidth.set(invocation.getArgument(0));
+          return true;
+        })
+        .when(polyine)
+        .setStrokeWidth(Mockito.anyInt());
+
+    doAnswer(invocation -> strokeWidth.get()).when(polyine).getStrokeWidth();
+
+    final AtomicReference<Boolean> isVisible = new AtomicReference();
+    isVisible.set(true);
+    doAnswer(
+        invocation -> {
+          isVisible.set(invocation.getArgument(0));
+          return true;
+        })
+        .when(polyine)
+        .setVisible(Mockito.anyBoolean());
+
+    doAnswer(invocation -> isVisible.get()).when(polyine).isVisible();
 
     return polyine;
   }
@@ -171,6 +295,29 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
         .setStrokeDashed(Mockito.anyBoolean());
 
     doAnswer(invocation -> isStrokeDashed.get()).when(polygon).isStrokeDashed();
+
+    final AtomicReference<Integer> strokeWidth = new AtomicReference();
+    doAnswer(
+        invocation -> {
+          strokeWidth.set(invocation.getArgument(0));
+          return true;
+        })
+        .when(polygon)
+        .setStrokeWidth(Mockito.anyInt());
+
+    doAnswer(invocation -> strokeWidth.get()).when(polygon).getStrokeWidth();
+
+    final AtomicReference<Boolean> isVisible = new AtomicReference();
+    isVisible.set(true);
+    doAnswer(
+        invocation -> {
+          isVisible.set(invocation.getArgument(0));
+          return true;
+        })
+        .when(polygon)
+        .setVisible(Mockito.anyBoolean());
+
+    doAnswer(invocation -> isVisible.get()).when(polygon).isVisible();
 
     return polygon;
   }
