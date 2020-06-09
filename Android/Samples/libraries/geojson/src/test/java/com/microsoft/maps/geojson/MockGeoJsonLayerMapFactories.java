@@ -91,20 +91,20 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
     // set the default value
     strokeWidth.set(1);
     doAnswer(
-        invocation -> {
-          int width = invocation.getArgument(0);
-          if (strokeWidth.get() != width) {
-            strokeWidth.set(width);
-            for (MapElement element : mockElementCollection.getElements()) {
-              if (element instanceof MapPolygon) {
-                ((MapPolygon) element).setStrokeWidth(width);
-              } else if (element instanceof MapPolyline) {
-                ((MapPolyline) element).setStrokeWidth(width);
+            invocation -> {
+              int width = invocation.getArgument(0);
+              if (strokeWidth.get() != width) {
+                strokeWidth.set(width);
+                for (MapElement element : mockElementCollection.getElements()) {
+                  if (element instanceof MapPolygon) {
+                    ((MapPolygon) element).setStrokeWidth(width);
+                  } else if (element instanceof MapPolyline) {
+                    ((MapPolyline) element).setStrokeWidth(width);
+                  }
+                }
               }
-            }
-          }
-          return true;
-        })
+              return true;
+            })
         .when(layer)
         .setStrokeWidth(Mockito.anyInt());
 
@@ -114,18 +114,18 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
     // set the default value
     polygonsVisible.set(true);
     doAnswer(
-        invocation -> {
-          boolean arg = invocation.getArgument(0);
-          if (polygonsVisible.get() != arg) {
-            polygonsVisible.set(arg);
-            for (MapElement element : mockElementCollection.getElements()) {
-              if (element instanceof MapPolygon) {
-                element.setVisible(arg);
+            invocation -> {
+              boolean arg = invocation.getArgument(0);
+              if (polygonsVisible.get() != arg) {
+                polygonsVisible.set(arg);
+                for (MapElement element : mockElementCollection.getElements()) {
+                  if (element instanceof MapPolygon) {
+                    element.setVisible(arg);
+                  }
+                }
               }
-            }
-          }
-          return true;
-        })
+              return true;
+            })
         .when(layer)
         .setPolygonsVisible(Mockito.anyBoolean());
 
@@ -135,18 +135,18 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
     // set the default value
     polylinesVisible.set(true);
     doAnswer(
-        invocation -> {
-          boolean arg = invocation.getArgument(0);
-          if (polylinesVisible.get() != arg) {
-            polylinesVisible.set(arg);
-            for (MapElement element : mockElementCollection.getElements()) {
-              if (element instanceof MapPolyline) {
-                element.setVisible(arg);
+            invocation -> {
+              boolean arg = invocation.getArgument(0);
+              if (polylinesVisible.get() != arg) {
+                polylinesVisible.set(arg);
+                for (MapElement element : mockElementCollection.getElements()) {
+                  if (element instanceof MapPolyline) {
+                    element.setVisible(arg);
+                  }
+                }
               }
-            }
-          }
-          return true;
-        })
+              return true;
+            })
         .when(layer)
         .setPolylinesVisible(Mockito.anyBoolean());
 
@@ -156,18 +156,18 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
     // set the default value
     iconsVisible.set(true);
     doAnswer(
-        invocation -> {
-          boolean arg = invocation.getArgument(0);
-          if (iconsVisible.get() != arg) {
-            iconsVisible.set(arg);
-            for (MapElement element : mockElementCollection.getElements()) {
-              if (element instanceof MapIcon) {
-                element.setVisible(arg);
+            invocation -> {
+              boolean arg = invocation.getArgument(0);
+              if (iconsVisible.get() != arg) {
+                iconsVisible.set(arg);
+                for (MapElement element : mockElementCollection.getElements()) {
+                  if (element instanceof MapIcon) {
+                    element.setVisible(arg);
+                  }
+                }
               }
-            }
-          }
-          return true;
-        })
+              return true;
+            })
         .when(layer)
         .setIconsVisible(Mockito.anyBoolean());
 
@@ -189,10 +189,10 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
     final AtomicReference<Boolean> isVisible = new AtomicReference();
     isVisible.set(true);
     doAnswer(
-        invocation -> {
-          isVisible.set(invocation.getArgument(0));
-          return true;
-        })
+            invocation -> {
+              isVisible.set(invocation.getArgument(0));
+              return true;
+            })
         .when(icon)
         .setVisible(Mockito.anyBoolean());
 
@@ -231,10 +231,10 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
 
     final AtomicReference<Integer> strokeWidth = new AtomicReference();
     doAnswer(
-        invocation -> {
-          strokeWidth.set(invocation.getArgument(0));
-          return true;
-        })
+            invocation -> {
+              strokeWidth.set(invocation.getArgument(0));
+              return true;
+            })
         .when(polyine)
         .setStrokeWidth(Mockito.anyInt());
 
@@ -243,10 +243,10 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
     final AtomicReference<Boolean> isVisible = new AtomicReference();
     isVisible.set(true);
     doAnswer(
-        invocation -> {
-          isVisible.set(invocation.getArgument(0));
-          return true;
-        })
+            invocation -> {
+              isVisible.set(invocation.getArgument(0));
+              return true;
+            })
         .when(polyine)
         .setVisible(Mockito.anyBoolean());
 
@@ -298,10 +298,10 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
 
     final AtomicReference<Integer> strokeWidth = new AtomicReference();
     doAnswer(
-        invocation -> {
-          strokeWidth.set(invocation.getArgument(0));
-          return true;
-        })
+            invocation -> {
+              strokeWidth.set(invocation.getArgument(0));
+              return true;
+            })
         .when(polygon)
         .setStrokeWidth(Mockito.anyInt());
 
@@ -310,10 +310,10 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
     final AtomicReference<Boolean> isVisible = new AtomicReference();
     isVisible.set(true);
     doAnswer(
-        invocation -> {
-          isVisible.set(invocation.getArgument(0));
-          return true;
-        })
+            invocation -> {
+              isVisible.set(invocation.getArgument(0));
+              return true;
+            })
         .when(polygon)
         .setVisible(Mockito.anyBoolean());
 
