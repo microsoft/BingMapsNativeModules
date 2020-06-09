@@ -230,7 +230,11 @@ public class GeoJsonParser {
   private void parseLineString(@NonNull JSONArray pathArray)
       throws JSONException, GeoJsonParseException {
     MapPolyline line = mFactory.createMapPolyline();
-    line.setPath(parsePath(pathArray));
+    Geopath path = parsePath(pathArray);
+    if (path.size() < 2) {
+      throw new GeoJsonParseException("Linestring must contain at least 2 positions.");
+    }
+    line.setPath(path);
     mLayer.getElements().add(line);
   }
 
