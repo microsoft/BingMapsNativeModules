@@ -105,7 +105,7 @@ map.getLayers().add(layer);
 
 
 Result: 
-![Default styling](https://github.com/microsoft/BingMapsNativeModules/blob/t-elbart/APIspecs/documentation/defaultStyle.png?raw=true)
+![Default styling](https://github.com/microsoft/BingMapsNativeModules/blob/master/documentation/defaultStyle.png?raw=true)
 
 Or to change the style before adding to the map:
 
@@ -120,7 +120,7 @@ map.getLayers().add(layer);
 ```
 
 Result:
-![New styling](https://github.com/microsoft/BingMapsNativeModules/blob/t-elbart/APIspecs/documentation/withStyle.png?raw=true)
+![New styling](https://github.com/microsoft/BingMapsNativeModules/blob/master/documentation/withStyle.png?raw=true)
 
 
 Filter out points:
@@ -134,7 +134,7 @@ map.getLayers().add(layer);
 
 Result:
 
-![Filter points](https://github.com/microsoft/BingMapsNativeModules/blob/t-elbart/APIspecs/documentation/filterPoints.png?raw=true)
+![Filter points](https://github.com/microsoft/BingMapsNativeModules/blob/master/documentation/filterPoints.png?raw=true)
 
 
 ## See Also

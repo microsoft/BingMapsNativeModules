@@ -49,5 +49,5 @@ map.getLayers().add(layer);
 
 
 Result: 
-![Default styling](https://github.com/microsoft/BingMapsNativeModules/blob/t-elbart/APIspecs/documentation/defaultStyle.png?raw=true)
+![Default styling](https://github.com/microsoft/BingMapsNativeModules/blob/master/documentation/defaultStyle.png?raw=true)
 
