@@ -18,4 +18,9 @@ public class MockMapElementCollection extends MapElementCollection {
   public ArrayList<MapElement> getElements() {
     return mElements;
   }
+
+  @Override
+  public boolean remove(MapElement element) {
+    return mElements.remove(element);
+  }
 }
