@@ -35,7 +35,7 @@ public class MapGeoJsonLayerTest {
   @Test
   public void testGetFillColorDefault() {
     MapGeoJsonLayer layer = MOCK_MAP_FACTORIES.createMapGeoJsonLayer();
-    assertEquals(0xff0000ff, layer.getFillColor());
+    assertEquals(Color.BLUE, layer.getFillColor());
     MapPolygon poly = MOCK_MAP_FACTORIES.createMapPolygon();
     layer.getElements().add(poly);
     MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
@@ -43,7 +43,7 @@ public class MapGeoJsonLayerTest {
     assertEquals(1, elementCollection.getElements().size());
     MapPolygon polygon = (MapPolygon) elementCollection.getElements().get(0);
     assertNotNull(polygon);
-    assertEquals(0xff0000ff, polygon.getFillColor());
+    assertEquals(Color.BLUE, polygon.getFillColor());
   }
 
   @Test

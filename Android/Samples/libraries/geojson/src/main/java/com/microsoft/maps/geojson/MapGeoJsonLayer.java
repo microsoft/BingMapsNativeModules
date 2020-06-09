@@ -1,7 +1,7 @@
 package com.microsoft.maps.geojson;
 
+import android.graphics.Color;
 import com.microsoft.maps.MapElement;
-import com.microsoft.maps.MapElementCollection;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapPolygon;
 
@@ -14,16 +14,10 @@ import com.microsoft.maps.MapPolygon;
  */
 public class MapGeoJsonLayer extends MapElementLayer {
 
-  private MapElementCollection mElements;
-
-  private int mFillColor = 0xff0000ff;
-  private int mStrokeColor = 0xff0000ff;
-  private float mStrokeWidth = 1;
-  private boolean mIsStrokeDashed;
+  private int mFillColor = Color.BLUE;
 
   public MapGeoJsonLayer() {
     super();
-    mElements = this.getElements();
   }
 
   /**
@@ -41,13 +35,11 @@ public class MapGeoJsonLayer extends MapElementLayer {
    * @param fillColor the ARGB color to fill polygons
    */
   public void setFillColor(int fillColor) {
-    synchronized (mElements) {
-      if (fillColor != mFillColor) {
-        mFillColor = fillColor;
-        for (MapElement element : mElements) {
-          if (element instanceof MapPolygon) {
-            ((MapPolygon) element).setFillColor(fillColor);
-          }
+    if (fillColor != mFillColor) {
+      mFillColor = fillColor;
+      for (MapElement element : getElements()) {
+        if (element instanceof MapPolygon) {
+          ((MapPolygon) element).setFillColor(fillColor);
         }
       }
     }

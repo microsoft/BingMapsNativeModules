@@ -2,6 +2,7 @@ package com.microsoft.maps.geojson;
 
 import static org.mockito.Mockito.doAnswer;
 
+import android.graphics.Color;
 import com.microsoft.maps.MapElement;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
@@ -23,7 +24,7 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
     // AtomicReference used as a wrapper class to capture changes to fillColor
     final AtomicReference<Integer> fillColor = new AtomicReference();
     // set the default value
-    fillColor.set(0xff0000ff);
+    fillColor.set(Color.BLUE);
     doAnswer(
             invocation -> {
               int color = invocation.getArgument(0);
@@ -67,7 +68,7 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
     // AtomicReference used as a wrapper class to capture changes to fillColor
     final AtomicReference<Integer> fillColor = new AtomicReference();
     // set the default value
-    fillColor.set(0xff0000ff);
+    fillColor.set(Color.BLUE);
     doAnswer(
             invocation -> {
               fillColor.set(invocation.getArgument(0));
