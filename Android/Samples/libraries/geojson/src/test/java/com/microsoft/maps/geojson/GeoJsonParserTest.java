@@ -19,7 +19,7 @@ import org.junit.Test;
 /** Unit tests to check the GeoJSONParser class. */
 public class GeoJsonParserTest {
 
-  private static final MapFactories MOCK_MAP_FACTORIES = new MockMapFactories();
+  private static final MapFactories MOCK_MAP_FACTORIES = new MockParserMapFactories();
 
   @Before
   public void setup() {
@@ -222,7 +222,7 @@ public class GeoJsonParserTest {
             + "        {\n"
             + "            \"type\": \"LineString\",\n"
             + "            \"coordinates\": [\n"
-            + "                [10, 20]\n"
+            + "                [10, 20], [5, 50]\n"
             + "            ]\n"
             + "        },\n"
             + "    ]\n"
@@ -241,9 +241,11 @@ public class GeoJsonParserTest {
 
     MapPolyline line = (MapPolyline) elementCollection.getElements().get(1);
     assertNotNull(line);
-    expectedPoints = new double[] {10, 20};
+    double[][] expectedLinePoints = new double[][] {{10, 20}, {5, 50}};
+    int index = 0;
     for (Geoposition position : line.getPath()) {
-      checkPosition(expectedPoints, position);
+      checkPosition(expectedLinePoints[index], position);
+      index++;
     }
   }
 
@@ -684,6 +686,37 @@ public class GeoJsonParserTest {
             + "    \"properties\": {},\n"
             + "    \"coordinates\": [\n"
             + "        [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]\n"
+            + "    ]\n"
+            + "}";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void testFeatureHasFeaturesMemberThrowsException()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "      \"type\": \"Feature\",\n"
+            + "      \"features\": [],\n"
+            + "      \"geometry\": {\n"
+            + "        \"type\": \"Point\",\n"
+            + "        \"coordinates\": [102.0, 0.5]\n"
+            + "      },\n"
+            + "      \"properties\": {\n"
+            + "        \"prop0\": \"value0\"\n"
+            + "      }\n"
+            + "    }";
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void testPolylineOneCoordinateThrowsException()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "    \"type\": \"LineString\", \n"
+            + "    \"coordinates\": [\n"
+            + "        [30, 10, 3]\n"
             + "    ]\n"
             + "}";
     new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);

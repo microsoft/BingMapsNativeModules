@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import org.mockito.Mockito;
 
-class MockMapFactories implements MapFactories {
+class MockParserMapFactories implements MapFactories {
 
   @Override
   public MapElementLayer createMapElementLayer() {
