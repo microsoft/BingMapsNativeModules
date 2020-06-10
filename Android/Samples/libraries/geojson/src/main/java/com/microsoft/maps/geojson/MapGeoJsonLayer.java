@@ -1,11 +1,17 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 package com.microsoft.maps.geojson;
 
 import android.graphics.Color;
+import androidx.annotation.NonNull;
 import com.microsoft.maps.MapElement;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class returned by GeoJsonParser. Optionally, the overall style of the shapes in the layer can be
@@ -152,5 +158,51 @@ public class MapGeoJsonLayer extends MapElementLayer {
         }
       }
     }
+  }
+
+  private void removeAll(@NonNull ArrayList<MapElement> elementsToRemove) {
+    for (int i = 0; i < elementsToRemove.size(); i++) {
+      MapElement element = elementsToRemove.get(i);
+      getElements().remove(element);
+    }
+  }
+
+  /** Removes all polygons from the layer and returns them in a list of MapElements. */
+  @NonNull
+  public List<MapElement> removePolygons() {
+    ArrayList<MapElement> elementsToRemove = new ArrayList<>();
+    for (MapElement element : getElements()) {
+      if (element instanceof MapPolygon) {
+        elementsToRemove.add(element);
+      }
+    }
+    removeAll(elementsToRemove);
+    return elementsToRemove;
+  }
+
+  /** Removes all polylines from the layer and returns them in a list of MapElements. */
+  @NonNull
+  public List<MapElement> removePolylines() {
+    ArrayList<MapElement> elementsToRemove = new ArrayList<>();
+    for (MapElement element : getElements()) {
+      if (element instanceof MapPolyline) {
+        elementsToRemove.add(element);
+      }
+    }
+    removeAll(elementsToRemove);
+    return elementsToRemove;
+  }
+
+  /** Removes all icons from the layer and returns them in a list of MapElements. */
+  @NonNull
+  public List<MapElement> removeIcons() {
+    ArrayList<MapElement> elementsToRemove = new ArrayList<>();
+    for (MapElement element : getElements()) {
+      if (element instanceof MapIcon) {
+        elementsToRemove.add(element);
+      }
+    }
+    removeAll(elementsToRemove);
+    return elementsToRemove;
   }
 }

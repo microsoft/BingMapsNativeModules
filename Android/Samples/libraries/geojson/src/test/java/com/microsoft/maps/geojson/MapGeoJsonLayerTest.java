@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 package com.microsoft.maps.geojson;
 
 import static org.junit.Assert.assertEquals;
@@ -6,11 +9,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.graphics.Color;
+import com.microsoft.maps.MapElement;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.MockBingMapsLoader;
 import com.microsoft.maps.MockMapElementCollection;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -209,18 +214,14 @@ public class MapGeoJsonLayerTest {
 
   @Test
   public void testSetPolygonsInvisible() {
-    MapGeoJsonLayer layer = MOCK_MAP_FACTORIES.createMapGeoJsonLayer();
-    for (int i = 0; i < 2; i++) {
-      layer.getElements().add(MOCK_MAP_FACTORIES.createMapPolygon());
-      layer.getElements().add(MOCK_MAP_FACTORIES.createMapPolyline());
-    }
+    MapGeoJsonLayer layer = populateNewLayer();
     MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
     assertNotNull(elementCollection);
-    assertEquals(4, elementCollection.getElements().size());
+    assertEquals(6, elementCollection.getElements().size());
     assertTrue(layer.getPolygonsVisible());
     layer.setPolygonsVisible(false);
     assertFalse(layer.getPolygonsVisible());
-    for (int i = 0; i < 4; i += 2) {
+    for (int i = 0; i < 6; i += 3) {
       MapPolygon polygon = (MapPolygon) elementCollection.getElements().get(i);
       assertNotNull(polygon);
       assertFalse(polygon.isVisible());
@@ -228,6 +229,10 @@ public class MapGeoJsonLayerTest {
       MapPolyline polyline = (MapPolyline) elementCollection.getElements().get(i + 1);
       assertNotNull(polyline);
       assertTrue(polyline.isVisible());
+
+      MapIcon icon = (MapIcon) elementCollection.getElements().get(i + 2);
+      assertNotNull(icon);
+      assertTrue(icon.isVisible());
     }
   }
 
@@ -239,18 +244,14 @@ public class MapGeoJsonLayerTest {
 
   @Test
   public void testSetPolylinesInvisible() {
-    MapGeoJsonLayer layer = MOCK_MAP_FACTORIES.createMapGeoJsonLayer();
-    for (int i = 0; i < 2; i++) {
-      layer.getElements().add(MOCK_MAP_FACTORIES.createMapPolygon());
-      layer.getElements().add(MOCK_MAP_FACTORIES.createMapPolyline());
-    }
+    MapGeoJsonLayer layer = populateNewLayer();
     MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
     assertNotNull(elementCollection);
-    assertEquals(4, elementCollection.getElements().size());
+    assertEquals(6, elementCollection.getElements().size());
     assertTrue(layer.getPolylinesVisible());
     layer.setPolylinesVisible(false);
     assertFalse(layer.getPolylinesVisible());
-    for (int i = 0; i < 4; i += 2) {
+    for (int i = 0; i < 6; i += 3) {
       MapPolygon polygon = (MapPolygon) elementCollection.getElements().get(i);
       assertNotNull(polygon);
       assertTrue(polygon.isVisible());
@@ -258,6 +259,10 @@ public class MapGeoJsonLayerTest {
       MapPolyline polyline = (MapPolyline) elementCollection.getElements().get(i + 1);
       assertNotNull(polyline);
       assertFalse(polyline.isVisible());
+
+      MapIcon icon = (MapIcon) elementCollection.getElements().get(i + 2);
+      assertNotNull(icon);
+      assertTrue(icon.isVisible());
     }
   }
 
@@ -269,25 +274,98 @@ public class MapGeoJsonLayerTest {
 
   @Test
   public void testSetIconsInvisible() {
-    MapGeoJsonLayer layer = MOCK_MAP_FACTORIES.createMapGeoJsonLayer();
-    for (int i = 0; i < 2; i++) {
-      layer.getElements().add(MOCK_MAP_FACTORIES.createMapPolygon());
-      layer.getElements().add(MOCK_MAP_FACTORIES.createMapIcon());
-    }
+    MapGeoJsonLayer layer = populateNewLayer();
     MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
     assertNotNull(elementCollection);
-    assertEquals(4, elementCollection.getElements().size());
+    assertEquals(6, elementCollection.getElements().size());
     assertTrue(layer.getIconsVisible());
     layer.setIconsVisible(false);
     assertFalse(layer.getIconsVisible());
-    for (int i = 0; i < 4; i += 2) {
+    for (int i = 0; i < 6; i += 3) {
       MapPolygon polygon = (MapPolygon) elementCollection.getElements().get(i);
       assertNotNull(polygon);
       assertTrue(polygon.isVisible());
 
-      MapIcon icon = (MapIcon) elementCollection.getElements().get(i + 1);
+      MapPolyline polyline = (MapPolyline) elementCollection.getElements().get(i + 1);
+      assertNotNull(polyline);
+      assertTrue(polyline.isVisible());
+
+      MapIcon icon = (MapIcon) elementCollection.getElements().get(i + 2);
       assertNotNull(icon);
       assertFalse(icon.isVisible());
     }
+  }
+
+  @Test
+  public void testRemovePolygons() {
+    MapGeoJsonLayer layer = populateNewLayer();
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(6, elementCollection.getElements().size());
+    List<MapElement> removed = layer.removePolygons();
+    assertEquals(2, removed.size());
+    for (int i = 0; i < removed.size(); i++) {
+      MapElement element = removed.get(i);
+      assertNotNull(element);
+      assertTrue(element instanceof MapPolygon);
+    }
+    assertEquals(4, elementCollection.getElements().size());
+    for (int i = 0; i < 4; i += 2) {
+      MapElement element = elementCollection.getElements().get(i);
+      assertNotNull(element);
+      assertFalse(element instanceof MapPolygon);
+    }
+  }
+
+  @Test
+  public void testRemovePolylines() {
+    MapGeoJsonLayer layer = populateNewLayer();
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(6, elementCollection.getElements().size());
+    List<MapElement> removed = layer.removePolylines();
+    assertEquals(2, removed.size());
+    for (int i = 0; i < removed.size(); i++) {
+      MapElement element = removed.get(i);
+      assertNotNull(element);
+      assertTrue(element instanceof MapPolyline);
+    }
+    assertEquals(4, elementCollection.getElements().size());
+    for (int i = 0; i < 4; i += 2) {
+      MapElement element = elementCollection.getElements().get(i);
+      assertNotNull(element);
+      assertFalse(element instanceof MapPolyline);
+    }
+  }
+
+  @Test
+  public void testRemoveIcons() {
+    MapGeoJsonLayer layer = populateNewLayer();
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(6, elementCollection.getElements().size());
+    List<MapElement> removed = layer.removeIcons();
+    assertEquals(2, removed.size());
+    for (int i = 0; i < removed.size(); i++) {
+      MapElement element = removed.get(i);
+      assertNotNull(element);
+      assertTrue(element instanceof MapIcon);
+    }
+    assertEquals(4, elementCollection.getElements().size());
+    for (int i = 0; i < 4; i += 2) {
+      MapElement element = elementCollection.getElements().get(i);
+      assertNotNull(element);
+      assertFalse(element instanceof MapIcon);
+    }
+  }
+
+  private static MapGeoJsonLayer populateNewLayer() {
+    MapGeoJsonLayer layer = MOCK_MAP_FACTORIES.createMapGeoJsonLayer();
+    for (int i = 0; i < 2; i++) {
+      layer.getElements().add(MOCK_MAP_FACTORIES.createMapPolygon());
+      layer.getElements().add(MOCK_MAP_FACTORIES.createMapPolyline());
+      layer.getElements().add(MOCK_MAP_FACTORIES.createMapIcon());
+    }
+    return layer;
   }
 }

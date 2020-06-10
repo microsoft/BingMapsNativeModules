@@ -1,14 +1,20 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 package com.microsoft.maps.geojson;
 
 import static org.mockito.Mockito.doAnswer;
 
 import android.graphics.Color;
+import androidx.annotation.NonNull;
 import com.microsoft.maps.MapElement;
+import com.microsoft.maps.MapElementCollection;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.MockMapElementCollection;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import org.mockito.Mockito;
 
@@ -173,6 +179,48 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
 
     doAnswer(invocation -> iconsVisible.get()).when(layer).getIconsVisible();
 
+    doAnswer(
+            invocation -> {
+              ArrayList<MapElement> elementsToRemove = new ArrayList<>();
+              for (MapElement element : mockElementCollection.getElements()) {
+                if (element instanceof MapPolygon) {
+                  elementsToRemove.add(element);
+                }
+              }
+              removeAll(elementsToRemove, mockElementCollection);
+              return elementsToRemove;
+            })
+        .when(layer)
+        .removePolygons();
+
+    doAnswer(
+            invocation -> {
+              ArrayList<MapElement> elementsToRemove = new ArrayList<>();
+              for (MapElement element : mockElementCollection.getElements()) {
+                if (element instanceof MapPolyline) {
+                  elementsToRemove.add(element);
+                }
+              }
+              removeAll(elementsToRemove, mockElementCollection);
+              return elementsToRemove;
+            })
+        .when(layer)
+        .removePolylines();
+
+    doAnswer(
+            invocation -> {
+              ArrayList<MapElement> elementsToRemove = new ArrayList<>();
+              for (MapElement element : mockElementCollection.getElements()) {
+                if (element instanceof MapIcon) {
+                  elementsToRemove.add(element);
+                }
+              }
+              removeAll(elementsToRemove, mockElementCollection);
+              return elementsToRemove;
+            })
+        .when(layer)
+        .removeIcons();
+
     return layer;
   }
 
@@ -320,5 +368,15 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
     doAnswer(invocation -> isVisible.get()).when(polygon).isVisible();
 
     return polygon;
+  }
+
+  private void removeAll(
+      @NonNull ArrayList<MapElement> elementsToRemove, @NonNull MapElementCollection elements) {
+    ArrayList<MapElement> removedList = new ArrayList<>();
+    for (int i = 0; i < elementsToRemove.size(); i++) {
+      MapElement element = elementsToRemove.get(i);
+      removedList.add(element);
+      elements.remove(element);
+    }
   }
 }

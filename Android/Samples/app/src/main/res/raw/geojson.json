@@ -13,6 +13,23 @@
       "coordinates": [-107.55, 43]
     },
     {
+      "type": "Point",
+      "coordinates": [30, 10]
+    },
+    {
+      "type": "LineString",
+      "coordinates": [
+        [30, 10], [10, 30], [40, 40]
+      ]
+    },
+    {
+      "type": "MultiLineString",
+      "coordinates": [
+        [[10, 10], [20, 20], [10, 40]],
+        [[40, 40], [30, 30], [40, 20], [30, 10]]
+      ]
+    },
+    {
       "type": "MultiPolygon",
       "coordinates": [
         [
