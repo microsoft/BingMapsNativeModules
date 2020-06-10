@@ -6,7 +6,6 @@ import com.microsoft.maps.AltitudeReferenceSystem;
 import com.microsoft.maps.Geopath;
 import com.microsoft.maps.Geopoint;
 import com.microsoft.maps.Geoposition;
-import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
@@ -20,19 +19,17 @@ import org.json.JSONObject;
  * the GeoJSON.
  *
  * <p>Created by Elizabeth Bartusiak (t-elbart) on 05/22/2020
- *
- * <p>TODO: return a MapGeoJsonLayer instead of MapElementLayer
  */
 public class GeoJsonParser {
 
-  private MapElementLayer mLayer;
+  private MapGeoJsonLayer mLayer;
   private MapFactories mFactory;
 
   private static final MapFactories DEFAULT_MAP_FACTORIES =
       new MapFactories() {
         @Override
-        public MapElementLayer createMapElementLayer() {
-          return new MapElementLayer();
+        public MapGeoJsonLayer createMapElementLayer() {
+          return new MapGeoJsonLayer();
         }
 
         @Override
@@ -55,14 +52,14 @@ public class GeoJsonParser {
   GeoJsonParser() {}
 
   /**
-   * TODO: return MapGeoJsonLayer
+   * Parses geojson String and returns a MapGeoJsonLayer with all shapes from the geojson String.
    *
    * @param geojson String of GeoJSON to parse
-   * @return MapElementLayer containing all objects
+   * @return MapGeoJsonLayer containing all objects
    * @throws GeoJsonParseException
    */
   @NonNull
-  public static MapElementLayer parse(@NonNull String geojson) throws GeoJsonParseException {
+  public static MapGeoJsonLayer parse(@NonNull String geojson) throws GeoJsonParseException {
     if (geojson == null) {
       throw new IllegalArgumentException("Input String cannot be null.");
     }
@@ -77,9 +74,9 @@ public class GeoJsonParser {
 
   @VisibleForTesting
   @NonNull
-  MapElementLayer internalParse(@NonNull String geojson, @NonNull MapFactories factory)
+  MapGeoJsonLayer internalParse(@NonNull String geojson, @NonNull MapFactories factory)
       throws JSONException, GeoJsonParseException {
-    mLayer = factory.createMapElementLayer();
+    mLayer = (MapGeoJsonLayer) factory.createMapElementLayer();
     mFactory = factory;
 
     JSONObject object = new JSONObject(geojson);
