@@ -1,11 +1,14 @@
 package com.microsoft.maps.geojson;
 
 import android.graphics.Color;
+import androidx.annotation.NonNull;
 import com.microsoft.maps.MapElement;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class returned by GeoJsonParser. Optionally, the overall style of the shapes in the layer can be
@@ -152,5 +155,49 @@ public class MapGeoJsonLayer extends MapElementLayer {
         }
       }
     }
+  }
+
+  @NonNull
+  private List<MapElement> removeAll(@NonNull ArrayList<MapElement> elementsToRemove) {
+    ArrayList<MapElement> removedList = new ArrayList<>();
+    for (int i = 0; i < elementsToRemove.size(); i++) {
+      MapElement element = elementsToRemove.get(i);
+      removedList.add(element);
+      getElements().remove(element);
+    }
+    return removedList;
+  }
+
+  /** Removes all polygons from the layer and returns them in a list of MapElements. */
+  public List<MapElement> removePolygons() {
+    ArrayList<MapElement> elementsToRemove = new ArrayList<>();
+    for (MapElement element : getElements()) {
+      if (element instanceof MapPolygon) {
+        elementsToRemove.add(element);
+      }
+    }
+    return removeAll(elementsToRemove);
+  }
+
+  /** Removes all polylines from the layer and returns them in a list of MapElements. */
+  public List<MapElement> removePolylines() {
+    ArrayList<MapElement> elementsToRemove = new ArrayList<>();
+    for (MapElement element : getElements()) {
+      if (element instanceof MapPolyline) {
+        elementsToRemove.add(element);
+      }
+    }
+    return removeAll(elementsToRemove);
+  }
+
+  /** Removes all icons from the layer and returns them in a list of MapElements. */
+  public List<MapElement> removeIcons() {
+    ArrayList<MapElement> elementsToRemove = new ArrayList<>();
+    for (MapElement element : getElements()) {
+      if (element instanceof MapIcon) {
+        elementsToRemove.add(element);
+      }
+    }
+    return removeAll(elementsToRemove);
   }
 }
