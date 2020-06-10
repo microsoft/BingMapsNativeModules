@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 package com.microsoft.maps.geojson;
 
 import android.graphics.Color;
@@ -157,18 +160,15 @@ public class MapGeoJsonLayer extends MapElementLayer {
     }
   }
 
-  @NonNull
-  private List<MapElement> removeAll(@NonNull ArrayList<MapElement> elementsToRemove) {
-    ArrayList<MapElement> removedList = new ArrayList<>();
+  private void removeAll(@NonNull ArrayList<MapElement> elementsToRemove) {
     for (int i = 0; i < elementsToRemove.size(); i++) {
       MapElement element = elementsToRemove.get(i);
-      removedList.add(element);
       getElements().remove(element);
     }
-    return removedList;
   }
 
   /** Removes all polygons from the layer and returns them in a list of MapElements. */
+  @NonNull
   public List<MapElement> removePolygons() {
     ArrayList<MapElement> elementsToRemove = new ArrayList<>();
     for (MapElement element : getElements()) {
@@ -176,10 +176,12 @@ public class MapGeoJsonLayer extends MapElementLayer {
         elementsToRemove.add(element);
       }
     }
-    return removeAll(elementsToRemove);
+    removeAll(elementsToRemove);
+    return elementsToRemove;
   }
 
   /** Removes all polylines from the layer and returns them in a list of MapElements. */
+  @NonNull
   public List<MapElement> removePolylines() {
     ArrayList<MapElement> elementsToRemove = new ArrayList<>();
     for (MapElement element : getElements()) {
@@ -187,10 +189,12 @@ public class MapGeoJsonLayer extends MapElementLayer {
         elementsToRemove.add(element);
       }
     }
-    return removeAll(elementsToRemove);
+    removeAll(elementsToRemove);
+    return elementsToRemove;
   }
 
   /** Removes all icons from the layer and returns them in a list of MapElements. */
+  @NonNull
   public List<MapElement> removeIcons() {
     ArrayList<MapElement> elementsToRemove = new ArrayList<>();
     for (MapElement element : getElements()) {
@@ -198,6 +202,7 @@ public class MapGeoJsonLayer extends MapElementLayer {
         elementsToRemove.add(element);
       }
     }
-    return removeAll(elementsToRemove);
+    removeAll(elementsToRemove);
+    return elementsToRemove;
   }
 }

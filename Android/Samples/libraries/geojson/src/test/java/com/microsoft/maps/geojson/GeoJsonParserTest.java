@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 package com.microsoft.maps.geojson;
 
 import static org.junit.Assert.assertEquals;

@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 package com.microsoft.maps.geojson;
 
 import static org.mockito.Mockito.doAnswer;
@@ -12,7 +15,6 @@ import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.MockMapElementCollection;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import org.mockito.Mockito;
 
@@ -185,7 +187,8 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
                   elementsToRemove.add(element);
                 }
               }
-              return removeAll(elementsToRemove, mockElementCollection);
+              removeAll(elementsToRemove, mockElementCollection);
+              return elementsToRemove;
             })
         .when(layer)
         .removePolygons();
@@ -198,7 +201,8 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
                   elementsToRemove.add(element);
                 }
               }
-              return removeAll(elementsToRemove, mockElementCollection);
+              removeAll(elementsToRemove, mockElementCollection);
+              return elementsToRemove;
             })
         .when(layer)
         .removePolylines();
@@ -211,7 +215,8 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
                   elementsToRemove.add(element);
                 }
               }
-              return removeAll(elementsToRemove, mockElementCollection);
+              removeAll(elementsToRemove, mockElementCollection);
+              return elementsToRemove;
             })
         .when(layer)
         .removeIcons();
@@ -365,8 +370,7 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
     return polygon;
   }
 
-  @NonNull
-  private List<MapElement> removeAll(
+  private void removeAll(
       @NonNull ArrayList<MapElement> elementsToRemove, @NonNull MapElementCollection elements) {
     ArrayList<MapElement> removedList = new ArrayList<>();
     for (int i = 0; i < elementsToRemove.size(); i++) {
@@ -374,6 +378,5 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
       removedList.add(element);
       elements.remove(element);
     }
-    return removedList;
   }
 }
