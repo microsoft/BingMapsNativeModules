@@ -71,6 +71,31 @@ float getStrokeWidth()
 void setStrokeWidth(float strokeWidth)
 ```
 
+## Methods
+
+### RemoveIcons
+
+Removes all icons from the layer and returns them in a list of MapElements.
+
+```Java
+List<MapElement> removeIcons()
+```
+
+### RemovePolylines
+
+Removes all polylines from the layer and returns them in a list of MapElements.
+
+```Java
+List<MapElement> removePolylines()
+```
+
+### RemovePolygons
+
+Removes all polygons from the layer and returns them in a list of MapElements.
+
+```Java
+List<MapElement> removePolygons()
+```
 
 ## Examples
 
