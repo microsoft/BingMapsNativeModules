@@ -21,28 +21,20 @@ public class MapGeoJsonLayer extends MapElementLayer {
   private boolean mIsStrokeDashed;
   private int mStrokeWidth = 1;
 
-  private boolean mArePolygonsVisible;
-  private boolean mArePolylinesVisible;
-  private boolean mAreIconsVisible;
+  private boolean mArePolygonsVisible = true;
+  private boolean mArePolylinesVisible = true;
+  private boolean mAreIconsVisible = true;
 
   public MapGeoJsonLayer() {
     super();
   }
 
-  /**
-   * Gets the ARGB format color to fill polygons.
-   *
-   * @return ARGB color to fill polygons.
-   */
+  /** Gets the ARGB format color to fill polygons. */
   public int getFillColor() {
     return mFillColor;
   }
 
-  /**
-   * Sets the ARGB fill color of polygons.
-   *
-   * @param fillColor the ARGB color to fill polygons
-   */
+  /** Sets the ARGB fill color of polygons. */
   public void setFillColor(int fillColor) {
     if (fillColor != mFillColor) {
       mFillColor = fillColor;
@@ -54,20 +46,12 @@ public class MapGeoJsonLayer extends MapElementLayer {
     }
   }
 
-  /**
-   * Gets the ARGB format color used to outline polygons and draw polylines.
-   *
-   * @return ARGB format color
-   */
+  /** Gets the ARGB format color used to outline polygons and draw polylines. */
   public int getStrokeColor() {
     return mStrokeColor;
   }
 
-  /**
-   * Sets the ARGB format color used to outline polygons and draw polylines.
-   *
-   * @param strokeColor the ARGB format color
-   */
+  /** Sets the ARGB format color used to outline polygons and draw polylines. */
   public void setStrokeColor(int strokeColor) {
     if (strokeColor != mStrokeColor) {
       mStrokeColor = strokeColor;
@@ -81,20 +65,12 @@ public class MapGeoJsonLayer extends MapElementLayer {
     }
   }
 
-  /**
-   * Tells whether the lines are dashed in polylines and polygons.
-   *
-   * @return boolean value of dashed or not
-   */
+  /** Tells whether the lines are dashed in polylines and polygons. */
   public boolean getStrokeDashed() {
     return mIsStrokeDashed;
   }
 
-  /**
-   * Sets whether the lines are dashed or not in polygons and polylines.
-   *
-   * @param isStrokeDashed whether the lines should be dashed or not
-   */
+  /** Sets whether the lines are dashed or not in polygons and polylines. */
   public void setStrokeDashed(boolean isStrokeDashed) {
     if (mIsStrokeDashed != isStrokeDashed) {
       mIsStrokeDashed = isStrokeDashed;
@@ -108,20 +84,12 @@ public class MapGeoJsonLayer extends MapElementLayer {
     }
   }
 
-  /**
-   * Gets the line width of polylines and the outline of polygons.
-   *
-   * @return int value of line width
-   */
+  /** Gets the line width of polylines and the outline of polygons. */
   public int getStrokeWidth() {
     return mStrokeWidth;
   }
 
-  /**
-   * Sets the line width for polylines and the outline of polygons.
-   *
-   * @param strokeWidth int value of line width
-   */
+  /** Sets the line width for polylines and the outline of polygons. */
   public void setStrokeWidth(int strokeWidth) {
     if (mStrokeWidth != strokeWidth) {
       mStrokeWidth = strokeWidth;
@@ -135,20 +103,12 @@ public class MapGeoJsonLayer extends MapElementLayer {
     }
   }
 
-  /**
-   * Tells whether polygons are visible or not.
-   *
-   * @return boolean true if polygons visible, false otherwise
-   */
+  /** Tells whether polygons are visible or not. */
   public boolean getPolygonsVisible() {
     return mArePolygonsVisible;
   }
 
-  /**
-   * Sets whether polygons are visible or not.
-   *
-   * @param visible boolean value for whether polygons are visible or not
-   */
+  /** Sets whether polygons are visible or not. */
   public void setPolygonsVisible(boolean visible) {
     if (mArePolygonsVisible != visible) {
       mArePolygonsVisible = visible;
@@ -160,20 +120,12 @@ public class MapGeoJsonLayer extends MapElementLayer {
     }
   }
 
-  /**
-   * Tells whether polylines are visible or not.
-   *
-   * @return boolean true if polylines visible, false otherwise
-   */
+  /** Tells whether polylines are visible or not. */
   public boolean getPolylinesVisible() {
     return mArePolylinesVisible;
   }
 
-  /**
-   * Sets whether polylines are visible or not.
-   *
-   * @param visible boolean value for whether polylines are visible or not
-   */
+  /** Sets whether polylines are visible or not. */
   public void setPolylinesVisible(boolean visible) {
     if (mArePolylinesVisible != visible) {
       mArePolylinesVisible = visible;
@@ -185,20 +137,12 @@ public class MapGeoJsonLayer extends MapElementLayer {
     }
   }
 
-  /**
-   * Tells whether icons are visible or not.
-   *
-   * @return boolean true if icons visible, false otherwise
-   */
+  /** Tells whether icons are visible or not. */
   public boolean getIconsVisible() {
     return mArePolylinesVisible;
   }
 
-  /**
-   * Sets whether icons are visible or not.
-   *
-   * @param visible boolean value for whether icons are visible or not
-   */
+  /** Sets whether icons are visible or not. */
   public void setIconsVisible(boolean visible) {
     if (mAreIconsVisible != visible) {
       mAreIconsVisible = visible;
