@@ -9,6 +9,7 @@ import com.microsoft.maps.AltitudeReferenceSystem;
 import com.microsoft.maps.Geopath;
 import com.microsoft.maps.Geopoint;
 import com.microsoft.maps.Geoposition;
+import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
@@ -25,7 +26,7 @@ import org.json.JSONObject;
  */
 public class GeoJsonParser {
 
-  private MapGeoJsonLayer mLayer;
+  private MapElementLayer mLayer;
   private MapFactories mFactory;
 
   private static final MapFactories DEFAULT_MAP_FACTORIES =
@@ -69,7 +70,7 @@ public class GeoJsonParser {
 
     GeoJsonParser instance = new GeoJsonParser();
     try {
-      return instance.internalParse(geojson, DEFAULT_MAP_FACTORIES);
+      return (MapGeoJsonLayer) instance.internalParse(geojson, DEFAULT_MAP_FACTORIES);
     } catch (JSONException e) {
       throw new GeoJsonParseException(e.getMessage());
     }
@@ -77,9 +78,9 @@ public class GeoJsonParser {
 
   @VisibleForTesting
   @NonNull
-  MapGeoJsonLayer internalParse(@NonNull String geojson, @NonNull MapFactories factory)
+  MapElementLayer internalParse(@NonNull String geojson, @NonNull MapFactories factory)
       throws JSONException, GeoJsonParseException {
-    mLayer = (MapGeoJsonLayer) factory.createMapElementLayer();
+    mLayer = factory.createMapElementLayer();
     mFactory = factory;
 
     JSONObject object = new JSONObject(geojson);
