@@ -10,6 +10,13 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
+
+  # Create dummy secrets.gradle
+- bash:
+    echo ext.credentialsKey = "DummyKey" >> secrets.gradle
+  displayName: Create secrets.gradle
+  workingDirectory: Android/Samples
+
 - task: Gradle@2
   inputs:
     workingDirectory: 'Android/Samples'
