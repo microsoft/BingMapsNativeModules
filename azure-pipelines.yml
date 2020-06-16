@@ -13,7 +13,8 @@ steps:
 
   # Create dummy secrets.gradle
 - bash:
-    echo ext.credentialsKey = "DummyKey" >> secrets.gradle
+    echo ext.credentialsKey = "DummyKey" > secrets.gradle
+    type secrets.gradle
   displayName: Create secrets.gradle
   workingDirectory: 'Android/Samples/app'
 
