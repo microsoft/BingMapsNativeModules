@@ -7,23 +7,22 @@
 //  Licensed under the MIT license.
 //
 
-#import "MSGeoJsonParser.h"
+#import "MSMapGeoJsonParser.h"
 #import <MicrosoftMaps/MicrosoftMaps.h>
 
-@implementation MSGeoJsonParser {
+@implementation MSMapGeoJsonParser {
   MSMapElementLayer *layer;
 };
 
 + (MSMapElementLayer *)parse:(NSString *)geojson {
   if (geojson == (id)[NSNull null] || geojson.length == 0) {
-    NSException *exception =
-        [NSException exceptionWithName:NSInvalidArgumentException
-                                reason:@"Input cannot be null."
-                              userInfo:nil];
-    @throw exception;
+    @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                   reason:@"Input cannot be null."
+                                 userInfo:nil];
+    ;
   }
 
-  MSGeoJsonParser *instance = [[MSGeoJsonParser alloc] init];
+  MSMapGeoJsonParser *instance = [[MSMapGeoJsonParser alloc] init];
   return [instance internalParse:geojson];
 }
 
@@ -37,11 +36,10 @@
                                         error:&jsonError];
 
   if (jsonObject == nil) {
-    NSException *exception =
-        [NSException exceptionWithName:jsonError.domain
-                                reason:jsonError.debugDescription
-                              userInfo:nil];
-    @throw exception;
+    @throw [NSException exceptionWithName:jsonError.domain
+                                   reason:jsonError.debugDescription
+                                 userInfo:nil];
+    ;
   }
 
   NSString *type =
@@ -72,11 +70,10 @@
 - (NSArray *)getCoordinates:(NSDictionary *)object {
   NSArray *coordinates = [object objectForKey:@"coordinates"];
   if (coordinates == nil) {
-    NSException *exception =
-        [NSException exceptionWithName:@"JSONException"
-                                reason:@"Error getting coordinates array."
-                              userInfo:nil];
-    @throw exception;
+    @throw [NSException exceptionWithName:@"JSONException"
+                                   reason:@"Error getting coordinates array."
+                                 userInfo:nil];
+    ;
   } else {
     return coordinates;
   }
@@ -126,12 +123,11 @@
                                          longitude:longitude
                                           altitude:0];
   } else {
-    NSException *exception =
-        [NSException exceptionWithName:@"MSGeoJsonParseException"
-                                reason:@"coordinates array must contain at "
-                                       @"least latitude and longitude."
-                              userInfo:nil];
-    @throw exception;
+    @throw [NSException exceptionWithName:@"MSGeoJsonParseException"
+                                   reason:@"coordinates array must contain at "
+                                          @"least latitude and longitude."
+                                 userInfo:nil];
+    ;
   }
 }
 

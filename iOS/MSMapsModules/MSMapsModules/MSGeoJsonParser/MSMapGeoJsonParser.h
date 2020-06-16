@@ -11,10 +11,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MSGeoJsonParser : NSObject
+@interface MSMapGeoJsonParser : NSObject
 
-- (MSGeoJsonParser *)init NS_UNAVAILABLE;
-+ (MSGeoJsonParser *)new NS_UNAVAILABLE;
+- (MSMapGeoJsonParser *)init NS_UNAVAILABLE;
++ (MSMapGeoJsonParser *)new NS_UNAVAILABLE;
 + (MSMapElementLayer *)parse:(NSString *)geojson;
 
 @end

@@ -8,7 +8,7 @@
 //
 
 #import "ViewController.h"
-#import "MSGeoJsonParser.h"
+#import "MSMapGeoJsonParser.h"
 #import <MicrosoftMaps/MicrosoftMaps.h>
 
 @interface ViewController ()
@@ -22,7 +22,8 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  self.mMapView.credentialsKey = @"YOUR_KEY_HERE";
+  self.mMapView.credentialsKey =
+      @"AtU8jGR_LBjMwjDhkdtTr1_KnN-MA9GI-lgtC2VzOuzgwS5lhPPUCRrSUpSk-Edj";
 
   MSGeopoint *point = [[MSGeopoint alloc] initWithLatitude:47.609466
                                                  longitude:-122.265185
@@ -33,7 +34,7 @@
   [self.mMapView setScene:scene withAnimationKind:MSMapAnimationKindNone];
 
   NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [30, 10]}";
-  MSMapElementLayer *layer = [MSGeoJsonParser parse:geojson];
+  MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson];
   [self.mMapView.layers addMapLayer:layer];
 }
 

@@ -7,15 +7,15 @@
 //  Licensed under the MIT license.
 //
 
-#import "MSGeoJsonParser.h"
+#import "MSMapGeoJsonParser.h"
 #import <MicrosoftMaps/MicrosoftMaps.h>
 #import <XCTest/XCTest.h>
 
-@interface MSGeoJsonParserTest : XCTestCase
+@interface MSMapGeoJsonParserTest : XCTestCase
 
 @end
 
-@implementation MSGeoJsonParserTest
+@implementation MSMapGeoJsonParserTest
 
 - (void)setUp {
   // Put setup code here. This method is called before the invocation of each
@@ -29,7 +29,7 @@
 
 - (void)testParsePoint {
   NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [30, 10]}";
-  MSMapElementLayer *layer = [MSGeoJsonParser parse:geojson];
+  MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson];
   MSMapElementCollection *collection = layer.elements;
   XCTAssertNotNil(collection);
   XCTAssertEqual(1, collection.count);
@@ -48,23 +48,23 @@
 }
 
 - (void)testNullInputThrowsException {
-  XCTAssertThrowsSpecificNamed([MSGeoJsonParser parse:NULL], NSException,
+  XCTAssertThrowsSpecificNamed([MSMapGeoJsonParser parse:NULL], NSException,
                                NSInvalidArgumentException,
                                @"Input String cannot be null.");
 }
 
 - (void)testEmptyInputThrowsException {
-  XCTAssertThrows([MSGeoJsonParser parse:@""]);
+  XCTAssertThrows([MSMapGeoJsonParser parse:@""]);
 }
 
 - (void)testNoBracketsJsonThrowsException {
-  XCTAssertThrows([MSGeoJsonParser
+  XCTAssertThrows([MSMapGeoJsonParser
       parse:@"\"type\": \"Point\", \"coordinates\": [-122.26, 47.609]"]);
 }
 
 - (void)testNoCoordinatesThrowsException {
   NSString *geojson = @"{\"type\": \"Point\"}";
-  XCTAssertThrowsSpecificNamed([MSGeoJsonParser parse:geojson], NSException,
+  XCTAssertThrowsSpecificNamed([MSMapGeoJsonParser parse:geojson], NSException,
                                @"JSONException",
                                @"Error getting coordinates array.");
 }
@@ -72,7 +72,8 @@
 - (void)testEmptyCoordinatesThrowsException {
   NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": []}";
   XCTAssertThrowsSpecificNamed(
-      [MSGeoJsonParser parse:geojson], NSException, @"MSGeoJsonParseException",
+      [MSMapGeoJsonParser parse:geojson], NSException,
+      @"MSGeoJsonParseException",
       @"coordinates array must contain at least latitude and longitude.");
 }
 

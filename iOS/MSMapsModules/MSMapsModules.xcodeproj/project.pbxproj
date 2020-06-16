@@ -16,8 +16,8 @@
 		8475E5B7249942F1003F4291 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8475E5B5249942F1003F4291 /* LaunchScreen.storyboard */; };
 		8475E5BA249942F1003F4291 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8475E5B9249942F1003F4291 /* main.m */; };
 		8475E5C4249942F2003F4291 /* MSMapsModulesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8475E5C3249942F2003F4291 /* MSMapsModulesTests.m */; };
-		84B371342499457300F568EE /* MSGeoJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B371332499457300F568EE /* MSGeoJsonParser.m */; };
-		84B371362499468900F568EE /* MSGeoJsonParserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B371352499468900F568EE /* MSGeoJsonParserTest.m */; };
+		84B371342499457300F568EE /* MSMapGeoJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B371332499457300F568EE /* MSMapGeoJsonParser.m */; };
+		84B371362499468900F568EE /* MSMapGeoJsonParserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B371352499468900F568EE /* MSMapGeoJsonParserTest.m */; };
 		C7DF2E24C714508DC68935C0 /* libPods-MSMapsModules.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8181CD8BF7D4BAB2BC37AE /* libPods-MSMapsModules.a */; };
 /* End PBXBuildFile section */
 
@@ -51,9 +51,9 @@
 		8475E5BF249942F2003F4291 /* MSMapsModulesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MSMapsModulesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8475E5C3249942F2003F4291 /* MSMapsModulesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSMapsModulesTests.m; sourceTree = "<group>"; };
 		8475E5C5249942F2003F4291 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		84B371322499457300F568EE /* MSGeoJsonParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSGeoJsonParser.h; sourceTree = "<group>"; };
-		84B371332499457300F568EE /* MSGeoJsonParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSGeoJsonParser.m; sourceTree = "<group>"; };
-		84B371352499468900F568EE /* MSGeoJsonParserTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSGeoJsonParserTest.m; sourceTree = "<group>"; };
+		84B371322499457300F568EE /* MSMapGeoJsonParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSMapGeoJsonParser.h; sourceTree = "<group>"; };
+		84B371332499457300F568EE /* MSMapGeoJsonParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSMapGeoJsonParser.m; sourceTree = "<group>"; };
+		84B371352499468900F568EE /* MSMapGeoJsonParserTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSMapGeoJsonParserTest.m; sourceTree = "<group>"; };
 		991BE2D0049EE0D1073D2D7B /* Pods-MSMapsModulesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModulesTests.release.xcconfig"; path = "Target Support Files/Pods-MSMapsModulesTests/Pods-MSMapsModulesTests.release.xcconfig"; sourceTree = "<group>"; };
 		D27FAB2510FBFA00B3AB46F0 /* Pods-MSMapsModulesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModulesTests.debug.xcconfig"; path = "Target Support Files/Pods-MSMapsModulesTests/Pods-MSMapsModulesTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -140,9 +140,9 @@
 		84B371312499452100F568EE /* MSGeoJsonParser */ = {
 			isa = PBXGroup;
 			children = (
-				84B371322499457300F568EE /* MSGeoJsonParser.h */,
-				84B371332499457300F568EE /* MSGeoJsonParser.m */,
-				84B371352499468900F568EE /* MSGeoJsonParserTest.m */,
+				84B371322499457300F568EE /* MSMapGeoJsonParser.h */,
+				84B371332499457300F568EE /* MSMapGeoJsonParser.m */,
+				84B371352499468900F568EE /* MSMapGeoJsonParserTest.m */,
 			);
 			path = MSGeoJsonParser;
 			sourceTree = "<group>";
@@ -325,7 +325,7 @@
 			files = (
 				8475E5AF249942F0003F4291 /* ViewController.m in Sources */,
 				8475E5A9249942F0003F4291 /* AppDelegate.m in Sources */,
-				84B371342499457300F568EE /* MSGeoJsonParser.m in Sources */,
+				84B371342499457300F568EE /* MSMapGeoJsonParser.m in Sources */,
 				8475E5BA249942F1003F4291 /* main.m in Sources */,
 				8475E5AC249942F0003F4291 /* SceneDelegate.m in Sources */,
 			);
@@ -335,7 +335,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84B371362499468900F568EE /* MSGeoJsonParserTest.m in Sources */,
+				84B371362499468900F568EE /* MSMapGeoJsonParserTest.m in Sources */,
 				8475E5C4249942F2003F4291 /* MSMapsModulesTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
