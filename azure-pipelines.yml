@@ -12,7 +12,7 @@ pool:
 steps:
 
   # Create dummy secrets.gradle
-- bash:
+- bash: |
     echo ext.credentialsKey = "DummyKey" > secrets.gradle
     echo `<secrets.gradle`
   displayName: Create secrets.gradle
