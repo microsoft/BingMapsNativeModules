@@ -15,7 +15,7 @@ steps:
 - bash:
     echo ext.credentialsKey = "DummyKey" >> secrets.gradle
   displayName: Create secrets.gradle
-  workingDirectory: Android/Samples
+  workingDirectory: 'Android/Samples/app'
 
 - task: Gradle@2
   inputs:
