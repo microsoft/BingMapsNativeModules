@@ -1,3 +1,4 @@
+[![Build Status](https://dev.azure.com/ms/BingMapsNativeModules/_apis/build/status/microsoft.BingMapsNativeModules?branchName=master)](https://dev.azure.com/ms/BingMapsNativeModules/_build/latest?definitionId=350&branchName=master)
 
 # Contributing
 

@@ -1,0 +1,28 @@
+# Android
+# Build your Android project with Gradle.
+# Add steps that test, sign, and distribute the APK, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/android
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+
+  # Create dummy secrets.gradle
+- bash: |
+    echo ext.credentialsKey = "\"DummyKey\"" > secrets.gradle
+    echo `<secrets.gradle`
+  displayName: Create secrets.gradle
+  workingDirectory: 'Android/Samples/app'
+
+- task: Gradle@2
+  inputs:
+    workingDirectory: 'Android/Samples'
+    gradleWrapperFile: 'Android/Samples/gradlew'
+    gradleOptions: '-Xmx3072m'
+    publishJUnitResults: false
+    testResultsFiles: '**/TEST-*.xml'
+    tasks: 'build'
