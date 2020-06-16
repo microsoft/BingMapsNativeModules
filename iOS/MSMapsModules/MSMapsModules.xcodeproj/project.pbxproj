@@ -1,0 +1,590 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		097236FE62CE10A68558F9BC /* libPods-MSMapsModulesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65267513927AFDB5C333D2EF /* libPods-MSMapsModulesTests.a */; };
+		8475E5A9249942F0003F4291 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8475E5A8249942F0003F4291 /* AppDelegate.m */; };
+		8475E5AC249942F0003F4291 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8475E5AB249942F0003F4291 /* SceneDelegate.m */; };
+		8475E5AF249942F0003F4291 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8475E5AE249942F0003F4291 /* ViewController.m */; };
+		8475E5B2249942F0003F4291 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8475E5B0249942F0003F4291 /* Main.storyboard */; };
+		8475E5B4249942F1003F4291 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8475E5B3249942F1003F4291 /* Assets.xcassets */; };
+		8475E5B7249942F1003F4291 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8475E5B5249942F1003F4291 /* LaunchScreen.storyboard */; };
+		8475E5BA249942F1003F4291 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8475E5B9249942F1003F4291 /* main.m */; };
+		8475E5C4249942F2003F4291 /* MSMapsModulesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8475E5C3249942F2003F4291 /* MSMapsModulesTests.m */; };
+		84B371342499457300F568EE /* MSGeoJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B371332499457300F568EE /* MSGeoJsonParser.m */; };
+		84B371362499468900F568EE /* MSGeoJsonParserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B371352499468900F568EE /* MSGeoJsonParserTest.m */; };
+		C7DF2E24C714508DC68935C0 /* libPods-MSMapsModules.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8181CD8BF7D4BAB2BC37AE /* libPods-MSMapsModules.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8475E5C0249942F2003F4291 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8475E59C249942F0003F4291 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8475E5A3249942F0003F4291;
+			remoteInfo = MSMapsModules;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2E8181CD8BF7D4BAB2BC37AE /* libPods-MSMapsModules.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MSMapsModules.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		65267513927AFDB5C333D2EF /* libPods-MSMapsModulesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MSMapsModulesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		76CEAE978630794E10CA6FE1 /* Pods-MSMapsModules.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModules.debug.xcconfig"; path = "Target Support Files/Pods-MSMapsModules/Pods-MSMapsModules.debug.xcconfig"; sourceTree = "<group>"; };
+		7B93EC941D20AD85D3DBD643 /* Pods-MSMapsModules.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModules.release.xcconfig"; path = "Target Support Files/Pods-MSMapsModules/Pods-MSMapsModules.release.xcconfig"; sourceTree = "<group>"; };
+		8475E5A4249942F0003F4291 /* MSMapsModules.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MSMapsModules.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8475E5A7249942F0003F4291 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		8475E5A8249942F0003F4291 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		8475E5AA249942F0003F4291 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		8475E5AB249942F0003F4291 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		8475E5AD249942F0003F4291 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		8475E5AE249942F0003F4291 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		8475E5B1249942F0003F4291 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8475E5B3249942F1003F4291 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8475E5B6249942F1003F4291 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8475E5B8249942F1003F4291 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8475E5B9249942F1003F4291 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		8475E5BF249942F2003F4291 /* MSMapsModulesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MSMapsModulesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8475E5C3249942F2003F4291 /* MSMapsModulesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSMapsModulesTests.m; sourceTree = "<group>"; };
+		8475E5C5249942F2003F4291 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		84B371322499457300F568EE /* MSGeoJsonParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSGeoJsonParser.h; sourceTree = "<group>"; };
+		84B371332499457300F568EE /* MSGeoJsonParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSGeoJsonParser.m; sourceTree = "<group>"; };
+		84B371352499468900F568EE /* MSGeoJsonParserTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSGeoJsonParserTest.m; sourceTree = "<group>"; };
+		991BE2D0049EE0D1073D2D7B /* Pods-MSMapsModulesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModulesTests.release.xcconfig"; path = "Target Support Files/Pods-MSMapsModulesTests/Pods-MSMapsModulesTests.release.xcconfig"; sourceTree = "<group>"; };
+		D27FAB2510FBFA00B3AB46F0 /* Pods-MSMapsModulesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModulesTests.debug.xcconfig"; path = "Target Support Files/Pods-MSMapsModulesTests/Pods-MSMapsModulesTests.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8475E5A1249942F0003F4291 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C7DF2E24C714508DC68935C0 /* libPods-MSMapsModules.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8475E5BC249942F2003F4291 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				097236FE62CE10A68558F9BC /* libPods-MSMapsModulesTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		51887FE793A3D7C187BAA718 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				76CEAE978630794E10CA6FE1 /* Pods-MSMapsModules.debug.xcconfig */,
+				7B93EC941D20AD85D3DBD643 /* Pods-MSMapsModules.release.xcconfig */,
+				D27FAB2510FBFA00B3AB46F0 /* Pods-MSMapsModulesTests.debug.xcconfig */,
+				991BE2D0049EE0D1073D2D7B /* Pods-MSMapsModulesTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		8475E59B249942F0003F4291 = {
+			isa = PBXGroup;
+			children = (
+				8475E5A6249942F0003F4291 /* MSMapsModules */,
+				8475E5C2249942F2003F4291 /* MSMapsModulesTests */,
+				8475E5A5249942F0003F4291 /* Products */,
+				51887FE793A3D7C187BAA718 /* Pods */,
+				9BAD9B3617DB1A482704E873 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		8475E5A5249942F0003F4291 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8475E5A4249942F0003F4291 /* MSMapsModules.app */,
+				8475E5BF249942F2003F4291 /* MSMapsModulesTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8475E5A6249942F0003F4291 /* MSMapsModules */ = {
+			isa = PBXGroup;
+			children = (
+				84B371312499452100F568EE /* MSGeoJsonParser */,
+				8475E5A7249942F0003F4291 /* AppDelegate.h */,
+				8475E5A8249942F0003F4291 /* AppDelegate.m */,
+				8475E5AA249942F0003F4291 /* SceneDelegate.h */,
+				8475E5AB249942F0003F4291 /* SceneDelegate.m */,
+				8475E5AD249942F0003F4291 /* ViewController.h */,
+				8475E5AE249942F0003F4291 /* ViewController.m */,
+				8475E5B0249942F0003F4291 /* Main.storyboard */,
+				8475E5B3249942F1003F4291 /* Assets.xcassets */,
+				8475E5B5249942F1003F4291 /* LaunchScreen.storyboard */,
+				8475E5B8249942F1003F4291 /* Info.plist */,
+				8475E5B9249942F1003F4291 /* main.m */,
+			);
+			path = MSMapsModules;
+			sourceTree = "<group>";
+		};
+		8475E5C2249942F2003F4291 /* MSMapsModulesTests */ = {
+			isa = PBXGroup;
+			children = (
+				8475E5C3249942F2003F4291 /* MSMapsModulesTests.m */,
+				8475E5C5249942F2003F4291 /* Info.plist */,
+			);
+			path = MSMapsModulesTests;
+			sourceTree = "<group>";
+		};
+		84B371312499452100F568EE /* MSGeoJsonParser */ = {
+			isa = PBXGroup;
+			children = (
+				84B371322499457300F568EE /* MSGeoJsonParser.h */,
+				84B371332499457300F568EE /* MSGeoJsonParser.m */,
+				84B371352499468900F568EE /* MSGeoJsonParserTest.m */,
+			);
+			path = MSGeoJsonParser;
+			sourceTree = "<group>";
+		};
+		9BAD9B3617DB1A482704E873 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2E8181CD8BF7D4BAB2BC37AE /* libPods-MSMapsModules.a */,
+				65267513927AFDB5C333D2EF /* libPods-MSMapsModulesTests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8475E5A3249942F0003F4291 /* MSMapsModules */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8475E5C8249942F2003F4291 /* Build configuration list for PBXNativeTarget "MSMapsModules" */;
+			buildPhases = (
+				91FD87BAE7C0677B8373034B /* [CP] Check Pods Manifest.lock */,
+				8475E5A0249942F0003F4291 /* Sources */,
+				8475E5A1249942F0003F4291 /* Frameworks */,
+				8475E5A2249942F0003F4291 /* Resources */,
+				54D0DEE5FEAB6B23B48C7FD6 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MSMapsModules;
+			productName = MSMapsModules;
+			productReference = 8475E5A4249942F0003F4291 /* MSMapsModules.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8475E5BE249942F2003F4291 /* MSMapsModulesTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8475E5CB249942F2003F4291 /* Build configuration list for PBXNativeTarget "MSMapsModulesTests" */;
+			buildPhases = (
+				C10F69B3F429B561E954F79A /* [CP] Check Pods Manifest.lock */,
+				8475E5BB249942F2003F4291 /* Sources */,
+				8475E5BC249942F2003F4291 /* Frameworks */,
+				8475E5BD249942F2003F4291 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8475E5C1249942F2003F4291 /* PBXTargetDependency */,
+			);
+			name = MSMapsModulesTests;
+			productName = MSMapsModulesTests;
+			productReference = 8475E5BF249942F2003F4291 /* MSMapsModulesTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8475E59C249942F0003F4291 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1120;
+				ORGANIZATIONNAME = Microsoft;
+				TargetAttributes = {
+					8475E5A3249942F0003F4291 = {
+						CreatedOnToolsVersion = 11.2.1;
+					};
+					8475E5BE249942F2003F4291 = {
+						CreatedOnToolsVersion = 11.2.1;
+						TestTargetID = 8475E5A3249942F0003F4291;
+					};
+				};
+			};
+			buildConfigurationList = 8475E59F249942F0003F4291 /* Build configuration list for PBXProject "MSMapsModules" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8475E59B249942F0003F4291;
+			productRefGroup = 8475E5A5249942F0003F4291 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8475E5A3249942F0003F4291 /* MSMapsModules */,
+				8475E5BE249942F2003F4291 /* MSMapsModulesTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8475E5A2249942F0003F4291 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8475E5B7249942F1003F4291 /* LaunchScreen.storyboard in Resources */,
+				8475E5B4249942F1003F4291 /* Assets.xcassets in Resources */,
+				8475E5B2249942F0003F4291 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8475E5BD249942F2003F4291 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		54D0DEE5FEAB6B23B48C7FD6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MSMapsModules/Pods-MSMapsModules-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MSMapsModules/Pods-MSMapsModules-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MSMapsModules/Pods-MSMapsModules-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		91FD87BAE7C0677B8373034B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MSMapsModules-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C10F69B3F429B561E954F79A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MSMapsModulesTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8475E5A0249942F0003F4291 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8475E5AF249942F0003F4291 /* ViewController.m in Sources */,
+				8475E5A9249942F0003F4291 /* AppDelegate.m in Sources */,
+				84B371342499457300F568EE /* MSGeoJsonParser.m in Sources */,
+				8475E5BA249942F1003F4291 /* main.m in Sources */,
+				8475E5AC249942F0003F4291 /* SceneDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8475E5BB249942F2003F4291 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84B371362499468900F568EE /* MSGeoJsonParserTest.m in Sources */,
+				8475E5C4249942F2003F4291 /* MSMapsModulesTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8475E5C1249942F2003F4291 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8475E5A3249942F0003F4291 /* MSMapsModules */;
+			targetProxy = 8475E5C0249942F2003F4291 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		8475E5B0249942F0003F4291 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8475E5B1249942F0003F4291 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		8475E5B5249942F1003F4291 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8475E5B6249942F1003F4291 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		8475E5C6249942F2003F4291 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		8475E5C7249942F2003F4291 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8475E5C9249942F2003F4291 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 76CEAE978630794E10CA6FE1 /* Pods-MSMapsModules.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = MSMapsModules/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.modules.MSMapsModules;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8475E5CA249942F2003F4291 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7B93EC941D20AD85D3DBD643 /* Pods-MSMapsModules.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = MSMapsModules/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.modules.MSMapsModules;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		8475E5CC249942F2003F4291 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D27FAB2510FBFA00B3AB46F0 /* Pods-MSMapsModulesTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = MSMapsModulesTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.modules.MSMapsModulesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MSMapsModules.app/MSMapsModules";
+			};
+			name = Debug;
+		};
+		8475E5CD249942F2003F4291 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 991BE2D0049EE0D1073D2D7B /* Pods-MSMapsModulesTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = MSMapsModulesTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.modules.MSMapsModulesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MSMapsModules.app/MSMapsModules";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8475E59F249942F0003F4291 /* Build configuration list for PBXProject "MSMapsModules" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8475E5C6249942F2003F4291 /* Debug */,
+				8475E5C7249942F2003F4291 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8475E5C8249942F2003F4291 /* Build configuration list for PBXNativeTarget "MSMapsModules" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8475E5C9249942F2003F4291 /* Debug */,
+				8475E5CA249942F2003F4291 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8475E5CB249942F2003F4291 /* Build configuration list for PBXNativeTarget "MSMapsModulesTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8475E5CC249942F2003F4291 /* Debug */,
+				8475E5CD249942F2003F4291 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8475E59C249942F0003F4291 /* Project object */;
+}
