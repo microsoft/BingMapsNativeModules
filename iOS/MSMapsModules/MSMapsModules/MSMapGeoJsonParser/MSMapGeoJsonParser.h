@@ -1,9 +1,9 @@
 //
-//  MSGeoJsonParser.h
+//  MSMapGeoJsonParser.h
 //  MSMapsModules
 //
-//  Created by Elizabeth Bartusiak (t-elbart) on 6/12/20.
-//  Copyright © 2020 Microsoft.
+//  Created by Elizabeth Bartusiak (t-elbart) on 6/17/20.
+//  Copyright © 2020 Microsoft Corporation.
 //  Licensed under the MIT license.
 //
 
@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (MSMapGeoJsonParser *)init NS_UNAVAILABLE;
 + (MSMapGeoJsonParser *)new NS_UNAVAILABLE;
-+ (MSMapElementLayer *)parse:(NSString *)geojson;
++ (MSMapElementLayer *)parse:(NSString *)geojson error:(NSError **)error;
 
 @end
 

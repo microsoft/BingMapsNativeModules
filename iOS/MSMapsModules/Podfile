@@ -9,7 +9,6 @@ target 'MSMapsModules' do
   pod 'MicrosoftMapsSDK', '~> 1.1.4'
 
   target 'MSMapsModulesTests' do
-    inherit! :search_paths
     # Pods for testing
   end
 

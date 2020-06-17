@@ -1,9 +1,9 @@
 //
-//  MSGeoJsonParser.m
-//  MapsModulesSample
+//  MSGeoJsonParser.h
+//  MSMapsModules
 //
 //  Created by Elizabeth Bartusiak (t-elbart) on 6/12/20.
-//  Copyright © 2020 Microsoft.
+//  Copyright © 2020 Microsoft Corporation.
 //  Licensed under the MIT license.
 //
 
@@ -14,19 +14,24 @@
   MSMapElementLayer *layer;
 };
 
-+ (MSMapElementLayer *)parse:(NSString *)geojson {
++ (MSMapElementLayer *)parse:(NSString *)geojson error:(NSError **)error {
   if (geojson == (id)[NSNull null] || geojson.length == 0) {
-    @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                   reason:@"Input cannot be null."
-                                 userInfo:nil];
-    ;
+    *error = [NSError
+        errorWithDomain:
+            @"com.microsoft.modules.MSMapsModules.InvalidArgumentError"
+                   code:-100
+               userInfo:@{
+                 NSLocalizedDescriptionKey : @"Input String cannot be null."
+               }];
+    return nil;
   }
 
   MSMapGeoJsonParser *instance = [[MSMapGeoJsonParser alloc] init];
-  return [instance internalParse:geojson];
+  return [instance internalParse:geojson error:error];
 }
 
-- (MSMapElementLayer *)internalParse:(NSString *)geojson {
+- (MSMapElementLayer *)internalParse:(NSString *)geojson
+                               error:(NSError **)error {
   layer = [[MSMapElementLayer alloc] init];
   NSData *jsonData = [geojson dataUsingEncoding:NSUTF8StringEncoding];
   NSError *jsonError;
@@ -36,10 +41,11 @@
                                         error:&jsonError];
 
   if (jsonObject == nil) {
-    @throw [NSException exceptionWithName:jsonError.domain
-                                   reason:jsonError.debugDescription
-                                 userInfo:nil];
-    ;
+    *error = [NSError
+        errorWithDomain:@"com.microsoft.modules.MSMapsModules.JSONError"
+                   code:-200
+               userInfo:@{NSLocalizedDescriptionKey : @"Malformed JSON."}];
+    return nil;
   }
 
   NSString *type =
@@ -50,37 +56,51 @@
     if ([type isEqualToString:@"Feature"]) {
       // TODO: feature
     }
-    [self switchToType:jsonObject];
+    [self switchToType:jsonObject error:error];
   }
 
   return layer;
 }
 
-- (void)switchToType:(NSDictionary *)object {
+- (void)switchToType:(NSDictionary *)object error:(NSError **)error {
   NSString *type =
       [NSString stringWithFormat:@"%@", [object objectForKey:@"type"]];
   if ([type isEqualToString:@"Polygon"]) {
     // TODO: parsePolygon
   } else if ([type isEqualToString:@"Point"]) {
-    [self parsePoint:[self getCoordinates:object]];
+    NSArray *coordinates = [self getCoordinates:object error:error];
+    if (coordinates != nil) {
+      [self parsePoint:coordinates error:error];
+    } else {
+      layer = nil;
+    }
   }
   // TODO: rest of geometry types
 }
 
-- (NSArray *)getCoordinates:(NSDictionary *)object {
+- (NSArray *)getCoordinates:(NSDictionary *)object error:(NSError **)error {
   NSArray *coordinates = [object objectForKey:@"coordinates"];
   if (coordinates == nil) {
-    @throw [NSException exceptionWithName:@"JSONException"
-                                   reason:@"Error getting coordinates array."
-                                 userInfo:nil];
-    ;
+    *error = [NSError
+        errorWithDomain:@"com.microsoft.modules.MSMapsModules.JSONError"
+                   code:-200
+               userInfo:@{
+                 NSLocalizedDescriptionKey : @"Error getting coordinates array."
+               }];
+    return nil;
   } else {
     return coordinates;
   }
 }
 
-- (void)parsePoint:(NSArray *)coordinates {
-  MSGeoposition *position = [self parseGeoposition:coordinates];
+- (void)parsePoint:(NSArray *)coordinates error:(NSError **)error {
+  MSGeoposition *position = [self parseGeoposition:coordinates error:error];
+
+  if (position == nil) {
+    layer = nil;
+    return;
+  }
+
   MSGeopoint *point;
   if (coordinates.count > 2) {
     point = [[MSGeopoint alloc]
@@ -96,7 +116,8 @@
   [layer.elements addMapElement:icon];
 }
 
-- (MSGeoposition *)parseGeoposition:(NSArray *)coordinates {
+- (MSGeoposition *)parseGeoposition:(NSArray *)coordinates
+                              error:(NSError **)error {
   if (coordinates.count >= 2) {
     NSNumber *longitudeObj = coordinates[0];
     double longitude = [longitudeObj doubleValue];
@@ -123,11 +144,15 @@
                                          longitude:longitude
                                           altitude:0];
   } else {
-    @throw [NSException exceptionWithName:@"MSGeoJsonParseException"
-                                   reason:@"coordinates array must contain at "
-                                          @"least latitude and longitude."
-                                 userInfo:nil];
-    ;
+    *error = [NSError
+        errorWithDomain:
+            @"com.microsoft.modules.MSMapsModules.MSGeoJsonParseError"
+                   code:-500
+               userInfo:@{
+                 NSLocalizedDescriptionKey : @"coordinates array must contain "
+                                             @"at least latitude and longitude."
+               }];
+    return nil;
   }
 }
 
