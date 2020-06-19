@@ -1,0 +1,16 @@
+PODS:
+  - MicrosoftMapsSDK (1.1.4)
+
+DEPENDENCIES:
+  - MicrosoftMapsSDK (~> 1.1.4)
+
+SPEC REPOS:
+  trunk:
+    - MicrosoftMapsSDK
+
+SPEC CHECKSUMS:
+  MicrosoftMapsSDK: 64317bb343e3ef26507f61617889a6918a1b59d4
+
+PODFILE CHECKSUM: 373392958843cb98706974781ce493b484fa2e01
+
+COCOAPODS: 1.9.3

@@ -1,0 +1,521 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2680EA402F41CE9851B191FB /* libPods-MSMapsModules-MSMapsModulesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D76BD38D0659F124625FB3C3 /* libPods-MSMapsModules-MSMapsModulesTests.a */; };
+		37A5A3EEE67D5FFD3143E7DC /* libPods-MSMapsModules.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C06BD4E5063D85AF6E1068 /* libPods-MSMapsModules.a */; };
+		849A34AD249D0B5900CDE035 /* libMSMapsModules.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 849A3498249D0AF800CDE035 /* libMSMapsModules.a */; };
+		849A34B6249D0D1E00CDE035 /* MSMapGeoJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 849A34B5249D0D1E00CDE035 /* MSMapGeoJsonParser.m */; };
+		849A34B8249D0DA500CDE035 /* MSMapGeoJsonParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 849A34B7249D0DA500CDE035 /* MSMapGeoJsonParserTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		849A34AE249D0B5900CDE035 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 849A3490249D0AF800CDE035 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 849A3497249D0AF800CDE035;
+			remoteInfo = MSMapsModules;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		849A3496249D0AF800CDE035 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		15ADE34BCD484504AAD25CB1 /* Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig"; path = "Target Support Files/Pods-MSMapsModules-MSMapsModulesTests/Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig"; sourceTree = "<group>"; };
+		2DAEB604BA692EF16902823E /* Pods-MSMapsModules.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModules.debug.xcconfig"; path = "Target Support Files/Pods-MSMapsModules/Pods-MSMapsModules.debug.xcconfig"; sourceTree = "<group>"; };
+		3C0938DF625EEB06EAAAB990 /* Pods-MSMapsModules.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModules.release.xcconfig"; path = "Target Support Files/Pods-MSMapsModules/Pods-MSMapsModules.release.xcconfig"; sourceTree = "<group>"; };
+		79C06BD4E5063D85AF6E1068 /* libPods-MSMapsModules.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MSMapsModules.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		849A3498249D0AF800CDE035 /* libMSMapsModules.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMSMapsModules.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		849A34A8249D0B5900CDE035 /* MSMapsModulesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MSMapsModulesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		849A34AC249D0B5900CDE035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		849A34B4249D0D1E00CDE035 /* MSMapGeoJsonParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSMapGeoJsonParser.h; sourceTree = "<group>"; };
+		849A34B5249D0D1E00CDE035 /* MSMapGeoJsonParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSMapGeoJsonParser.m; sourceTree = "<group>"; };
+		849A34B7249D0DA500CDE035 /* MSMapGeoJsonParserTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSMapGeoJsonParserTests.m; sourceTree = "<group>"; };
+		C6898845D39C0F222BE24BA2 /* Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig"; path = "Target Support Files/Pods-MSMapsModules-MSMapsModulesTests/Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig"; sourceTree = "<group>"; };
+		D76BD38D0659F124625FB3C3 /* libPods-MSMapsModules-MSMapsModulesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MSMapsModules-MSMapsModulesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		849A3495249D0AF800CDE035 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37A5A3EEE67D5FFD3143E7DC /* libPods-MSMapsModules.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		849A34A5249D0B5900CDE035 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				849A34AD249D0B5900CDE035 /* libMSMapsModules.a in Frameworks */,
+				2680EA402F41CE9851B191FB /* libPods-MSMapsModules-MSMapsModulesTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4E14BF5F347A7EEDF38D6BE7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2DAEB604BA692EF16902823E /* Pods-MSMapsModules.debug.xcconfig */,
+				3C0938DF625EEB06EAAAB990 /* Pods-MSMapsModules.release.xcconfig */,
+				15ADE34BCD484504AAD25CB1 /* Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig */,
+				C6898845D39C0F222BE24BA2 /* Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		849A348F249D0AF800CDE035 = {
+			isa = PBXGroup;
+			children = (
+				849A349A249D0AF800CDE035 /* MSMapsModules */,
+				849A34A9249D0B5900CDE035 /* MSMapsModulesTests */,
+				849A3499249D0AF800CDE035 /* Products */,
+				4E14BF5F347A7EEDF38D6BE7 /* Pods */,
+				A655EB40BC0C6A2B5B5F03CD /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		849A3499249D0AF800CDE035 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				849A3498249D0AF800CDE035 /* libMSMapsModules.a */,
+				849A34A8249D0B5900CDE035 /* MSMapsModulesTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		849A349A249D0AF800CDE035 /* MSMapsModules */ = {
+			isa = PBXGroup;
+			children = (
+				849A34B3249D0CD200CDE035 /* MSMapGeoJsonParser */,
+			);
+			path = MSMapsModules;
+			sourceTree = "<group>";
+		};
+		849A34A9249D0B5900CDE035 /* MSMapsModulesTests */ = {
+			isa = PBXGroup;
+			children = (
+				849A34AC249D0B5900CDE035 /* Info.plist */,
+				849A34B7249D0DA500CDE035 /* MSMapGeoJsonParserTests.m */,
+			);
+			path = MSMapsModulesTests;
+			sourceTree = "<group>";
+		};
+		849A34B3249D0CD200CDE035 /* MSMapGeoJsonParser */ = {
+			isa = PBXGroup;
+			children = (
+				849A34B4249D0D1E00CDE035 /* MSMapGeoJsonParser.h */,
+				849A34B5249D0D1E00CDE035 /* MSMapGeoJsonParser.m */,
+			);
+			path = MSMapGeoJsonParser;
+			sourceTree = "<group>";
+		};
+		A655EB40BC0C6A2B5B5F03CD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				79C06BD4E5063D85AF6E1068 /* libPods-MSMapsModules.a */,
+				D76BD38D0659F124625FB3C3 /* libPods-MSMapsModules-MSMapsModulesTests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		849A3497249D0AF800CDE035 /* MSMapsModules */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 849A34A1249D0AF800CDE035 /* Build configuration list for PBXNativeTarget "MSMapsModules" */;
+			buildPhases = (
+				0A0DB5DFA2F569A2E425E821 /* [CP] Check Pods Manifest.lock */,
+				849A3494249D0AF800CDE035 /* Sources */,
+				849A3495249D0AF800CDE035 /* Frameworks */,
+				849A3496249D0AF800CDE035 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MSMapsModules;
+			productName = MSMapsModules;
+			productReference = 849A3498249D0AF800CDE035 /* libMSMapsModules.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		849A34A7249D0B5900CDE035 /* MSMapsModulesTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 849A34B0249D0B5900CDE035 /* Build configuration list for PBXNativeTarget "MSMapsModulesTests" */;
+			buildPhases = (
+				86B102E47826007CD304D6D1 /* [CP] Check Pods Manifest.lock */,
+				849A34A4249D0B5900CDE035 /* Sources */,
+				849A34A5249D0B5900CDE035 /* Frameworks */,
+				849A34A6249D0B5900CDE035 /* Resources */,
+				88B27E558E19B76154BB3DFD /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				849A34AF249D0B5900CDE035 /* PBXTargetDependency */,
+			);
+			name = MSMapsModulesTests;
+			productName = MSMapsModulesTests;
+			productReference = 849A34A8249D0B5900CDE035 /* MSMapsModulesTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		849A3490249D0AF800CDE035 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1120;
+				ORGANIZATIONNAME = "Microsoft Corporation";
+				TargetAttributes = {
+					849A3497249D0AF800CDE035 = {
+						CreatedOnToolsVersion = 11.2.1;
+					};
+					849A34A7249D0B5900CDE035 = {
+						CreatedOnToolsVersion = 11.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 849A3493249D0AF800CDE035 /* Build configuration list for PBXProject "MSMapsModules" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 849A348F249D0AF800CDE035;
+			productRefGroup = 849A3499249D0AF800CDE035 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				849A3497249D0AF800CDE035 /* MSMapsModules */,
+				849A34A7249D0B5900CDE035 /* MSMapsModulesTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		849A34A6249D0B5900CDE035 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0A0DB5DFA2F569A2E425E821 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MSMapsModules-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		86B102E47826007CD304D6D1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MSMapsModules-MSMapsModulesTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		88B27E558E19B76154BB3DFD /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MSMapsModules-MSMapsModulesTests/Pods-MSMapsModules-MSMapsModulesTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MSMapsModules-MSMapsModulesTests/Pods-MSMapsModules-MSMapsModulesTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MSMapsModules-MSMapsModulesTests/Pods-MSMapsModules-MSMapsModulesTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		849A3494249D0AF800CDE035 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				849A34B6249D0D1E00CDE035 /* MSMapGeoJsonParser.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		849A34A4249D0B5900CDE035 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				849A34B8249D0DA500CDE035 /* MSMapGeoJsonParserTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		849A34AF249D0B5900CDE035 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 849A3497249D0AF800CDE035 /* MSMapsModules */;
+			targetProxy = 849A34AE249D0B5900CDE035 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		849A349F249D0AF800CDE035 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		849A34A0249D0AF800CDE035 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		849A34A2249D0AF800CDE035 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2DAEB604BA692EF16902823E /* Pods-MSMapsModules.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		849A34A3249D0AF800CDE035 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C0938DF625EEB06EAAAB990 /* Pods-MSMapsModules.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		849A34B1249D0B5900CDE035 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 15ADE34BCD484504AAD25CB1 /* Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = MSMapsModulesTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.modules.MSMapsModulesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		849A34B2249D0B5900CDE035 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C6898845D39C0F222BE24BA2 /* Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = MSMapsModulesTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.modules.MSMapsModulesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		849A3493249D0AF800CDE035 /* Build configuration list for PBXProject "MSMapsModules" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				849A349F249D0AF800CDE035 /* Debug */,
+				849A34A0249D0AF800CDE035 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		849A34A1249D0AF800CDE035 /* Build configuration list for PBXNativeTarget "MSMapsModules" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				849A34A2249D0AF800CDE035 /* Debug */,
+				849A34A3249D0AF800CDE035 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		849A34B0249D0B5900CDE035 /* Build configuration list for PBXNativeTarget "MSMapsModulesTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				849A34B1249D0B5900CDE035 /* Debug */,
+				849A34B2249D0B5900CDE035 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 849A3490249D0AF800CDE035 /* Project object */;
+}
