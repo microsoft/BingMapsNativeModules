@@ -6,10 +6,12 @@ target 'MSMapsModules' do
   # use_frameworks!
 
   # Pods for MSMapsModules
-  pod 'MicrosoftMapsSDK', '~> 1.1.4'
+  pod 'MicrosoftMapsSDK', '~> 1.1.4' 
 
   target 'MSMapsModulesTests' do
     # Pods for testing
+    project './MSMapsModules.xcodeproj'
+    pod 'MicrosoftMapsSDK', '~> 1.1.4'
   end
 
 end

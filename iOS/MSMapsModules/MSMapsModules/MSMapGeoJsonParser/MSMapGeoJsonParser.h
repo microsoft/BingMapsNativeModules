@@ -7,6 +7,7 @@
 //  Licensed under the MIT license.
 //
 
+#import <Foundation/Foundation.h>
 #import <MicrosoftMaps/MicrosoftMaps.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -15,7 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (MSMapGeoJsonParser *)init NS_UNAVAILABLE;
 + (MSMapGeoJsonParser *)new NS_UNAVAILABLE;
-+ (MSMapElementLayer *)parse:(NSString *)geojson error:(NSError **)error;
++ (nullable MSMapElementLayer *)parse:(nonnull NSString *)geojson
+                                error:(NSError * _Nullable *)error;
 
 @end
 

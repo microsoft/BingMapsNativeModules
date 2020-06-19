@@ -1,5 +1,5 @@
 //
-//  MSGeoJsonParser.h
+//  MSMapGeoJsonParser.m
 //  MSMapsModules
 //
 //  Created by Elizabeth Bartusiak (t-elbart) on 6/12/20.
@@ -11,28 +11,39 @@
 #import <MicrosoftMaps/MicrosoftMaps.h>
 
 @implementation MSMapGeoJsonParser {
-  MSMapElementLayer *layer;
+  MSMapElementLayer *mLayer;
 };
 
-+ (MSMapElementLayer *)parse:(NSString *)geojson error:(NSError **)error {
-  if (geojson == (id)[NSNull null] || geojson.length == 0) {
-    *error = [NSError
-        errorWithDomain:
-            @"com.microsoft.modules.MSMapsModules.InvalidArgumentError"
-                   code:-100
-               userInfo:@{
-                 NSLocalizedDescriptionKey : @"Input String cannot be null."
-               }];
++ (nullable MSMapElementLayer *)parse:(nonnull NSString *)geojson
+                                error:(NSError * _Nullable *)error {
+  if (geojson == nil || geojson.length == 0) {
+    if (error != nil) {
+      *error = [NSError
+          errorWithDomain:
+              @"com.microsoft.modules.MSMapsModules.InvalidArgumentError"
+                     code:-100
+                 userInfo:@{
+                   NSLocalizedDescriptionKey : @"Input String cannot be null."
+                 }];
+    }
     return nil;
   }
 
   MSMapGeoJsonParser *instance = [[MSMapGeoJsonParser alloc] init];
-  return [instance internalParse:geojson error:error];
+  NSError *localError;
+  MSMapElementLayer *layer = [instance internalParse:geojson error:&localError];
+  if (localError != nil) {
+    if (error != nil) {
+      *error = localError;
+    }
+    return nil;
+  }
+  return layer;
 }
 
-- (MSMapElementLayer *)internalParse:(NSString *)geojson
-                               error:(NSError **)error {
-  layer = [[MSMapElementLayer alloc] init];
+- (nullable MSMapElementLayer *)internalParse:(nonnull NSString *)geojson
+                                        error:(NSError * _Nullable *)error {
+  mLayer = [[MSMapElementLayer alloc] init];
   NSData *jsonData = [geojson dataUsingEncoding:NSUTF8StringEncoding];
   NSError *jsonError;
   NSDictionary *jsonObject =
@@ -59,10 +70,11 @@
     [self switchToType:jsonObject error:error];
   }
 
-  return layer;
+  return mLayer;
 }
 
-- (void)switchToType:(NSDictionary *)object error:(NSError **)error {
+- (void)switchToType:(nonnull NSDictionary *)object
+               error:(NSError * _Nullable *)error {
   NSString *type =
       [NSString stringWithFormat:@"%@", [object objectForKey:@"type"]];
   if ([type isEqualToString:@"Polygon"]) {
@@ -72,13 +84,14 @@
     if (coordinates != nil) {
       [self parsePoint:coordinates error:error];
     } else {
-      layer = nil;
+      mLayer = nil;
     }
   }
   // TODO: rest of geometry types
 }
 
-- (NSArray *)getCoordinates:(NSDictionary *)object error:(NSError **)error {
+- (nullable NSArray *)getCoordinates:(nonnull NSDictionary *)object
+                               error:(NSError * _Nullable *)error {
   NSArray *coordinates = [object objectForKey:@"coordinates"];
   if (coordinates == nil) {
     *error = [NSError
@@ -93,11 +106,12 @@
   }
 }
 
-- (void)parsePoint:(NSArray *)coordinates error:(NSError **)error {
+- (void)parsePoint:(nonnull NSArray *)coordinates
+             error:(NSError * _Nullable *)error {
   MSGeoposition *position = [self parseGeoposition:coordinates error:error];
 
   if (position == nil) {
-    layer = nil;
+    mLayer = nil;
     return;
   }
 
@@ -113,23 +127,36 @@
   }
   MSMapIcon *icon = [[MSMapIcon alloc] init];
   icon.location = point;
-  [layer.elements addMapElement:icon];
+  [mLayer.elements addMapElement:icon];
 }
 
-- (MSGeoposition *)parseGeoposition:(NSArray *)coordinates
-                              error:(NSError **)error {
+- (nullable MSGeoposition *)parseGeoposition:(nonnull NSArray *)coordinates
+                                       error:(NSError * _Nullable *)error {
   if (coordinates.count >= 2) {
     NSNumber *longitudeObj = coordinates[0];
     double longitude = [longitudeObj doubleValue];
     if (longitude < -180 || longitude > 180) {
-      // TODO: throw exception
-      return nil;
+      *error = [NSError
+          errorWithDomain:
+              @"com.microsoft.modules.MSMapsModules.MSMapGeoJsonParseError"
+                     code:-500
+                 userInfo:@{
+                   NSLocalizedDescriptionKey :
+                       @"Longitude must be in range [-180, 180]."
+                 }];
     }
 
     NSNumber *latitudeObj = coordinates[1];
     double latitude = [latitudeObj doubleValue];
     if (latitude < -90 || latitude > 90) {
-      // TODO: throw exception
+      *error = [NSError
+          errorWithDomain:
+              @"com.microsoft.modules.MSMapsModules.MSMapGeoJsonParseError"
+                     code:-500
+                 userInfo:@{
+                   NSLocalizedDescriptionKey :
+                       @"Latitude must be in range [-90, 90]."
+                 }];
       return nil;
     }
 
@@ -146,7 +173,7 @@
   } else {
     *error = [NSError
         errorWithDomain:
-            @"com.microsoft.modules.MSMapsModules.MSGeoJsonParseError"
+            @"com.microsoft.modules.MSMapsModules.MSMapGeoJsonParseError"
                    code:-500
                userInfo:@{
                  NSLocalizedDescriptionKey : @"coordinates array must contain "

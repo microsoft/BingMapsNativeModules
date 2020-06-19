@@ -45,6 +45,11 @@
   XCTAssertEqual(-100, error.code);
 }
 
+- (void)testNullInputNullError {
+  MSMapElementLayer *layer = [MSMapGeoJsonParser parse:NULL error:nil];
+  XCTAssertNil(layer);
+}
+
 - (void)testEmptyInputGivesError {
   NSError *error;
   MSMapElementLayer *layer = [MSMapGeoJsonParser parse:@"" error:&error];
@@ -71,11 +76,6 @@
 
 - (void)testEmptyCoordinatesGivesError {
   NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": []}";
-  //  XCTAssertThrowsSpecificNamed(
-  //      [MSMapGeoJsonParser parse:geojson error:nil], NSException,
-  //      @"MSGeoJsonParseException",
-  //      @"coordinates array must contain at least latitude and longitude.");
-  //
   NSError *error;
   XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
   XCTAssertEqual(-500, error.code);

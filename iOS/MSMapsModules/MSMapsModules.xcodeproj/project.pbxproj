@@ -7,155 +7,148 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		84B37193249A721700F568EE /* MSMapsModules.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84B37189249A721700F568EE /* MSMapsModules.framework */; };
-		84B37198249A721700F568EE /* MSMapGeoJsonParserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B37197249A721700F568EE /* MSMapGeoJsonParserTest.m */; };
-		84B3719A249A721700F568EE /* MSMapsModules.h in Headers */ = {isa = PBXBuildFile; fileRef = 84B3718C249A721700F568EE /* MSMapsModules.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84B371A6249A735400F568EE /* MSMapGeoJsonParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 84B371A4249A735400F568EE /* MSMapGeoJsonParser.h */; };
-		84B371A7249A735400F568EE /* MSMapGeoJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B371A5249A735400F568EE /* MSMapGeoJsonParser.m */; };
-		D26FF966198020E8079D0D2E /* libPods-MSMapsModules.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 716B6F975F3EA0B306BCFF1F /* libPods-MSMapsModules.a */; };
-		D2CAE92BED0C744D99E8AF73 /* libPods-MSMapsModules-MSMapsModulesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D09BB3845665225599360FE /* libPods-MSMapsModules-MSMapsModulesTests.a */; };
+		2680EA402F41CE9851B191FB /* libPods-MSMapsModules-MSMapsModulesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D76BD38D0659F124625FB3C3 /* libPods-MSMapsModules-MSMapsModulesTests.a */; };
+		37A5A3EEE67D5FFD3143E7DC /* libPods-MSMapsModules.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C06BD4E5063D85AF6E1068 /* libPods-MSMapsModules.a */; };
+		849A34AD249D0B5900CDE035 /* libMSMapsModules.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 849A3498249D0AF800CDE035 /* libMSMapsModules.a */; };
+		849A34B6249D0D1E00CDE035 /* MSMapGeoJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 849A34B5249D0D1E00CDE035 /* MSMapGeoJsonParser.m */; };
+		849A34B8249D0DA500CDE035 /* MSMapGeoJsonParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 849A34B7249D0DA500CDE035 /* MSMapGeoJsonParserTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		84B37194249A721700F568EE /* PBXContainerItemProxy */ = {
+		849A34AE249D0B5900CDE035 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 84B37180249A721700F568EE /* Project object */;
+			containerPortal = 849A3490249D0AF800CDE035 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 84B37188249A721700F568EE;
+			remoteGlobalIDString = 849A3497249D0AF800CDE035;
 			remoteInfo = MSMapsModules;
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXFileReference section */
-		62997621F06E32DF00F74884 /* Pods-MSMapsModules.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModules.debug.xcconfig"; path = "Target Support Files/Pods-MSMapsModules/Pods-MSMapsModules.debug.xcconfig"; sourceTree = "<group>"; };
-		706D95C01FAFF8666245D4B6 /* Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig"; path = "Target Support Files/Pods-MSMapsModules-MSMapsModulesTests/Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig"; sourceTree = "<group>"; };
-		716B6F975F3EA0B306BCFF1F /* libPods-MSMapsModules.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MSMapsModules.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		84B37189249A721700F568EE /* MSMapsModules.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MSMapsModules.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		84B3718C249A721700F568EE /* MSMapsModules.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSMapsModules.h; sourceTree = "<group>"; };
-		84B3718D249A721700F568EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		84B37192249A721700F568EE /* MSMapsModulesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MSMapsModulesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		84B37197249A721700F568EE /* MSMapGeoJsonParserTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSMapGeoJsonParserTest.m; sourceTree = "<group>"; };
-		84B37199249A721700F568EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		84B371A4249A735400F568EE /* MSMapGeoJsonParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSMapGeoJsonParser.h; sourceTree = "<group>"; };
-		84B371A5249A735400F568EE /* MSMapGeoJsonParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSMapGeoJsonParser.m; sourceTree = "<group>"; };
-		8D09BB3845665225599360FE /* libPods-MSMapsModules-MSMapsModulesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MSMapsModules-MSMapsModulesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AB888218BE4A312066E1AAAD /* Pods-MSMapsModules.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModules.release.xcconfig"; path = "Target Support Files/Pods-MSMapsModules/Pods-MSMapsModules.release.xcconfig"; sourceTree = "<group>"; };
-		B93E146C89DFBE5F098D88AC /* Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig"; path = "Target Support Files/Pods-MSMapsModules-MSMapsModulesTests/Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig"; sourceTree = "<group>"; };
-/* End PBXFileReference section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		84B37186249A721700F568EE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
+/* Begin PBXCopyFilesBuildPhase section */
+		849A3496249D0AF800CDE035 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
 			files = (
-				D26FF966198020E8079D0D2E /* libPods-MSMapsModules.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		84B3718F249A721700F568EE /* Frameworks */ = {
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		15ADE34BCD484504AAD25CB1 /* Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig"; path = "Target Support Files/Pods-MSMapsModules-MSMapsModulesTests/Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig"; sourceTree = "<group>"; };
+		2DAEB604BA692EF16902823E /* Pods-MSMapsModules.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModules.debug.xcconfig"; path = "Target Support Files/Pods-MSMapsModules/Pods-MSMapsModules.debug.xcconfig"; sourceTree = "<group>"; };
+		3C0938DF625EEB06EAAAB990 /* Pods-MSMapsModules.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModules.release.xcconfig"; path = "Target Support Files/Pods-MSMapsModules/Pods-MSMapsModules.release.xcconfig"; sourceTree = "<group>"; };
+		79C06BD4E5063D85AF6E1068 /* libPods-MSMapsModules.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MSMapsModules.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		849A3498249D0AF800CDE035 /* libMSMapsModules.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMSMapsModules.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		849A34A8249D0B5900CDE035 /* MSMapsModulesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MSMapsModulesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		849A34AC249D0B5900CDE035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		849A34B4249D0D1E00CDE035 /* MSMapGeoJsonParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSMapGeoJsonParser.h; sourceTree = "<group>"; };
+		849A34B5249D0D1E00CDE035 /* MSMapGeoJsonParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSMapGeoJsonParser.m; sourceTree = "<group>"; };
+		849A34B7249D0DA500CDE035 /* MSMapGeoJsonParserTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSMapGeoJsonParserTests.m; sourceTree = "<group>"; };
+		C6898845D39C0F222BE24BA2 /* Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig"; path = "Target Support Files/Pods-MSMapsModules-MSMapsModulesTests/Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig"; sourceTree = "<group>"; };
+		D76BD38D0659F124625FB3C3 /* libPods-MSMapsModules-MSMapsModulesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MSMapsModules-MSMapsModulesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		849A3495249D0AF800CDE035 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84B37193249A721700F568EE /* MSMapsModules.framework in Frameworks */,
-				D2CAE92BED0C744D99E8AF73 /* libPods-MSMapsModules-MSMapsModulesTests.a in Frameworks */,
+				37A5A3EEE67D5FFD3143E7DC /* libPods-MSMapsModules.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		849A34A5249D0B5900CDE035 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				849A34AD249D0B5900CDE035 /* libMSMapsModules.a in Frameworks */,
+				2680EA402F41CE9851B191FB /* libPods-MSMapsModules-MSMapsModulesTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		84B3717F249A721700F568EE = {
+		4E14BF5F347A7EEDF38D6BE7 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				84B3718B249A721700F568EE /* MSMapsModules */,
-				84B37196249A721700F568EE /* MSMapsModulesTests */,
-				84B3718A249A721700F568EE /* Products */,
-				8538BC02D5854A3650906963 /* Pods */,
-				C05B488C5CAA9678E32CEA99 /* Frameworks */,
-			);
-			sourceTree = "<group>";
-		};
-		84B3718A249A721700F568EE /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				84B37189249A721700F568EE /* MSMapsModules.framework */,
-				84B37192249A721700F568EE /* MSMapsModulesTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		84B3718B249A721700F568EE /* MSMapsModules */ = {
-			isa = PBXGroup;
-			children = (
-				84B371A3249A72F600F568EE /* MSMapGeoJsonParser */,
-				84B3718C249A721700F568EE /* MSMapsModules.h */,
-				84B3718D249A721700F568EE /* Info.plist */,
-			);
-			path = MSMapsModules;
-			sourceTree = "<group>";
-		};
-		84B37196249A721700F568EE /* MSMapsModulesTests */ = {
-			isa = PBXGroup;
-			children = (
-				84B37197249A721700F568EE /* MSMapGeoJsonParserTest.m */,
-				84B37199249A721700F568EE /* Info.plist */,
-			);
-			path = MSMapsModulesTests;
-			sourceTree = "<group>";
-		};
-		84B371A3249A72F600F568EE /* MSMapGeoJsonParser */ = {
-			isa = PBXGroup;
-			children = (
-				84B371A4249A735400F568EE /* MSMapGeoJsonParser.h */,
-				84B371A5249A735400F568EE /* MSMapGeoJsonParser.m */,
-			);
-			path = MSMapGeoJsonParser;
-			sourceTree = "<group>";
-		};
-		8538BC02D5854A3650906963 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				62997621F06E32DF00F74884 /* Pods-MSMapsModules.debug.xcconfig */,
-				AB888218BE4A312066E1AAAD /* Pods-MSMapsModules.release.xcconfig */,
-				706D95C01FAFF8666245D4B6 /* Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig */,
-				B93E146C89DFBE5F098D88AC /* Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig */,
+				2DAEB604BA692EF16902823E /* Pods-MSMapsModules.debug.xcconfig */,
+				3C0938DF625EEB06EAAAB990 /* Pods-MSMapsModules.release.xcconfig */,
+				15ADE34BCD484504AAD25CB1 /* Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig */,
+				C6898845D39C0F222BE24BA2 /* Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		C05B488C5CAA9678E32CEA99 /* Frameworks */ = {
+		849A348F249D0AF800CDE035 = {
 			isa = PBXGroup;
 			children = (
-				716B6F975F3EA0B306BCFF1F /* libPods-MSMapsModules.a */,
-				8D09BB3845665225599360FE /* libPods-MSMapsModules-MSMapsModulesTests.a */,
+				849A349A249D0AF800CDE035 /* MSMapsModules */,
+				849A34A9249D0B5900CDE035 /* MSMapsModulesTests */,
+				849A3499249D0AF800CDE035 /* Products */,
+				4E14BF5F347A7EEDF38D6BE7 /* Pods */,
+				A655EB40BC0C6A2B5B5F03CD /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		849A3499249D0AF800CDE035 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				849A3498249D0AF800CDE035 /* libMSMapsModules.a */,
+				849A34A8249D0B5900CDE035 /* MSMapsModulesTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		849A349A249D0AF800CDE035 /* MSMapsModules */ = {
+			isa = PBXGroup;
+			children = (
+				849A34B3249D0CD200CDE035 /* MSMapGeoJsonParser */,
+			);
+			path = MSMapsModules;
+			sourceTree = "<group>";
+		};
+		849A34A9249D0B5900CDE035 /* MSMapsModulesTests */ = {
+			isa = PBXGroup;
+			children = (
+				849A34AC249D0B5900CDE035 /* Info.plist */,
+				849A34B7249D0DA500CDE035 /* MSMapGeoJsonParserTests.m */,
+			);
+			path = MSMapsModulesTests;
+			sourceTree = "<group>";
+		};
+		849A34B3249D0CD200CDE035 /* MSMapGeoJsonParser */ = {
+			isa = PBXGroup;
+			children = (
+				849A34B4249D0D1E00CDE035 /* MSMapGeoJsonParser.h */,
+				849A34B5249D0D1E00CDE035 /* MSMapGeoJsonParser.m */,
+			);
+			path = MSMapGeoJsonParser;
+			sourceTree = "<group>";
+		};
+		A655EB40BC0C6A2B5B5F03CD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				79C06BD4E5063D85AF6E1068 /* libPods-MSMapsModules.a */,
+				D76BD38D0659F124625FB3C3 /* libPods-MSMapsModules-MSMapsModulesTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		84B37184249A721700F568EE /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				84B371A6249A735400F568EE /* MSMapGeoJsonParser.h in Headers */,
-				84B3719A249A721700F568EE /* MSMapsModules.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
-		84B37188249A721700F568EE /* MSMapsModules */ = {
+		849A3497249D0AF800CDE035 /* MSMapsModules */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 84B3719D249A721700F568EE /* Build configuration list for PBXNativeTarget "MSMapsModules" */;
+			buildConfigurationList = 849A34A1249D0AF800CDE035 /* Build configuration list for PBXNativeTarget "MSMapsModules" */;
 			buildPhases = (
-				E454FA60A33264462F4E2D0D /* [CP] Check Pods Manifest.lock */,
-				84B37184249A721700F568EE /* Headers */,
-				84B37185249A721700F568EE /* Sources */,
-				84B37186249A721700F568EE /* Frameworks */,
-				84B37187249A721700F568EE /* Resources */,
+				0A0DB5DFA2F569A2E425E821 /* [CP] Check Pods Manifest.lock */,
+				849A3494249D0AF800CDE035 /* Sources */,
+				849A3495249D0AF800CDE035 /* Frameworks */,
+				849A3496249D0AF800CDE035 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -163,47 +156,47 @@
 			);
 			name = MSMapsModules;
 			productName = MSMapsModules;
-			productReference = 84B37189249A721700F568EE /* MSMapsModules.framework */;
-			productType = "com.apple.product-type.framework";
+			productReference = 849A3498249D0AF800CDE035 /* libMSMapsModules.a */;
+			productType = "com.apple.product-type.library.static";
 		};
-		84B37191249A721700F568EE /* MSMapsModulesTests */ = {
+		849A34A7249D0B5900CDE035 /* MSMapsModulesTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 84B371A0249A721700F568EE /* Build configuration list for PBXNativeTarget "MSMapsModulesTests" */;
+			buildConfigurationList = 849A34B0249D0B5900CDE035 /* Build configuration list for PBXNativeTarget "MSMapsModulesTests" */;
 			buildPhases = (
-				761D340B83C2A6C7BE7BC67B /* [CP] Check Pods Manifest.lock */,
-				84B3718E249A721700F568EE /* Sources */,
-				84B3718F249A721700F568EE /* Frameworks */,
-				84B37190249A721700F568EE /* Resources */,
-				E6FBF7B2999DFB5F8E0AD6F1 /* [CP] Embed Pods Frameworks */,
+				86B102E47826007CD304D6D1 /* [CP] Check Pods Manifest.lock */,
+				849A34A4249D0B5900CDE035 /* Sources */,
+				849A34A5249D0B5900CDE035 /* Frameworks */,
+				849A34A6249D0B5900CDE035 /* Resources */,
+				88B27E558E19B76154BB3DFD /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				84B37195249A721700F568EE /* PBXTargetDependency */,
+				849A34AF249D0B5900CDE035 /* PBXTargetDependency */,
 			);
 			name = MSMapsModulesTests;
 			productName = MSMapsModulesTests;
-			productReference = 84B37192249A721700F568EE /* MSMapsModulesTests.xctest */;
+			productReference = 849A34A8249D0B5900CDE035 /* MSMapsModulesTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		84B37180249A721700F568EE /* Project object */ = {
+		849A3490249D0AF800CDE035 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1120;
-				ORGANIZATIONNAME = Microsoft;
+				ORGANIZATIONNAME = "Microsoft Corporation";
 				TargetAttributes = {
-					84B37188249A721700F568EE = {
+					849A3497249D0AF800CDE035 = {
 						CreatedOnToolsVersion = 11.2.1;
 					};
-					84B37191249A721700F568EE = {
+					849A34A7249D0B5900CDE035 = {
 						CreatedOnToolsVersion = 11.2.1;
 					};
 				};
 			};
-			buildConfigurationList = 84B37183249A721700F568EE /* Build configuration list for PBXProject "MSMapsModules" */;
+			buildConfigurationList = 849A3493249D0AF800CDE035 /* Build configuration list for PBXProject "MSMapsModules" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -211,26 +204,19 @@
 				en,
 				Base,
 			);
-			mainGroup = 84B3717F249A721700F568EE;
-			productRefGroup = 84B3718A249A721700F568EE /* Products */;
+			mainGroup = 849A348F249D0AF800CDE035;
+			productRefGroup = 849A3499249D0AF800CDE035 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				84B37188249A721700F568EE /* MSMapsModules */,
-				84B37191249A721700F568EE /* MSMapsModulesTests */,
+				849A3497249D0AF800CDE035 /* MSMapsModules */,
+				849A34A7249D0B5900CDE035 /* MSMapsModulesTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		84B37187249A721700F568EE /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		84B37190249A721700F568EE /* Resources */ = {
+		849A34A6249D0B5900CDE035 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -240,29 +226,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		761D340B83C2A6C7BE7BC67B /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-MSMapsModules-MSMapsModulesTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E454FA60A33264462F4E2D0D /* [CP] Check Pods Manifest.lock */ = {
+		0A0DB5DFA2F569A2E425E821 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -284,7 +248,29 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E6FBF7B2999DFB5F8E0AD6F1 /* [CP] Embed Pods Frameworks */ = {
+		86B102E47826007CD304D6D1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MSMapsModules-MSMapsModulesTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		88B27E558E19B76154BB3DFD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -304,34 +290,34 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		84B37185249A721700F568EE /* Sources */ = {
+		849A3494249D0AF800CDE035 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84B371A7249A735400F568EE /* MSMapGeoJsonParser.m in Sources */,
+				849A34B6249D0D1E00CDE035 /* MSMapGeoJsonParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		84B3718E249A721700F568EE /* Sources */ = {
+		849A34A4249D0B5900CDE035 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84B37198249A721700F568EE /* MSMapGeoJsonParserTest.m in Sources */,
+				849A34B8249D0DA500CDE035 /* MSMapGeoJsonParserTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		84B37195249A721700F568EE /* PBXTargetDependency */ = {
+		849A34AF249D0B5900CDE035 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 84B37188249A721700F568EE /* MSMapsModules */;
-			targetProxy = 84B37194249A721700F568EE /* PBXContainerItemProxy */;
+			target = 849A3497249D0AF800CDE035 /* MSMapsModules */;
+			targetProxy = 849A34AE249D0B5900CDE035 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		84B3719B249A721700F568EE /* Debug */ = {
+		849A349F249D0AF800CDE035 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -364,7 +350,6 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -387,12 +372,10 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		84B3719C249A721700F568EE /* Release */ = {
+		849A34A0249D0AF800CDE035 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -425,7 +408,6 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -442,60 +424,36 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
-		84B3719E249A721700F568EE /* Debug */ = {
+		849A34A2249D0AF800CDE035 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 62997621F06E32DF00F74884 /* Pods-MSMapsModules.debug.xcconfig */;
+			baseConfigurationReference = 2DAEB604BA692EF16902823E /* Pods-MSMapsModules.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MSMapsModules/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.modules.MSMapsModules;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		84B3719F249A721700F568EE /* Release */ = {
+		849A34A3249D0AF800CDE035 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AB888218BE4A312066E1AAAD /* Pods-MSMapsModules.release.xcconfig */;
+			baseConfigurationReference = 3C0938DF625EEB06EAAAB990 /* Pods-MSMapsModules.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MSMapsModules/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.modules.MSMapsModules;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
-		84B371A1249A721700F568EE /* Debug */ = {
+		849A34B1249D0B5900CDE035 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 706D95C01FAFF8666245D4B6 /* Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig */;
+			baseConfigurationReference = 15ADE34BCD484504AAD25CB1 /* Pods-MSMapsModules-MSMapsModulesTests.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = MSMapsModulesTests/Info.plist;
@@ -510,9 +468,9 @@
 			};
 			name = Debug;
 		};
-		84B371A2249A721700F568EE /* Release */ = {
+		849A34B2249D0B5900CDE035 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B93E146C89DFBE5F098D88AC /* Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig */;
+			baseConfigurationReference = C6898845D39C0F222BE24BA2 /* Pods-MSMapsModules-MSMapsModulesTests.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = MSMapsModulesTests/Info.plist;
@@ -530,34 +488,34 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		84B37183249A721700F568EE /* Build configuration list for PBXProject "MSMapsModules" */ = {
+		849A3493249D0AF800CDE035 /* Build configuration list for PBXProject "MSMapsModules" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				84B3719B249A721700F568EE /* Debug */,
-				84B3719C249A721700F568EE /* Release */,
+				849A349F249D0AF800CDE035 /* Debug */,
+				849A34A0249D0AF800CDE035 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		84B3719D249A721700F568EE /* Build configuration list for PBXNativeTarget "MSMapsModules" */ = {
+		849A34A1249D0AF800CDE035 /* Build configuration list for PBXNativeTarget "MSMapsModules" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				84B3719E249A721700F568EE /* Debug */,
-				84B3719F249A721700F568EE /* Release */,
+				849A34A2249D0AF800CDE035 /* Debug */,
+				849A34A3249D0AF800CDE035 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		84B371A0249A721700F568EE /* Build configuration list for PBXNativeTarget "MSMapsModulesTests" */ = {
+		849A34B0249D0B5900CDE035 /* Build configuration list for PBXNativeTarget "MSMapsModulesTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				84B371A1249A721700F568EE /* Debug */,
-				84B371A2249A721700F568EE /* Release */,
+				849A34B1249D0B5900CDE035 /* Debug */,
+				849A34B2249D0B5900CDE035 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 84B37180249A721700F568EE /* Project object */;
+	rootObject = 849A3490249D0AF800CDE035 /* Project object */;
 }
