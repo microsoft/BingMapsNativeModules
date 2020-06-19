@@ -16,8 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (MSMapGeoJsonParser *)init NS_UNAVAILABLE;
 + (MSMapGeoJsonParser *)new NS_UNAVAILABLE;
-+ (nullable MSMapElementLayer *)parse:(nonnull NSString *)geojson
-                                error:(NSError * _Nullable *)error;
++ (MSMapElementLayer * _Nullable)parse:(NSString *)geojson
+                                error:(NSError * _Nullable * _Nullable)error;
 
 @end
 

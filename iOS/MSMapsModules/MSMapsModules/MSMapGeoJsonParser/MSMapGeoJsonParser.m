@@ -10,12 +10,14 @@
 #import "MSMapGeoJsonParser.h"
 #import <MicrosoftMaps/MicrosoftMaps.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation MSMapGeoJsonParser {
   MSMapElementLayer *mLayer;
 };
 
-+ (nullable MSMapElementLayer *)parse:(nonnull NSString *)geojson
-                                error:(NSError * _Nullable *)error {
++ (MSMapElementLayer * _Nullable)parse:(NSString *)geojson
+                                error:(NSError * _Nullable * _Nullable)error {
   if (geojson == nil || geojson.length == 0) {
     if (error != nil) {
       *error = [NSError
@@ -41,8 +43,8 @@
   return layer;
 }
 
-- (nullable MSMapElementLayer *)internalParse:(nonnull NSString *)geojson
-                                        error:(NSError * _Nullable *)error {
+- (MSMapElementLayer * _Nullable)internalParse:(NSString *)geojson
+                                        error:(NSError **)error {
   mLayer = [[MSMapElementLayer alloc] init];
   NSData *jsonData = [geojson dataUsingEncoding:NSUTF8StringEncoding];
   NSError *jsonError;
@@ -59,8 +61,19 @@
     return nil;
   }
 
-  NSString *type =
-      [NSString stringWithFormat:@"%@", [jsonObject objectForKey:@"type"]];
+  NSObject *typeObject = [jsonObject objectForKey:@"type"];
+  if (typeObject == nil) {
+    *error = [NSError
+        errorWithDomain:
+            @"com.microsoft.modules.MSMapsModules.MSMapGeoJsonParseError"
+                   code:-500
+               userInfo:@{
+                 NSLocalizedDescriptionKey :
+                     @"GeoJson geomtry object must have \"type\"."
+               }];
+    return nil;
+  }
+  NSString *type = [NSString stringWithFormat:@"%@", typeObject];
   if ([type isEqualToString:@"FeatureCollection"]) {
     // TODO: parseFeatureCollection
   } else {
@@ -73,25 +86,24 @@
   return mLayer;
 }
 
-- (void)switchToType:(nonnull NSDictionary *)object
-               error:(NSError * _Nullable *)error {
+- (void)switchToType:(NSDictionary *)object error:(NSError **)error {
   NSString *type =
       [NSString stringWithFormat:@"%@", [object objectForKey:@"type"]];
   if ([type isEqualToString:@"Polygon"]) {
     // TODO: parsePolygon
   } else if ([type isEqualToString:@"Point"]) {
-    NSArray *coordinates = [self getCoordinates:object error:error];
-    if (coordinates != nil) {
-      [self parsePoint:coordinates error:error];
-    } else {
-      mLayer = nil;
+    NSArray *coordinates = [MSMapGeoJsonParser getCoordinates:object
+                                                        error:error];
+    if (coordinates == nil) {
+      return;
     }
+    [self parsePoint:coordinates error:error];
   }
   // TODO: rest of geometry types
 }
 
-- (nullable NSArray *)getCoordinates:(nonnull NSDictionary *)object
-                               error:(NSError * _Nullable *)error {
++ (NSArray * _Nullable)getCoordinates:(NSDictionary *)object
+                               error:(NSError **)error {
   NSArray *coordinates = [object objectForKey:@"coordinates"];
   if (coordinates == nil) {
     *error = [NSError
@@ -101,17 +113,15 @@
                  NSLocalizedDescriptionKey : @"Error getting coordinates array."
                }];
     return nil;
-  } else {
-    return coordinates;
   }
+  return coordinates;
 }
 
-- (void)parsePoint:(nonnull NSArray *)coordinates
-             error:(NSError * _Nullable *)error {
-  MSGeoposition *position = [self parseGeoposition:coordinates error:error];
+- (void)parsePoint:(NSArray *)coordinates error:(NSError **)error {
+  MSGeoposition *position = [MSMapGeoJsonParser parseGeoposition:coordinates
+                                                           error:error];
 
   if (position == nil) {
-    mLayer = nil;
     return;
   }
 
@@ -130,11 +140,21 @@
   [mLayer.elements addMapElement:icon];
 }
 
-- (nullable MSGeoposition *)parseGeoposition:(nonnull NSArray *)coordinates
-                                       error:(NSError * _Nullable *)error {
++ (MSGeoposition * _Nullable)parseGeoposition:(NSArray *)coordinates
+                                       error:(NSError **)error {
   if (coordinates.count >= 2) {
-    NSNumber *longitudeObj = coordinates[0];
-    double longitude = [longitudeObj doubleValue];
+    if (![coordinates[0] isKindOfClass:[NSNumber class]]) {
+      *error = [NSError
+          errorWithDomain:
+              @"com.microsoft.modules.MSMapsModules.MSMapGeoJsonParseError"
+                     code:-500
+                 userInfo:@{
+                   NSLocalizedDescriptionKey : @"Longitude must be a number."
+                 }];
+      return nil;
+    }
+
+    double longitude = [coordinates[0] doubleValue];
     if (longitude < -180 || longitude > 180) {
       *error = [NSError
           errorWithDomain:
@@ -146,8 +166,18 @@
                  }];
     }
 
-    NSNumber *latitudeObj = coordinates[1];
-    double latitude = [latitudeObj doubleValue];
+    if (![coordinates[1] isKindOfClass:[NSNumber class]]) {
+      *error = [NSError
+          errorWithDomain:
+              @"com.microsoft.modules.MSMapsModules.MSMapGeoJsonParseError"
+                     code:-500
+                 userInfo:@{
+                   NSLocalizedDescriptionKey : @"Latitude must be a number."
+                 }];
+      return nil;
+    }
+
+    double latitude = [coordinates[1] doubleValue];
     if (latitude < -90 || latitude > 90) {
       *error = [NSError
           errorWithDomain:
@@ -160,16 +190,26 @@
       return nil;
     }
 
+    double altitude = 0;
+
     if (coordinates.count > 2) {
+      if (![coordinates[2] isKindOfClass:[NSNumber class]]) {
+        *error = [NSError
+            errorWithDomain:
+                @"com.microsoft.modules.MSMapsModules.MSMapGeoJsonParseError"
+                       code:-500
+                   userInfo:@{
+                     NSLocalizedDescriptionKey : @"Altitude must be a number."
+                   }];
+        return nil;
+      }
+
       NSNumber *altitudeObj = coordinates[2];
-      double altitude = [altitudeObj doubleValue];
-      return [[MSGeoposition alloc] initWithLatitude:latitude
-                                           longitude:longitude
-                                            altitude:altitude];
+      altitude = [altitudeObj doubleValue];
     }
     return [[MSGeoposition alloc] initWithLatitude:latitude
                                          longitude:longitude
-                                          altitude:0];
+                                          altitude:altitude];
   } else {
     *error = [NSError
         errorWithDomain:
@@ -184,3 +224,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

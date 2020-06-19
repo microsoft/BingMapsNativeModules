@@ -81,6 +81,35 @@
   XCTAssertEqual(-500, error.code);
 }
 
+- (void)testNoTypeGivesError {
+  NSString *geojson = @"{\"coordinates\": [30, 10]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testLongitudeNaNGivesError {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [\"a\", 10]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testLatitudeNaNGivesError {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [30, \"b\"]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testAltitudeNaNGivesError {
+  NSString *geojson =
+      @"{\"type\": \"Point\", \"coordinates\": [30, 10, \"c\"]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
 - (void)checkExpectedPosition:(NSArray *)expectedPoints
            withActualPosition:(MSGeoposition *)position {
   XCTAssertEqual([[expectedPoints objectAtIndex:0] doubleValue],
