@@ -88,21 +88,49 @@
   XCTAssertEqual(-500, error.code);
 }
 
-- (void)testLongitudeNaNGivesError {
+- (void)testCoordinateNaNGivesError {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [NaN, 10]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-200, error.code);
+}
+
+- (void)testLongitudeNullGivesError {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [null, 10]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testLatitudeNullGivesError {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [30, null]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testAltitudeNullGivesError {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [30, 10, null]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testLongitudeStringGivesError {
   NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [\"a\", 10]}";
   NSError *error;
   XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
   XCTAssertEqual(-500, error.code);
 }
 
-- (void)testLatitudeNaNGivesError {
+- (void)testLatitudeStringGivesError {
   NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [30, \"b\"]}";
   NSError *error;
   XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
   XCTAssertEqual(-500, error.code);
 }
 
-- (void)testAltitudeNaNGivesError {
+- (void)testAltitudeStringGivesError {
   NSString *geojson =
       @"{\"type\": \"Point\", \"coordinates\": [30, 10, \"c\"]}";
   NSError *error;
