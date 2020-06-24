@@ -3,7 +3,7 @@
 //  MSMapsModules
 //
 //  Created by Elizabeth Bartusiak (t-elbart) on 6/16/20.
-//  Copyright © 2020 Microsoft.
+//  Copyright © 2020 Microsoft Corporation.
 //  Licensed under the MIT license.
 //
 
@@ -11,6 +11,4 @@
 
 @interface ViewController : UIViewController
 
-
 @end
-
