@@ -1,0 +1,30 @@
+PODS:
+  - MicrosoftMapsSDK (1.1.4)
+  - MSMapsModules (0.0.2):
+    - MicrosoftMapsSDK
+
+DEPENDENCIES:
+  - MicrosoftMapsSDK (~> 1.1.4)
+  - MSMapsModules (from `https://github.com/microsoft/BingMapsNativeModules.git`, commit `150bc44e2176d0536dc6430615f3227f8a60f39a`)
+
+SPEC REPOS:
+  trunk:
+    - MicrosoftMapsSDK
+
+EXTERNAL SOURCES:
+  MSMapsModules:
+    :commit: 150bc44e2176d0536dc6430615f3227f8a60f39a
+    :git: https://github.com/microsoft/BingMapsNativeModules.git
+
+CHECKOUT OPTIONS:
+  MSMapsModules:
+    :commit: 150bc44e2176d0536dc6430615f3227f8a60f39a
+    :git: https://github.com/microsoft/BingMapsNativeModules.git
+
+SPEC CHECKSUMS:
+  MicrosoftMapsSDK: 64317bb343e3ef26507f61617889a6918a1b59d4
+  MSMapsModules: b093e70edf536650f713a85b833a794908aebc58
+
+PODFILE CHECKSUM: 161f1026163d73be6d70866dede48e062746d3c4
+
+COCOAPODS: 1.9.3
