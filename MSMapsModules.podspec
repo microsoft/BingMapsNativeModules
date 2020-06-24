@@ -9,8 +9,9 @@ Library for parsing GeoJSON, extracting the shapes, and adding them to a new Map
   spec.license      = { :type => 'MIT'}
   spec.author    = "Microsoft Corporation"
   spec.platform     = :ios, "9.0"
+  spec.static_framework = true
   spec.source       = { :git => 'https://github.com/microsoft/BingMapsNativeModules.git'}
-  spec.source_files  = 'iOS/MSMapsModules', 'iOS/MSMapsModules/MSMapsModules/MSMapGeoJsonParser/*.{h, m}'
+  spec.source_files  = 'iOS/MSMapsModules/MSMapsModules/MSMapGeoJsonParser/*'
   spec.dependency 'MicrosoftMapsSDK'
 
 end
