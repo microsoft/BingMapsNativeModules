@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "MSMapsModules"
-  spec.version      = "0.0.1"
+  spec.version      = "0.0.2"
   spec.summary      = "Library for parsing GeoJSON and adding shapes to a MapGeoJsonLayer."
   spec.description  = <<-DESC
 Library for parsing GeoJSON, extracting the shapes, and adding them to a new MapGeoJsonLayer for use with a Microsoft Maps Mapview. 
@@ -10,7 +10,7 @@ Library for parsing GeoJSON, extracting the shapes, and adding them to a new Map
   spec.author    = "Microsoft Corporation"
   spec.platform     = :ios, "9.0"
   spec.source       = { :git => 'https://github.com/microsoft/BingMapsNativeModules.git'}
-  spec.source_files  = 'iOS/MSMapsModules', 'iOS/MSMapsModules/MSMapsModules/MSMapGeoJsonParser/*'
+  spec.source_files  = 'iOS/MSMapsModules', 'iOS/MSMapsModules/MSMapsModules/MSMapGeoJsonParser/*.{h, m}'
   spec.dependency 'MicrosoftMapsSDK'
 
 end
