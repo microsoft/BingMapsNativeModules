@@ -13,7 +13,7 @@
 		8493FEE324A40373008FDAAD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8493FEE124A40373008FDAAD /* Main.storyboard */; };
 		8493FEE524A40375008FDAAD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8493FEE424A40375008FDAAD /* Assets.xcassets */; };
 		8493FEE824A40375008FDAAD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8493FEE624A40375008FDAAD /* LaunchScreen.storyboard */; };
-		8493FEF024A52901008FDAAD /* keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8493FEEF24A52901008FDAAD /* keys.plist */; };
+		8493FEF224A54F57008FDAAD /* keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8493FEF124A54F57008FDAAD /* keys.plist */; };
 		90B2D193C20916EDB8FF16EA /* Pods_MSMapsModulesReferenceApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3659F247DDC8B661221A807E /* Pods_MSMapsModulesReferenceApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -28,7 +28,7 @@
 		8493FEE424A40375008FDAAD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8493FEE724A40375008FDAAD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8493FEE924A40375008FDAAD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8493FEEF24A52901008FDAAD /* keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = keys.plist; sourceTree = "<group>"; };
+		8493FEF124A54F57008FDAAD /* keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = keys.plist; sourceTree = "<group>"; };
 		EA61A7A79BEBCE521FDFBAEA /* Pods-MSMapsModulesReferenceApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModulesReferenceApp.debug.xcconfig"; path = "Target Support Files/Pods-MSMapsModulesReferenceApp/Pods-MSMapsModulesReferenceApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -64,7 +64,7 @@
 		8493FECF24A40373008FDAAD = {
 			isa = PBXGroup;
 			children = (
-				8493FEEF24A52901008FDAAD /* keys.plist */,
+				8493FEF124A54F57008FDAAD /* keys.plist */,
 				8493FEDA24A40373008FDAAD /* MSMapsModulesReferenceApp */,
 				8493FED924A40373008FDAAD /* Products */,
 				6CCA7236EDF8031DAA962776 /* Pods */,
@@ -156,7 +156,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8493FEF024A52901008FDAAD /* keys.plist in Resources */,
+				8493FEF224A54F57008FDAAD /* keys.plist in Resources */,
 				8493FEE824A40375008FDAAD /* LaunchScreen.storyboard in Resources */,
 				8493FEE524A40375008FDAAD /* Assets.xcassets in Resources */,
 				8493FEE324A40373008FDAAD /* Main.storyboard in Resources */,
