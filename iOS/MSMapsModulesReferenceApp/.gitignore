@@ -27,3 +27,6 @@ Pods/
 
 # Output folder for universal frameworks
 Output/
+
+# file containing credentialsKey
+keys.plist

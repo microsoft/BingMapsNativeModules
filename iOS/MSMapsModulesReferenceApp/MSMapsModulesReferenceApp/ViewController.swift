@@ -17,12 +17,15 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        /* Add your credentials key in the following line.
-         See
+        /* Add your credential key in a keys.plist file.
+         	 To acquire a key, visit:
          https://docs.microsoft.com/en-us/bingmaps/getting-started/bing-maps-dev-center-help/getting-a-bing-maps-key
-         for instructions on how to get a key.
          */
-        mMapView.credentialsKey = "YOUR_KEY_HERE"
+        var keys: NSDictionary?
+        if let path = Bundle.main.path(forResource: "keys", ofType: "plist") {
+            keys = NSDictionary(contentsOfFile: path)
+        }
+        mMapView.credentialsKey = keys?.object(forKey: "credentialsKey") as! String
 
         let LOCATION_LAKE_WASHINGTON = MSGeopoint(latitude: 47.61, longitude: -122.27)
         let scene = MSMapScene(location: LOCATION_LAKE_WASHINGTON, zoomLevel: 10)
