@@ -98,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
       return;
     }
     [self parsePoint:coordinates error:error];
-  }
+	}
   // TODO: rest of geometry types
 }
 

@@ -21,7 +21,8 @@
   NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [30, 10]}";
   NSError *error;
   MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
-  MSMapElementCollection *collection = layer.elements;
+	XCTAssertNil(error);
+	MSMapElementCollection *collection = layer.elements;
   XCTAssertNotNil(collection);
   XCTAssertEqual(1, collection.count);
 
