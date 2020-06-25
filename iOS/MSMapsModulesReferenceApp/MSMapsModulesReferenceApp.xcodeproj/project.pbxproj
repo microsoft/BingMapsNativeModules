@@ -7,112 +7,103 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8493FEB824A3CD5A008FDAAD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8493FEB724A3CD5A008FDAAD /* AppDelegate.m */; };
-		8493FEBB24A3CD5A008FDAAD /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8493FEBA24A3CD5A008FDAAD /* SceneDelegate.m */; };
-		8493FEBE24A3CD5A008FDAAD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8493FEBD24A3CD5A008FDAAD /* ViewController.m */; };
-		8493FEC124A3CD5A008FDAAD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8493FEBF24A3CD5A008FDAAD /* Main.storyboard */; };
-		8493FEC324A3CD5D008FDAAD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8493FEC224A3CD5D008FDAAD /* Assets.xcassets */; };
-		8493FEC624A3CD5D008FDAAD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8493FEC424A3CD5D008FDAAD /* LaunchScreen.storyboard */; };
-		8493FEC924A3CD5D008FDAAD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8493FEC824A3CD5D008FDAAD /* main.m */; };
-		B76C7FE5207A20668867B728 /* libPods-MSMapsModulesReferenceApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 61312E15ACC645A14163776C /* libPods-MSMapsModulesReferenceApp.a */; };
+		8493FEDC24A40373008FDAAD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8493FEDB24A40373008FDAAD /* AppDelegate.swift */; };
+		8493FEDE24A40373008FDAAD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8493FEDD24A40373008FDAAD /* SceneDelegate.swift */; };
+		8493FEE024A40373008FDAAD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8493FEDF24A40373008FDAAD /* ViewController.swift */; };
+		8493FEE324A40373008FDAAD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8493FEE124A40373008FDAAD /* Main.storyboard */; };
+		8493FEE524A40375008FDAAD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8493FEE424A40375008FDAAD /* Assets.xcassets */; };
+		8493FEE824A40375008FDAAD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8493FEE624A40375008FDAAD /* LaunchScreen.storyboard */; };
+		90B2D193C20916EDB8FF16EA /* Pods_MSMapsModulesReferenceApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3659F247DDC8B661221A807E /* Pods_MSMapsModulesReferenceApp.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		3BE76A6A44756309CE6417B2 /* Pods-MSMapsModulesReferenceApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModulesReferenceApp.debug.xcconfig"; path = "Target Support Files/Pods-MSMapsModulesReferenceApp/Pods-MSMapsModulesReferenceApp.debug.xcconfig"; sourceTree = "<group>"; };
-		61312E15ACC645A14163776C /* libPods-MSMapsModulesReferenceApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MSMapsModulesReferenceApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8493FEB324A3CD5A008FDAAD /* MSMapsModulesReferenceApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MSMapsModulesReferenceApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8493FEB624A3CD5A008FDAAD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		8493FEB724A3CD5A008FDAAD /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		8493FEB924A3CD5A008FDAAD /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
-		8493FEBA24A3CD5A008FDAAD /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
-		8493FEBC24A3CD5A008FDAAD /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		8493FEBD24A3CD5A008FDAAD /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		8493FEC024A3CD5A008FDAAD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		8493FEC224A3CD5D008FDAAD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8493FEC524A3CD5D008FDAAD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8493FEC724A3CD5D008FDAAD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8493FEC824A3CD5D008FDAAD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		9762953511BD19AB0A93EB12 /* Pods-MSMapsModulesReferenceApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModulesReferenceApp.release.xcconfig"; path = "Target Support Files/Pods-MSMapsModulesReferenceApp/Pods-MSMapsModulesReferenceApp.release.xcconfig"; sourceTree = "<group>"; };
+		3659F247DDC8B661221A807E /* Pods_MSMapsModulesReferenceApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MSMapsModulesReferenceApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AC64ABCB524E4D9491C4657 /* Pods-MSMapsModulesReferenceApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModulesReferenceApp.release.xcconfig"; path = "Target Support Files/Pods-MSMapsModulesReferenceApp/Pods-MSMapsModulesReferenceApp.release.xcconfig"; sourceTree = "<group>"; };
+		8493FED824A40373008FDAAD /* MSMapsModulesReferenceApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MSMapsModulesReferenceApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8493FEDB24A40373008FDAAD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8493FEDD24A40373008FDAAD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		8493FEDF24A40373008FDAAD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		8493FEE224A40373008FDAAD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8493FEE424A40375008FDAAD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8493FEE724A40375008FDAAD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8493FEE924A40375008FDAAD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EA61A7A79BEBCE521FDFBAEA /* Pods-MSMapsModulesReferenceApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSMapsModulesReferenceApp.debug.xcconfig"; path = "Target Support Files/Pods-MSMapsModulesReferenceApp/Pods-MSMapsModulesReferenceApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		8493FEB024A3CD5A008FDAAD /* Frameworks */ = {
+		8493FED524A40373008FDAAD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B76C7FE5207A20668867B728 /* libPods-MSMapsModulesReferenceApp.a in Frameworks */,
+				90B2D193C20916EDB8FF16EA /* Pods_MSMapsModulesReferenceApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		70B6684006E7D63C79606562 /* Frameworks */ = {
+		4B118FABA490AF4B26461595 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				61312E15ACC645A14163776C /* libPods-MSMapsModulesReferenceApp.a */,
+				3659F247DDC8B661221A807E /* Pods_MSMapsModulesReferenceApp.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		8493FEAA24A3CD5A008FDAAD = {
+		6CCA7236EDF8031DAA962776 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				8493FEB524A3CD5A008FDAAD /* MSMapsModulesReferenceApp */,
-				8493FEB424A3CD5A008FDAAD /* Products */,
-				969D8ADCDDEE3D5D961BF7B0 /* Pods */,
-				70B6684006E7D63C79606562 /* Frameworks */,
-			);
-			sourceTree = "<group>";
-		};
-		8493FEB424A3CD5A008FDAAD /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				8493FEB324A3CD5A008FDAAD /* MSMapsModulesReferenceApp.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		8493FEB524A3CD5A008FDAAD /* MSMapsModulesReferenceApp */ = {
-			isa = PBXGroup;
-			children = (
-				8493FEB624A3CD5A008FDAAD /* AppDelegate.h */,
-				8493FEB724A3CD5A008FDAAD /* AppDelegate.m */,
-				8493FEB924A3CD5A008FDAAD /* SceneDelegate.h */,
-				8493FEBA24A3CD5A008FDAAD /* SceneDelegate.m */,
-				8493FEBC24A3CD5A008FDAAD /* ViewController.h */,
-				8493FEBD24A3CD5A008FDAAD /* ViewController.m */,
-				8493FEBF24A3CD5A008FDAAD /* Main.storyboard */,
-				8493FEC224A3CD5D008FDAAD /* Assets.xcassets */,
-				8493FEC424A3CD5D008FDAAD /* LaunchScreen.storyboard */,
-				8493FEC724A3CD5D008FDAAD /* Info.plist */,
-				8493FEC824A3CD5D008FDAAD /* main.m */,
-			);
-			path = MSMapsModulesReferenceApp;
-			sourceTree = "<group>";
-		};
-		969D8ADCDDEE3D5D961BF7B0 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				3BE76A6A44756309CE6417B2 /* Pods-MSMapsModulesReferenceApp.debug.xcconfig */,
-				9762953511BD19AB0A93EB12 /* Pods-MSMapsModulesReferenceApp.release.xcconfig */,
+				EA61A7A79BEBCE521FDFBAEA /* Pods-MSMapsModulesReferenceApp.debug.xcconfig */,
+				5AC64ABCB524E4D9491C4657 /* Pods-MSMapsModulesReferenceApp.release.xcconfig */,
 			);
 			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		8493FECF24A40373008FDAAD = {
+			isa = PBXGroup;
+			children = (
+				8493FEDA24A40373008FDAAD /* MSMapsModulesReferenceApp */,
+				8493FED924A40373008FDAAD /* Products */,
+				6CCA7236EDF8031DAA962776 /* Pods */,
+				4B118FABA490AF4B26461595 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		8493FED924A40373008FDAAD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8493FED824A40373008FDAAD /* MSMapsModulesReferenceApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8493FEDA24A40373008FDAAD /* MSMapsModulesReferenceApp */ = {
+			isa = PBXGroup;
+			children = (
+				8493FEDB24A40373008FDAAD /* AppDelegate.swift */,
+				8493FEDD24A40373008FDAAD /* SceneDelegate.swift */,
+				8493FEDF24A40373008FDAAD /* ViewController.swift */,
+				8493FEE124A40373008FDAAD /* Main.storyboard */,
+				8493FEE424A40375008FDAAD /* Assets.xcassets */,
+				8493FEE624A40375008FDAAD /* LaunchScreen.storyboard */,
+				8493FEE924A40375008FDAAD /* Info.plist */,
+			);
+			path = MSMapsModulesReferenceApp;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8493FEB224A3CD5A008FDAAD /* MSMapsModulesReferenceApp */ = {
+		8493FED724A40373008FDAAD /* MSMapsModulesReferenceApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8493FECC24A3CD5D008FDAAD /* Build configuration list for PBXNativeTarget "MSMapsModulesReferenceApp" */;
+			buildConfigurationList = 8493FEEC24A40375008FDAAD /* Build configuration list for PBXNativeTarget "MSMapsModulesReferenceApp" */;
 			buildPhases = (
-				DBEF5DEDC1D4112B78C57921 /* [CP] Check Pods Manifest.lock */,
-				8493FEAF24A3CD5A008FDAAD /* Sources */,
-				8493FEB024A3CD5A008FDAAD /* Frameworks */,
-				8493FEB124A3CD5A008FDAAD /* Resources */,
-				E9E38EF8DFBDC29625BC4F1A /* [CP] Embed Pods Frameworks */,
+				8195D0FFE8B408697A12112B /* [CP] Check Pods Manifest.lock */,
+				8493FED424A40373008FDAAD /* Sources */,
+				8493FED524A40373008FDAAD /* Frameworks */,
+				8493FED624A40373008FDAAD /* Resources */,
+				E683613BFB98FA8DDE5A8955 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -120,24 +111,25 @@
 			);
 			name = MSMapsModulesReferenceApp;
 			productName = MSMapsModulesReferenceApp;
-			productReference = 8493FEB324A3CD5A008FDAAD /* MSMapsModulesReferenceApp.app */;
+			productReference = 8493FED824A40373008FDAAD /* MSMapsModulesReferenceApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		8493FEAB24A3CD5A008FDAAD /* Project object */ = {
+		8493FED024A40373008FDAAD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1120;
 				LastUpgradeCheck = 1120;
 				ORGANIZATIONNAME = "Microsoft Corporation";
 				TargetAttributes = {
-					8493FEB224A3CD5A008FDAAD = {
+					8493FED724A40373008FDAAD = {
 						CreatedOnToolsVersion = 11.2.1;
 					};
 				};
 			};
-			buildConfigurationList = 8493FEAE24A3CD5A008FDAAD /* Build configuration list for PBXProject "MSMapsModulesReferenceApp" */;
+			buildConfigurationList = 8493FED324A40373008FDAAD /* Build configuration list for PBXProject "MSMapsModulesReferenceApp" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -145,31 +137,31 @@
 				en,
 				Base,
 			);
-			mainGroup = 8493FEAA24A3CD5A008FDAAD;
-			productRefGroup = 8493FEB424A3CD5A008FDAAD /* Products */;
+			mainGroup = 8493FECF24A40373008FDAAD;
+			productRefGroup = 8493FED924A40373008FDAAD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8493FEB224A3CD5A008FDAAD /* MSMapsModulesReferenceApp */,
+				8493FED724A40373008FDAAD /* MSMapsModulesReferenceApp */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		8493FEB124A3CD5A008FDAAD /* Resources */ = {
+		8493FED624A40373008FDAAD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8493FEC624A3CD5D008FDAAD /* LaunchScreen.storyboard in Resources */,
-				8493FEC324A3CD5D008FDAAD /* Assets.xcassets in Resources */,
-				8493FEC124A3CD5A008FDAAD /* Main.storyboard in Resources */,
+				8493FEE824A40375008FDAAD /* LaunchScreen.storyboard in Resources */,
+				8493FEE524A40375008FDAAD /* Assets.xcassets in Resources */,
+				8493FEE324A40373008FDAAD /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		DBEF5DEDC1D4112B78C57921 /* [CP] Check Pods Manifest.lock */ = {
+		8195D0FFE8B408697A12112B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -191,7 +183,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E9E38EF8DFBDC29625BC4F1A /* [CP] Embed Pods Frameworks */ = {
+		E683613BFB98FA8DDE5A8955 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -211,32 +203,31 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		8493FEAF24A3CD5A008FDAAD /* Sources */ = {
+		8493FED424A40373008FDAAD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8493FEBE24A3CD5A008FDAAD /* ViewController.m in Sources */,
-				8493FEB824A3CD5A008FDAAD /* AppDelegate.m in Sources */,
-				8493FEC924A3CD5D008FDAAD /* main.m in Sources */,
-				8493FEBB24A3CD5A008FDAAD /* SceneDelegate.m in Sources */,
+				8493FEE024A40373008FDAAD /* ViewController.swift in Sources */,
+				8493FEDC24A40373008FDAAD /* AppDelegate.swift in Sources */,
+				8493FEDE24A40373008FDAAD /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		8493FEBF24A3CD5A008FDAAD /* Main.storyboard */ = {
+		8493FEE124A40373008FDAAD /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				8493FEC024A3CD5A008FDAAD /* Base */,
+				8493FEE224A40373008FDAAD /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		8493FEC424A3CD5D008FDAAD /* LaunchScreen.storyboard */ = {
+		8493FEE624A40375008FDAAD /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				8493FEC524A3CD5D008FDAAD /* Base */,
+				8493FEE724A40375008FDAAD /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -244,7 +235,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		8493FECA24A3CD5D008FDAAD /* Debug */ = {
+		8493FEEA24A40375008FDAAD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -299,10 +290,12 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
-		8493FECB24A3CD5D008FDAAD /* Release */ = {
+		8493FEEB24A40375008FDAAD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -350,13 +343,15 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		8493FECD24A3CD5D008FDAAD /* Debug */ = {
+		8493FEED24A40375008FDAAD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3BE76A6A44756309CE6417B2 /* Pods-MSMapsModulesReferenceApp.debug.xcconfig */;
+			baseConfigurationReference = EA61A7A79BEBCE521FDFBAEA /* Pods-MSMapsModulesReferenceApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -368,13 +363,14 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.modules.MSMapsModulesReferenceApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		8493FECE24A3CD5D008FDAAD /* Release */ = {
+		8493FEEE24A40375008FDAAD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9762953511BD19AB0A93EB12 /* Pods-MSMapsModulesReferenceApp.release.xcconfig */;
+			baseConfigurationReference = 5AC64ABCB524E4D9491C4657 /* Pods-MSMapsModulesReferenceApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -386,6 +382,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.modules.MSMapsModulesReferenceApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -393,25 +390,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		8493FEAE24A3CD5A008FDAAD /* Build configuration list for PBXProject "MSMapsModulesReferenceApp" */ = {
+		8493FED324A40373008FDAAD /* Build configuration list for PBXProject "MSMapsModulesReferenceApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8493FECA24A3CD5D008FDAAD /* Debug */,
-				8493FECB24A3CD5D008FDAAD /* Release */,
+				8493FEEA24A40375008FDAAD /* Debug */,
+				8493FEEB24A40375008FDAAD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8493FECC24A3CD5D008FDAAD /* Build configuration list for PBXNativeTarget "MSMapsModulesReferenceApp" */ = {
+		8493FEEC24A40375008FDAAD /* Build configuration list for PBXNativeTarget "MSMapsModulesReferenceApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8493FECD24A3CD5D008FDAAD /* Debug */,
-				8493FECE24A3CD5D008FDAAD /* Release */,
+				8493FEED24A40375008FDAAD /* Debug */,
+				8493FEEE24A40375008FDAAD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 8493FEAB24A3CD5A008FDAAD /* Project object */;
+	rootObject = 8493FED024A40373008FDAAD /* Project object */;
 }
