@@ -98,6 +98,8 @@ NS_ASSUME_NONNULL_BEGIN
       return;
     }
     [self parsePoint:coordinates error:error];
+  } else if ([type isEqualToString:@"MultiPoint"]) {
+    [self parseMultiPoint:object error:error];
   }
   // TODO: rest of geometry types
 }
@@ -138,6 +140,13 @@ NS_ASSUME_NONNULL_BEGIN
   MSMapIcon *icon = [[MSMapIcon alloc] init];
   icon.location = point;
   [mLayer.elements addMapElement:icon];
+}
+
+- (void)parseMultiPoint:(NSDictionary *)object error:(NSError **)error {
+  NSArray *coordinates = [object objectForKey:@"coordinates"];
+  for (int i = 0; i < coordinates.count; i++) {
+    [self parsePoint:coordinates[i] error:error];
+  }
 }
 
 + (MSGeoposition * _Nullable)parseGeoposition:(NSArray *)coordinates

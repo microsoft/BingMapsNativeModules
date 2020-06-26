@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  MSMapsModulesReferenceApp
+//  MSMapsModulesTestApp
 //
 //  Created by Elizabeth Bartusiak (t-elbart) on 6/24/20.
 //  Copyright © 2020 Microsoft Corporation.
@@ -8,7 +8,6 @@
 //
 
 import MicrosoftMaps
-import MSMapsModules
 import UIKit
 
 class ViewController: UIViewController {
@@ -17,10 +16,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        /* Add your credential key in a keys.plist file.
-         	 To acquire a key, visit:
-         https://docs.microsoft.com/en-us/bingmaps/getting-started/bing-maps-dev-center-help/getting-a-bing-maps-key
-         */
+        /* Add your credential key in a keys.plist file. */
         var keys: NSDictionary?
         if let path = Bundle.main.path(forResource: "keys", ofType: "plist") {
             keys = NSDictionary(contentsOfFile: path)

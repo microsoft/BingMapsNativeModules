@@ -1,4 +1,6 @@
 # Uncomment the next line to define a global platform for your project
+project './MSMapsModules.xcodeproj'
+workspace 'MSMapsModules.xcworkspace' 
 platform :ios, '9.0'
 
 target 'MSMapsModules' do
@@ -7,6 +9,11 @@ target 'MSMapsModules' do
 
   # Pods for MSMapsModules
   pod 'MicrosoftMapsSDK', '~> 1.1.4' 
+
+  target 'MSMapsModulesTestApp' do
+    project './MSMapsModulesTestApp/MSMapsModulesTestApp.xcodeproj'
+    pod 'MicrosoftMapsSDK', '~> 1.1.4'
+  end
 
   target 'MSMapsModulesTests' do
     # Pods for testing

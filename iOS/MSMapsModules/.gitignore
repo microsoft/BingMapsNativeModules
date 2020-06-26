@@ -27,3 +27,5 @@ Pods/
 
 # Output folder for universal frameworks
 Output/
+
+keys.plist
