@@ -185,6 +185,7 @@
 		849A3490249D0AF800CDE035 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1120;
 				LastUpgradeCheck = 1120;
 				ORGANIZATIONNAME = "Microsoft Corporation";
 				TargetAttributes = {
@@ -432,6 +433,10 @@
 			baseConfigurationReference = 2DAEB604BA692EF16902823E /* Pods-MSMapsModules.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)ReferenceApp/Pods/MicrosoftMapsSDK",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -444,6 +449,10 @@
 			baseConfigurationReference = 3C0938DF625EEB06EAAAB990 /* Pods-MSMapsModules.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)ReferenceApp/Pods/MicrosoftMapsSDK",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

@@ -21,8 +21,8 @@
   NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [30, 10]}";
   NSError *error;
   MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
-	XCTAssertNil(error);
-	MSMapElementCollection *collection = layer.elements;
+  XCTAssertNil(error);
+  MSMapElementCollection *collection = layer.elements;
   XCTAssertNotNil(collection);
   XCTAssertEqual(1, collection.count);
 
@@ -34,6 +34,83 @@
   NSArray *expectedPoints =
       [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:30],
                                        [NSNumber numberWithDouble:10], nil];
+
+  [self checkExpectedPosition:expectedPoints
+           withActualPosition:icon.location.position];
+}
+
+- (void)testParseMultiPoint {
+  NSString *geojson = @"{\"type\": \"MultiPoint\", \"coordinates\": [[10, 40], "
+                      @"[40, 30], [20, 20], [30, 10]]}";
+  NSError *error;
+  MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
+  XCTAssertNil(error);
+  MSMapElementCollection *collection = layer.elements;
+  XCTAssertNotNil(collection);
+  XCTAssertEqual(4, collection.count);
+
+  double expected[4][2] = {{10, 40}, {40, 30}, {20, 20}, {30, 10}};
+  NSArray *expectedPoints = [[NSArray alloc] init];
+  for (int row = 0; row < 4; row++) {
+    NSArray *pair = [[NSArray alloc]
+        initWithObjects:[NSNumber numberWithDouble:expected[row][0]],
+                        [NSNumber numberWithDouble:expected[row][1]], nil];
+    expectedPoints = [expectedPoints arrayByAddingObject:pair];
+  }
+
+  MSMapIcon *icon;
+  int index = 0;
+  for (id obj in collection) {
+    icon = (MSMapIcon *)obj;
+    XCTAssertNotNil(icon);
+    [self checkExpectedPosition:expectedPoints[index]
+             withActualPosition:icon.location.position];
+    index++;
+  }
+}
+
+- (void)testParsePointWithAltitude {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [30, 10, 5]}";
+  NSError *error;
+  MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
+  XCTAssertNil(error);
+  MSMapElementCollection *collection = layer.elements;
+  XCTAssertNotNil(collection);
+  XCTAssertEqual(1, collection.count);
+
+  MSMapIcon *icon;
+  for (id obj in collection) {
+    icon = (MSMapIcon *)obj;
+  }
+  XCTAssertNotNil(icon);
+  NSArray *expectedPoints =
+      [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:30],
+                                       [NSNumber numberWithDouble:10],
+                                       [NSNumber numberWithDouble:5], nil];
+
+  [self checkExpectedPosition:expectedPoints
+           withActualPosition:icon.location.position];
+}
+
+- (void)testParsePointManyCoordinates {
+  NSString *geojson =
+      @"{\"type\": \"Point\", \"coordinates\": [30, 10, 5, 3, 4]}";
+  NSError *error;
+  MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
+  XCTAssertNil(error);
+  MSMapElementCollection *collection = layer.elements;
+  XCTAssertNotNil(collection);
+  XCTAssertEqual(1, collection.count);
+
+  MSMapIcon *icon;
+  for (id obj in collection) {
+    icon = (MSMapIcon *)obj;
+  }
+  XCTAssertNotNil(icon);
+  NSArray *expectedPoints =
+      [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:30],
+                                       [NSNumber numberWithDouble:10],
+                                       [NSNumber numberWithDouble:5], nil];
 
   [self checkExpectedPosition:expectedPoints
            withActualPosition:icon.location.position];
@@ -60,18 +137,16 @@
 
 - (void)testNoBracketsJsonGivesError {
   NSError *error;
-  MSMapElementLayer *layer = [MSMapGeoJsonParser
+  XCTAssertNil([MSMapGeoJsonParser
       parse:@"\"type\": \"Point\", \"coordinates\": [-122.26, 47.609]"
-      error:&error];
-  XCTAssertNil(layer);
+      error:&error]);
   XCTAssertEqual(-200, error.code);
 }
 
 - (void)testNoCoordinatesGivesError {
   NSString *geojson = @"{\"type\": \"Point\"}";
   NSError *error;
-  MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
-  XCTAssertNil(layer);
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
   XCTAssertEqual(-200, error.code);
 }
 
@@ -80,6 +155,13 @@
   NSError *error;
   XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
   XCTAssertEqual(-500, error.code);
+}
+
+- (void)testNoCoordinatesValueGivesError {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": }";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-200, error.code);
 }
 
 - (void)testNoTypeGivesError {
@@ -117,6 +199,55 @@
   XCTAssertEqual(-500, error.code);
 }
 
+- (void)testCoordinatesObjectGivesError {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": {}}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testCoordinatesArraysGivesError {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [[], []]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testCoordinatesStringGivesError {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": \"foo\"}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testLongitudeTooHighGivesError {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [189, 7]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testLongitudeTooLowGivesError {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [-189, 7]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testLatitudeTooHighGivesError {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [7, 95]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testLatitudeTooLowGivesError {
+  NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [7, -95]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
 - (void)testLongitudeStringGivesError {
   NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [\"a\", 10]}";
   NSError *error;
@@ -137,6 +268,38 @@
   NSError *error;
   XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
   XCTAssertEqual(-500, error.code);
+}
+
+- (void)testParseMultiPointBadPointGivesError {
+  NSString *geojson = @"{\"type\": \"MultiPoint\", \"coordinates\": [[10, 40], "
+                      @"[40, \"cat\"], [20, 20], [30, 10]]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testParseMultiPointNotArraysGivesError {
+  NSString *geojson = @"{\"type\": \"MultiPoint\", \"coordinates\": [10, 40, "
+                      @"40, 10, 20, 20, 30, 10]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testParseMultiPointObjectPointsGivesError {
+  NSString *geojson = @"{\"type\": \"MultiPoint\", \"coordinates\": [{10, 40}, "
+                      @"{40, 10}, {20, 20}, {30, 10}]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-200, error.code);
+}
+
+- (void)testParseMultiPointObjectArrayGivesError {
+  NSString *geojson = @"{\"type\": \"MultiPoint\", \"coordinates\": {[10, 40], "
+                      @"[40, 10], [20, 20], [30, 10]}}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-200, error.code);
 }
 
 - (void)checkExpectedPosition:(NSArray *)expectedPoints
