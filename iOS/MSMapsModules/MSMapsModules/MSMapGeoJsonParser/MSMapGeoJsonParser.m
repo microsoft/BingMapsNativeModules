@@ -100,6 +100,14 @@ NS_ASSUME_NONNULL_BEGIN
     [self parsePoint:coordinates error:error];
   } else if ([type isEqualToString:@"MultiPoint"]) {
     [self parseMultiPoint:object error:error];
+  } else if ([type isEqualToString:@"LineString"]) {
+    NSArray *pathArray = [MSMapGeoJsonParser getCoordinates:object error:error];
+    if (pathArray == nil) {
+      return;
+    }
+    [self parseLineString:pathArray error:error];
+  } else if ([type isEqualToString:@"MultiLineString"]) {
+    [self parseMultiLineString:object error:error];
   }
   // TODO: rest of geometry types
 }
@@ -112,7 +120,8 @@ NS_ASSUME_NONNULL_BEGIN
         errorWithDomain:@"com.microsoft.modules.MSMapsModules.JSONError"
                    code:-200
                userInfo:@{
-                 NSLocalizedDescriptionKey : @"Error getting coordinates array."
+                 NSLocalizedDescriptionKey :
+                     @"Object must contain \"coordinates\" array."
                }];
     return nil;
   }
@@ -152,16 +161,66 @@ NS_ASSUME_NONNULL_BEGIN
   }
 }
 
+- (void)parseLineString:(NSArray *)pathArray error:(NSError **)error {
+  if (pathArray.count < 2) {
+    *error = [NSError
+        errorWithDomain:
+            @"com.microsoft.modules.MSMapsModules.MSMapGeoJsonParseError"
+                   code:-500
+               userInfo:@{
+                 NSLocalizedDescriptionKey :
+                     [@"LineString must contain at least two positions. "
+                      @"Instead saw: "
+                         stringByAppendingString:
+                             [pathArray componentsJoinedByString:@", "]]
+               }];
+    return;
+  }
+  MSGeopath *path = [MSMapGeoJsonParser parsePath:pathArray error:error];
+  if (*error != nil) {
+    return;
+  }
+  MSMapPolyline *line = [[MSMapPolyline alloc] init];
+  line.path = path;
+  [mLayer.elements addMapElement:line];
+}
+
+- (void)parseMultiLineString:(NSDictionary *)shape error:(NSError **)error {
+  NSArray *coordinates = [shape valueForKey:@"coordinates"];
+  for (id obj in coordinates) {
+    [self parseLineString:(NSArray *)obj error:error];
+    if (*error != nil) {
+      return;
+    }
+  }
+}
+
 + (MSGeoposition * _Nullable)parseGeoposition:(NSArray *)coordinates
                                        error:(NSError **)error {
-  if ([coordinates isKindOfClass:[NSArray class]] && coordinates.count >= 2) {
+  if (![coordinates isKindOfClass:[NSArray class]]) {
+    *error = [NSError
+        errorWithDomain:
+            @"com.microsoft.modules.MSMapsModules.MSMapGeoJsonParseError"
+                   code:-500
+               userInfo:@{
+                 NSLocalizedDescriptionKey :
+                     [@"coordinates array must contain "
+                      @"at least latitude and longitude. Instead saw: "
+                         stringByAppendingFormat:@"%@", coordinates]
+               }];
+    return nil;
+  }
+  if (coordinates.count >= 2) {
     if (![coordinates[0] isKindOfClass:[NSNumber class]]) {
       *error = [NSError
           errorWithDomain:
               @"com.microsoft.modules.MSMapsModules.MSMapGeoJsonParseError"
                      code:-500
                  userInfo:@{
-                   NSLocalizedDescriptionKey : @"Longitude must be a number."
+                   NSLocalizedDescriptionKey :
+                       [@"Longitude must be a number. Instead saw array: "
+                           stringByAppendingString:
+                               [coordinates componentsJoinedByString:@", "]]
                  }];
       return nil;
     }
@@ -174,7 +233,8 @@ NS_ASSUME_NONNULL_BEGIN
                      code:-500
                  userInfo:@{
                    NSLocalizedDescriptionKey :
-                       @"Longitude must be in range [-180, 180]."
+                       [@"Longitude must be in range [-180, 180]. Instead saw: "
+                           stringByAppendingFormat:@"%f", longitude]
                  }];
     }
 
@@ -184,7 +244,10 @@ NS_ASSUME_NONNULL_BEGIN
               @"com.microsoft.modules.MSMapsModules.MSMapGeoJsonParseError"
                      code:-500
                  userInfo:@{
-                   NSLocalizedDescriptionKey : @"Latitude must be a number."
+                   NSLocalizedDescriptionKey :
+                       [@"Latitude must be a number. Instead saw array: "
+                           stringByAppendingString:
+                               [coordinates componentsJoinedByString:@", "]]
                  }];
       return nil;
     }
@@ -197,7 +260,8 @@ NS_ASSUME_NONNULL_BEGIN
                      code:-500
                  userInfo:@{
                    NSLocalizedDescriptionKey :
-                       @"Latitude must be in range [-90, 90]."
+                       [@"Latitude must be in range [-90, 90]. Instead saw: "
+                           stringByAppendingFormat:@"%f", latitude]
                  }];
       return nil;
     }
@@ -211,7 +275,11 @@ NS_ASSUME_NONNULL_BEGIN
                 @"com.microsoft.modules.MSMapsModules.MSMapGeoJsonParseError"
                        code:-500
                    userInfo:@{
-                     NSLocalizedDescriptionKey : @"Altitude must be a number."
+                     NSLocalizedDescriptionKey :
+                         [@"Altitude must be a number. Instead saw array: "
+                             stringByAppendingString:
+                                 [coordinates
+                                     componentsJoinedByString:@", "]]
                    }];
         return nil;
       }
@@ -228,11 +296,45 @@ NS_ASSUME_NONNULL_BEGIN
             @"com.microsoft.modules.MSMapsModules.MSMapGeoJsonParseError"
                    code:-500
                userInfo:@{
-                 NSLocalizedDescriptionKey : @"coordinates array must contain "
-                                             @"at least latitude and longitude."
+                 NSLocalizedDescriptionKey :
+                     [@"coordinates array must contain "
+                      @"at least latitude and longitude. Instead saw: "
+                         stringByAppendingString:
+                             [coordinates componentsJoinedByString:@", "]]
                }];
     return nil;
   }
+}
+
++ (MSGeopath *)parsePath:(NSArray *)pathArray error:(NSError **)error {
+  NSArray<MSGeoposition *> *path = [[NSArray alloc] init];
+  MSMapAltitudeReferenceSystem ref = MSMapAltitudeReferenceSystemSurface;
+  for (id obj in pathArray) {
+    if (![obj isKindOfClass:[NSArray class]]) {
+      *error = [NSError
+          errorWithDomain:
+              @"com.microsoft.modules.MSMapsModules.MSMapGeoJsonParseError"
+                     code:-500
+                 userInfo:@{
+                   NSLocalizedDescriptionKey :
+                       [@"coordinates of LineString must contain an array of "
+                        @"positions. Instead saw: "
+                           stringByAppendingFormat:@"%@", (NSString *)obj]
+                 }];
+      return nil;
+    }
+
+    NSArray *latLong = (NSArray *)obj;
+    MSGeoposition *position = [self parseGeoposition:latLong error:error];
+    if (*error != nil) {
+      return nil;
+    }
+    if (latLong.count > 2) {
+      ref = MSMapAltitudeReferenceSystemEllipsoid;
+    }
+    path = [path arrayByAddingObject:position];
+  }
+  return [[MSGeopath alloc] initWithPositions:path altitudeReferenceSystem:ref];
 }
 
 @end
