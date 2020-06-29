@@ -30,7 +30,6 @@ class ViewController: UIViewController {
         let geojson = "{\"type\": \"MultiPoint\", \"coordinates\": [[-122.27, 47.61], [40, 30], [20, 20], [30, 10]]}"
         do {
             let layer = try MSMapGeoJsonParser.parse(geojson)
-            print("count: :", layer.elements.count)
             mMapView.layers.add(layer)
         } catch {
             print(error.self)
