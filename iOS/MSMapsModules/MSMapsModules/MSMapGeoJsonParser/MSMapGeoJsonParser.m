@@ -146,12 +146,15 @@ NS_ASSUME_NONNULL_BEGIN
   NSArray *coordinates = [object objectForKey:@"coordinates"];
   for (int i = 0; i < coordinates.count; i++) {
     [self parsePoint:coordinates[i] error:error];
+    if (error == nil) {
+      return;
+    }
   }
 }
 
 + (MSGeoposition * _Nullable)parseGeoposition:(NSArray *)coordinates
                                        error:(NSError **)error {
-  if (coordinates.count >= 2) {
+  if ([coordinates isKindOfClass:[NSArray class]] && coordinates.count >= 2) {
     if (![coordinates[0] isKindOfClass:[NSNumber class]]) {
       *error = [NSError
           errorWithDomain:
