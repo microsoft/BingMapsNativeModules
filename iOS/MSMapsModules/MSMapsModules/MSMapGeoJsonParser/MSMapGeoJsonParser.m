@@ -146,7 +146,7 @@ NS_ASSUME_NONNULL_BEGIN
   NSArray *coordinates = [object objectForKey:@"coordinates"];
   for (int i = 0; i < coordinates.count; i++) {
     [self parsePoint:coordinates[i] error:error];
-    if (error == nil) {
+    if (*error != nil) {
       return;
     }
   }
