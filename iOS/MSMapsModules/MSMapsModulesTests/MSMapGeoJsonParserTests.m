@@ -69,6 +69,91 @@
   }
 }
 
+- (void)testParseLineString {
+  NSString *geojson = @"{\"type\": \"LineString\",\"coordinates\": [[30, 10], "
+                      @"[10, 30, 8], [40, 40]]}";
+  NSError *error;
+  MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
+  XCTAssertNil(error);
+  MSMapElementCollection *collection = layer.elements;
+  XCTAssertNotNil(collection);
+  XCTAssertEqual(1, collection.count);
+
+  double expected[3][3] = {{30, 10}, {10, 30, 8}, {40, 40}};
+  NSArray *expectedPoints = [[NSArray alloc] init];
+  for (int row = 0; row < 3; row++) {
+    NSArray *pair;
+    if (row == 1) {
+      pair = [[NSArray alloc]
+          initWithObjects:[NSNumber numberWithDouble:expected[row][0]],
+                          [NSNumber numberWithDouble:expected[row][1]],
+                          [NSNumber numberWithDouble:expected[row][2]], nil];
+    } else {
+      pair = [[NSArray alloc]
+          initWithObjects:[NSNumber numberWithDouble:expected[row][0]],
+                          [NSNumber numberWithDouble:expected[row][1]], nil];
+    }
+    expectedPoints = [expectedPoints arrayByAddingObject:pair];
+  }
+
+  MSMapPolyline *line;
+
+  for (id obj in collection) {
+    XCTAssertEqual([MSMapPolyline class], [obj class]);
+    line = (MSMapPolyline *)obj;
+    XCTAssertNotNil(line);
+    XCTAssertEqual(MSMapAltitudeReferenceSystemEllipsoid,
+                   line.path.altitudeReferenceSystem);
+    int index = 0;
+
+    for (id pos in line.path) {
+      MSGeoposition *position = (MSGeoposition *)pos;
+      [self checkExpectedPosition:expectedPoints[index]
+               withActualPosition:position];
+      index++;
+    }
+  }
+}
+
+- (void)testParseMultiLineString {
+  NSString *geojson =
+      @"{\"type\": \"MultiLineString\",\"coordinates\": [[[10, 10], [20, 20], "
+      @"[10, 40]], [[40, 40], [30, 30], [40, 20], [30, 10]]]}";
+  NSError *error;
+  MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
+  XCTAssertNil(error);
+  MSMapElementCollection *collection = layer.elements;
+  XCTAssertNotNil(collection);
+  XCTAssertEqual(2, collection.count);
+
+  double expected[7][2] = {{10, 10}, {20, 20}, {10, 40}, {40, 40},
+                           {30, 30}, {40, 20}, {30, 10}};
+  NSArray *expectedPoints = [[NSArray alloc] init];
+  for (int row = 0; row < 7; row++) {
+    NSArray *pair = [[NSArray alloc]
+        initWithObjects:[NSNumber numberWithDouble:expected[row][0]],
+                        [NSNumber numberWithDouble:expected[row][1]], nil];
+    expectedPoints = [expectedPoints arrayByAddingObject:pair];
+  }
+
+  MSMapPolyline *line;
+
+  int index = 0;
+  for (id obj in collection) {
+    XCTAssertEqual([MSMapPolyline class], [obj class]);
+    line = (MSMapPolyline *)obj;
+    XCTAssertNotNil(line);
+    XCTAssertEqual(MSMapAltitudeReferenceSystemSurface,
+                   line.path.altitudeReferenceSystem);
+    for (id pos in line.path) {
+      MSGeoposition *position = (MSGeoposition *)pos;
+      [self checkExpectedPosition:expectedPoints[index]
+               withActualPosition:position];
+      index++;
+    }
+  }
+}
+
 - (void)testParsePointWithAltitude {
   NSString *geojson = @"{\"type\": \"Point\", \"coordinates\": [30, 10, 5]}";
   NSError *error;
@@ -147,7 +232,7 @@
   NSString *geojson = @"{\"type\": \"Point\"}";
   NSError *error;
   XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
-  XCTAssertEqual(-200, error.code);
+  XCTAssertEqual(-500, error.code);
 }
 
 - (void)testEmptyCoordinatesGivesError {
@@ -300,6 +385,38 @@
   NSError *error;
   XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
   XCTAssertEqual(-200, error.code);
+}
+
+- (void)testParseLineStringLessThan2CoordinatesGivesError {
+  NSString *geojson =
+      @"{\"type\": \"LineString\", \"coordinates\": [[30, 10]]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testParseLineStringNotArraysGivesError {
+  NSString *geojson =
+      @"{\"type\": \"LineString\", \"coordinates\": [30, 10, 4, 5]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testParseMultiLineStringBadLineGivesError {
+  NSString *geojson = @"{\"type\": \"MultiLineString\",\"coordinates\": [[[10, "
+                      @"10]], [[40, 40], [30, 30], [40, 20], [30, 10]]]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testParseMultiLineStringStringCoordinatesGivesError {
+  NSString *geojson =
+      @"{\"type\": \"MultiLineString\",\"coordinates\": \"foo\"}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
 }
 
 - (void)checkExpectedPosition:(NSArray *)expectedPoints

@@ -7,8 +7,6 @@ target 'MSMapsModulesReferenceApp' do
 
   # Pods for MSMapsModulesReferenceApp
   pod 'MicrosoftMapsSDK', '~> 1.1.4'
-  # Modify the following line to import the library from GitHub
-  # See https://guides.cocoapods.org/using/the-podfile.html for more information
-  pod 'MSMapsModules', :podspec => '~/Desktop/internProject/BingMapsNativeModules'
+  pod 'MSMapsModules', :git => 'https://github.com/microsoft/BingMapsNativeModules.git'
 
 end

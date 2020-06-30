@@ -27,7 +27,7 @@ class ViewController: UIViewController {
         let scene = MSMapScene(location: LOCATION_LAKE_WASHINGTON, zoomLevel: 10)
         mMapView.setScene(scene, with: .none)
 
-        let geojson = "{\"type\": \"MultiPoint\", \"coordinates\": [[-122.27, 47.61], [40, 30], [20, 20], [30, 10]]}"
+				let geojson = "{\"type\": \"MultiLineString\",\"coordinates\": [[[10, 10], [20, 20], [10, 40]], [[40, 40], [30, 30], [40, 20], [30, 10]]]}";
         do {
             let layer = try MSMapGeoJsonParser.parse(geojson)
             mMapView.layers.add(layer)

@@ -5,7 +5,7 @@ PODS:
 
 DEPENDENCIES:
   - MicrosoftMapsSDK (~> 1.1.4)
-  - MSMapsModules (from `~/Desktop/internProject/BingMapsNativeModules`)
+  - MSMapsModules (from `https://github.com/microsoft/BingMapsNativeModules.git`)
 
 SPEC REPOS:
   trunk:
@@ -13,17 +13,17 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   MSMapsModules:
-    :podspec: "~/Desktop/internProject/BingMapsNativeModules"
+    :git: https://github.com/microsoft/BingMapsNativeModules.git
 
 CHECKOUT OPTIONS:
   MSMapsModules:
-    :commit: 3814ebdbca8706bf60d6e8c615423692b991e1e7
-    :git: file:///Users/admin/Desktop/internProject/BingMapsNativeModules
+    :commit: 4d5126603451d713bff7a1450874a12bcf830c48
+    :git: https://github.com/microsoft/BingMapsNativeModules.git
 
 SPEC CHECKSUMS:
   MicrosoftMapsSDK: 64317bb343e3ef26507f61617889a6918a1b59d4
   MSMapsModules: 888f539afcbcad3ce2462f060b73bd97f24b2b63
 
-PODFILE CHECKSUM: cc598cad0e432de4a2fa127e85e914d1e467f55c
+PODFILE CHECKSUM: 1e8ecb3f6a7c957508f837b7055fe6b84fa38c0c
 
 COCOAPODS: 1.9.3
