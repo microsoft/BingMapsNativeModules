@@ -232,7 +232,7 @@
   NSString *geojson = @"{\"type\": \"Point\"}";
   NSError *error;
   XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
-  XCTAssertEqual(-200, error.code);
+  XCTAssertEqual(-500, error.code);
 }
 
 - (void)testEmptyCoordinatesGivesError {
@@ -406,6 +406,14 @@
 - (void)testParseMultiLineStringBadLineGivesError {
   NSString *geojson = @"{\"type\": \"MultiLineString\",\"coordinates\": [[[10, "
                       @"10]], [[40, 40], [30, 30], [40, 20], [30, 10]]]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testParseMultiLineStringStringCoordinatesGivesError {
+  NSString *geojson =
+      @"{\"type\": \"MultiLineString\",\"coordinates\": \"foo\"}";
   NSError *error;
   XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
   XCTAssertEqual(-500, error.code);
