@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
   MSMapElementLayer *mLayer;
 };
 
+bool mDidWarn = false;
+
 + (MSMapElementLayer * _Nullable)parse:(NSString *)geojson
                                 error:(NSError * _Nullable * _Nullable)error {
   if (geojson == nil || geojson.length == 0) {
@@ -47,14 +49,11 @@ NS_ASSUME_NONNULL_BEGIN
                                         error:(NSError **)error {
   mLayer = [[MSMapElementLayer alloc] init];
   NSData *jsonData = [geojson dataUsingEncoding:NSUTF8StringEncoding];
-  NSError *jsonError;
-  NSDictionary *jsonObject =
-      [NSJSONSerialization JSONObjectWithData:jsonData
-                                      options:kNilOptions
-                                        error:&jsonError];
+  NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                             options:kNilOptions
+                                                               error:error];
 
-  if (jsonObject == nil) {
-    *error = jsonError;
+  if (*error != nil) {
     return nil;
   }
 
@@ -64,10 +63,6 @@ NS_ASSUME_NONNULL_BEGIN
         makeGeoJsonError:@"GeoJson geomtry object must have \"type\"."];
     return nil;
   }
-
-  NSLog(@"warning: Unless all positions in a Geometry Object contain an "
-        @"altitude coordinate, all altitudes will be set to 0 at surface level "
-        @"for that Geometry Object.");
 
   NSString *type = [NSString stringWithFormat:@"%@", typeObject];
   if ([type isEqualToString:@"FeatureCollection"]) {
@@ -85,29 +80,39 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)switchToType:(NSDictionary *)object error:(NSError **)error {
   NSString *type =
       [NSString stringWithFormat:@"%@", [object objectForKey:@"type"]];
-  if ([type isEqualToString:@"Polygon"]) {
-    NSArray *rings = [MSMapGeoJsonParser getCoordinates:object error:error];
-    if (*error != nil) {
-      return;
-    }
-    [self parsePolygon:rings error:error];
-  } else if ([type isEqualToString:@"Point"]) {
+  if ([type isEqualToString:@"Point"]) {
     NSArray *coordinates = [MSMapGeoJsonParser getCoordinates:object
                                                         error:error];
     if (coordinates == nil) {
       return;
     }
     [self parsePoint:coordinates error:error];
-  } else if ([type isEqualToString:@"MultiPoint"]) {
-    [self parseMultiPoint:object error:error];
-  } else if ([type isEqualToString:@"LineString"]) {
-    NSArray *pathArray = [MSMapGeoJsonParser getCoordinates:object error:error];
-    if (*error != nil) {
-      return;
+  } else {
+    if (!mDidWarn) {
+      NSLog(@"warning: Unless all positions in a Geometry Object contain an "
+            @"altitude coordinate, all altitudes will be set to 0 at surface "
+            @"level "
+            @"for that Geometry Object.");
+      mDidWarn = true;
     }
-    [self parseLineString:pathArray error:error];
-  } else if ([type isEqualToString:@"MultiLineString"]) {
-    [self parseMultiLineString:object error:error];
+    if ([type isEqualToString:@"Polygon"]) {
+      NSArray *rings = [MSMapGeoJsonParser getCoordinates:object error:error];
+      if (*error != nil) {
+        return;
+      }
+      [self parsePolygon:rings error:error];
+    } else if ([type isEqualToString:@"MultiPoint"]) {
+      [self parseMultiPoint:object error:error];
+    } else if ([type isEqualToString:@"LineString"]) {
+      NSArray *pathArray = [MSMapGeoJsonParser getCoordinates:object
+                                                        error:error];
+      if (*error != nil) {
+        return;
+      }
+      [self parseLineString:pathArray error:error];
+    } else if ([type isEqualToString:@"MultiLineString"]) {
+      [self parseMultiLineString:object error:error];
+    }
   }
   // TODO: rest of geometry types
 }
@@ -226,7 +231,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
   }
 
-  NSArray<MSGeopath *> *rings = [[NSArray alloc] init];
+  NSMutableArray<MSGeopath *> *rings = [[NSMutableArray alloc] init];
   for (id obj in jsonRings) {
     NSArray *pathArray = (NSArray *)obj;
     MSGeopath *path = [MSMapGeoJsonParser parsePath:pathArray
@@ -239,7 +244,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (*error != nil) {
       return;
     }
-    rings = [rings arrayByAddingObject:path];
+    [rings addObject:path];
   }
   MSMapPolygon *poly = [[MSMapPolygon alloc] init];
   poly.paths = rings;
@@ -335,7 +340,7 @@ NS_ASSUME_NONNULL_BEGIN
     return nil;
   }
 
-  NSArray<MSGeoposition *> *path = [[NSArray alloc] init];
+  NSMutableArray<MSGeoposition *> *path = [[NSMutableArray alloc] init];
   for (id obj in pathArray) {
     NSArray *latLong = (NSArray *)obj;
     bool useAltitude = false;
@@ -348,7 +353,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (*error != nil) {
       return nil;
     }
-    path = [path arrayByAddingObject:position];
+    [path addObject:position];
   }
   return [[MSGeopath alloc] initWithPositions:path
                       altitudeReferenceSystem:altitudeReferenceSystem];
@@ -378,10 +383,23 @@ NS_ASSUME_NONNULL_BEGIN
   }
   NSArray *firstPosition = [path firstObject];
   NSArray *lastPosition = [path lastObject];
-  if ((firstPosition.count < 3 && lastPosition.count < 3) ||
-      (firstPosition.count > 2 && lastPosition.count > 2)) {
+  if (firstPosition.count != lastPosition.count) {
+    NSString *stringArray =
+        [@"first: " stringByAppendingString:[MSMapGeoJsonParser
+                                                arrayToString:firstPosition]];
+    stringArray = [stringArray
+        stringByAppendingString:
+            [@"  last: ["
+                stringByAppendingString:[MSMapGeoJsonParser
+                                            arrayToString:lastPosition]]];
 
-    for (int i = 0; i < MIN(firstPosition.count, lastPosition.count); i++) {
+    *error = [MSMapGeoJsonParser
+        makeGeoJsonError:[@"First and last coordinate pair of each polygon "
+                          @"ring must be the same. Instead saw: "
+                             stringByAppendingString:stringArray]];
+
+  } else {
+    for (int i = 0; i < firstPosition.count; i++) {
       if ([firstPosition objectAtIndex:i] != [lastPosition objectAtIndex:i]) {
         NSString *stringArray = [@"first: "
             stringByAppendingString:[MSMapGeoJsonParser
@@ -399,21 +417,6 @@ NS_ASSUME_NONNULL_BEGIN
         return;
       }
     }
-
-  } else {
-    NSString *stringArray =
-        [@"first: " stringByAppendingString:[MSMapGeoJsonParser
-                                                arrayToString:firstPosition]];
-    stringArray = [stringArray
-        stringByAppendingString:
-            [@"  last: ["
-                stringByAppendingString:[MSMapGeoJsonParser
-                                            arrayToString:lastPosition]]];
-
-    *error = [MSMapGeoJsonParser
-        makeGeoJsonError:[@"First and last coordinate pair of each polygon "
-                          @"ring must be the same. Instead saw: "
-                             stringByAppendingString:stringArray]];
   }
 }
 

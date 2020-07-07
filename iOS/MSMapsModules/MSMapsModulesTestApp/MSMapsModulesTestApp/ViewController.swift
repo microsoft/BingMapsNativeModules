@@ -27,7 +27,7 @@ class ViewController: UIViewController {
         let scene = MSMapScene(location: LOCATION_LAKE_WASHINGTON, zoomLevel: 10)
         mMapView.setScene(scene, with: .none)
 
-		let geojson = "{\"type\": \"Polygon\", \"coordinates\": [[[35, 10], [9, 8]]]}"
+		let geojson = "{\"type\": \"Polygon\", \"coordinates\": [[[35, 10], [9, 8], [9, 8],[35, 10]]]}"
 		
         do {
             let layer = try MSMapGeoJsonParser.parse(geojson)
