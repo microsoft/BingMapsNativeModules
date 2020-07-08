@@ -57,7 +57,9 @@
 				847CA0EA24A68F72007FA446 /* Frameworks */,
 				CBE567AB50810EDB37FCB043 /* Pods */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		847CA0D424A68ED4007FA446 /* Products */ = {
 			isa = PBXGroup;
