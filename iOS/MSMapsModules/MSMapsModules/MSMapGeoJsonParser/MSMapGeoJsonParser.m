@@ -15,16 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation MSMapGeoJsonParser {
   MSMapElementLayer *mLayer;
   bool mDidWarn;
-  NSString *mWarning;
 };
 
 - (MSMapGeoJsonParser *)init {
   if (self = [super init]) {
     mLayer = [[MSMapElementLayer alloc] init];
     mDidWarn = false;
-    mWarning = @"Warning: Unless all positions in a Geometry Object contain an "
-               @"altitude coordinate, all altitudes will be set to 0 at "
-               @"surface level for that Geometry Object.";
   }
   return self;
 }
@@ -101,41 +97,37 @@ NS_ASSUME_NONNULL_BEGIN
     if (*error != nil) {
       return;
     }
-    MSMapAltitudeReferenceSystem system =
+    MSMapAltitudeReferenceSystem altitudeReferenceSystem =
         (coordinates.count > 2) ? MSMapAltitudeReferenceSystemEllipsoid
                                 : MSMapAltitudeReferenceSystemSurface;
     [self createIconAddToLayer:position
-        altitudeReferenceSystem:system
+        altitudeReferenceSystem:altitudeReferenceSystem
                           error:error];
-  } else {
-    if ([type isEqualToString:@"Polygon"]) {
-      NSArray *rings = [MSMapGeoJsonParser getCoordinates:object error:error];
-      if (*error != nil) {
-        return;
-      }
-      [self parsePolygon:rings error:error];
-    } else if ([type isEqualToString:@"MultiPoint"]) {
-      NSArray *coordinates = [MSMapGeoJsonParser getCoordinates:object
-                                                          error:error];
-      if (*error != nil) {
-        return;
-      }
-      [self parseMultiPoint:coordinates error:error];
-    } else if ([type isEqualToString:@"LineString"]) {
-      NSArray *pathArray = [MSMapGeoJsonParser getCoordinates:object
-                                                        error:error];
-      if (*error != nil) {
-        return;
-      }
-      [self parseLineString:pathArray error:error];
-    } else if ([type isEqualToString:@"MultiLineString"]) {
-      NSArray *pathArray = [MSMapGeoJsonParser getCoordinates:object
-                                                        error:error];
-      if (*error != nil) {
-        return;
-      }
-      [self parseMultiLineString:pathArray error:error];
+  } else if ([type isEqualToString:@"Polygon"]) {
+    NSArray *rings = [MSMapGeoJsonParser getCoordinates:object error:error];
+    if (*error != nil) {
+      return;
     }
+    [self parsePolygon:rings error:error];
+  } else if ([type isEqualToString:@"MultiPoint"]) {
+    NSArray *coordinates = [MSMapGeoJsonParser getCoordinates:object
+                                                        error:error];
+    if (*error != nil) {
+      return;
+    }
+    [self parseMultiPoint:coordinates error:error];
+  } else if ([type isEqualToString:@"LineString"]) {
+    NSArray *pathArray = [MSMapGeoJsonParser getCoordinates:object error:error];
+    if (*error != nil) {
+      return;
+    }
+    [self parseLineString:pathArray error:error];
+  } else if ([type isEqualToString:@"MultiLineString"]) {
+    NSArray *pathArray = [MSMapGeoJsonParser getCoordinates:object error:error];
+    if (*error != nil) {
+      return;
+    }
+    [self parseMultiLineString:pathArray error:error];
   }
   // TODO: rest of geometry types
 }
@@ -168,39 +160,34 @@ NS_ASSUME_NONNULL_BEGIN
   [mLayer.elements addMapElement:icon];
 }
 
+- (void)createLineAddToLayer:(NSArray<MSGeoposition *> *)positions
+     altitudeReferenceSystem:(MSMapAltitudeReferenceSystem)system {
+  MSMapPolyline *line = [[MSMapPolyline alloc] init];
+  line.path = [[MSGeopath alloc] initWithPositions:positions
+                           altitudeReferenceSystem:system];
+  [mLayer.elements addMapElement:line];
+}
+
 - (void)parseMultiPoint:(NSArray *)coordinates error:(NSError **)error {
-  MSMapAltitudeReferenceSystem system = MSMapAltitudeReferenceSystemEllipsoid;
-  NSArray<MSGeoposition *> *positions = [self parsePositionArray:coordinates
-                                         altitudeReferenceSystem:&system
-                                                           error:error];
+  MSMapAltitudeReferenceSystem altitudeReferenceSystem =
+      MSMapAltitudeReferenceSystemEllipsoid;
+  NSArray<MSGeoposition *> *positions =
+      [self parsePositionArray:coordinates
+          altitudeReferenceSystem:&altitudeReferenceSystem
+                            error:error];
   if (*error != nil) {
     return;
   }
-  if (system == MSMapAltitudeReferenceSystemSurface) {
-    [MSMapGeoJsonParser setAltitudesZero:positions];
-  }
+  [MSMapGeoJsonParser setAltitudesToZeroIfAtSurface:positions
+                            altitudeReferenceSystem:altitudeReferenceSystem];
   for (int i = 0; i < positions.count; i++) {
     [self createIconAddToLayer:positions[i]
-        altitudeReferenceSystem:system
+        altitudeReferenceSystem:altitudeReferenceSystem
                           error:error];
     if (*error != nil) {
       return;
     }
   }
-}
-
-- (void)parseLineString:(NSArray *)pathArray error:(NSError **)error {
-  MSMapAltitudeReferenceSystem system = MSMapAltitudeReferenceSystemEllipsoid;
-  NSArray<MSGeoposition *> *validatedArray = [self parseLineArray:pathArray
-                                          altitudeReferenceSystem:&system
-                                                            error:error];
-  if (*error != nil) {
-    return;
-  }
-  if (system == MSMapAltitudeReferenceSystemSurface) {
-    [MSMapGeoJsonParser setAltitudesZero:validatedArray];
-  }
-  [self createLineAddToLayer:validatedArray altitudeReferenceSystem:system];
 }
 
 - (NSArray<MSGeoposition *> * _Nullable)parseLineArray:(NSArray *)pathArray
@@ -220,17 +207,26 @@ NS_ASSUME_NONNULL_BEGIN
                             error:error];
 }
 
-- (void)createLineAddToLayer:(NSArray<MSGeoposition *> *)positions
-     altitudeReferenceSystem:(MSMapAltitudeReferenceSystem)system {
-  MSMapPolyline *line = [[MSMapPolyline alloc] init];
-  line.path = [[MSGeopath alloc] initWithPositions:positions
-                           altitudeReferenceSystem:system];
-  [mLayer.elements addMapElement:line];
+- (void)parseLineString:(NSArray *)pathArray error:(NSError **)error {
+  MSMapAltitudeReferenceSystem altitudeReferenceSystem =
+      MSMapAltitudeReferenceSystemEllipsoid;
+  NSArray<MSGeoposition *> *validatedArray =
+      [self parseLineArray:pathArray
+          altitudeReferenceSystem:&altitudeReferenceSystem
+                            error:error];
+  if (*error != nil) {
+    return;
+  }
+  [MSMapGeoJsonParser setAltitudesToZeroIfAtSurface:validatedArray
+                            altitudeReferenceSystem:altitudeReferenceSystem];
+  [self createLineAddToLayer:validatedArray
+      altitudeReferenceSystem:altitudeReferenceSystem];
 }
 
 - (void)parseMultiLineString:(NSArray *)coordinates error:(NSError **)error {
   NSMutableArray *lines = [[NSMutableArray alloc] init];
-  MSMapAltitudeReferenceSystem system = MSMapAltitudeReferenceSystemEllipsoid;
+  MSMapAltitudeReferenceSystem altitudeReferenceSystem =
+      MSMapAltitudeReferenceSystemEllipsoid;
   for (id obj in coordinates) {
     if (![obj isKindOfClass:[NSArray class]]) {
       *error = [MSMapGeoJsonParser
@@ -238,19 +234,20 @@ NS_ASSUME_NONNULL_BEGIN
                             @"line arrays. Instead saw: "
                                stringByAppendingFormat:@"%@", obj]];
     }
-    NSArray<MSGeoposition *> *parsedLine = [self parseLineArray:(NSArray *)obj
-                                        altitudeReferenceSystem:&system
-                                                          error:error];
+    NSArray<MSGeoposition *> *parsedLine =
+        [self parseLineArray:(NSArray *)obj
+            altitudeReferenceSystem:&altitudeReferenceSystem
+                              error:error];
     if (*error != nil) {
       return;
     }
     [lines addObject:parsedLine];
   }
   for (NSMutableArray<MSGeoposition *> *line in lines) {
-    if (system == MSMapAltitudeReferenceSystemSurface) {
-      [MSMapGeoJsonParser setAltitudesZero:line];
-    }
-    [self createLineAddToLayer:line altitudeReferenceSystem:system];
+    [MSMapGeoJsonParser setAltitudesToZeroIfAtSurface:line
+                              altitudeReferenceSystem:altitudeReferenceSystem];
+    [self createLineAddToLayer:line
+        altitudeReferenceSystem:altitudeReferenceSystem];
   }
 }
 
@@ -264,7 +261,8 @@ NS_ASSUME_NONNULL_BEGIN
     return;
   }
   NSMutableArray *parsedRings = [[NSMutableArray alloc] init];
-  MSMapAltitudeReferenceSystem system = MSMapAltitudeReferenceSystemEllipsoid;
+  MSMapAltitudeReferenceSystem altitudeReferenceSystem =
+      MSMapAltitudeReferenceSystemEllipsoid;
   for (id obj in jsonRings) {
     if (![obj isKindOfClass:[NSArray class]]) {
       *error = [MSMapGeoJsonParser
@@ -278,9 +276,10 @@ NS_ASSUME_NONNULL_BEGIN
     if (*error != nil) {
       return;
     }
-    NSArray<MSGeoposition *> *parsedArray = [self parsePositionArray:pathArray
-                                             altitudeReferenceSystem:&system
-                                                               error:error];
+    NSArray<MSGeoposition *> *parsedArray =
+        [self parsePositionArray:pathArray
+            altitudeReferenceSystem:&altitudeReferenceSystem
+                              error:error];
     if (*error != nil) {
       return;
     }
@@ -289,16 +288,121 @@ NS_ASSUME_NONNULL_BEGIN
 
   NSMutableArray<MSGeopath *> *rings = [[NSMutableArray alloc] init];
   for (NSArray<MSGeoposition *> *positions in parsedRings) {
-    if (system == MSMapAltitudeReferenceSystemSurface) {
-      [MSMapGeoJsonParser setAltitudesZero:positions];
-    }
-    MSGeopath *path = [[MSGeopath alloc] initWithPositions:positions
-                                   altitudeReferenceSystem:system];
+    [MSMapGeoJsonParser setAltitudesToZeroIfAtSurface:positions
+                              altitudeReferenceSystem:altitudeReferenceSystem];
+    MSGeopath *path =
+        [[MSGeopath alloc] initWithPositions:positions
+                     altitudeReferenceSystem:altitudeReferenceSystem];
     [rings addObject:path];
   }
   MSMapPolygon *poly = [[MSMapPolygon alloc] init];
   poly.paths = rings;
   [mLayer.elements addMapElement:poly];
+}
+
++ (void)verifyPolygonRing:(NSArray *)path error:(NSError **)error {
+  if (![path isKindOfClass:[NSArray class]]) {
+    *error = [MSMapGeoJsonParser
+        makeGeoJsonError:
+            [@"Polygon rings must be an array of positions. Instead saw: "
+                stringByAppendingFormat:@"%@", path]];
+    return;
+  }
+  if (path.count < 4) {
+    NSString *array = [MSMapGeoJsonParser arrayToString:path];
+    *error = [MSMapGeoJsonParser
+        makeGeoJsonError:
+            [@"Polygon ring must have at least 4 positions, and the first and "
+             @"last position must be the same. Instead saw: "
+                stringByAppendingString:array]];
+    return;
+  }
+  NSArray *firstPosition = [path firstObject];
+  NSArray *lastPosition = [path lastObject];
+  if (firstPosition.count != lastPosition.count) {
+    NSString *stringArray =
+        [@"first: " stringByAppendingString:[MSMapGeoJsonParser
+                                                arrayToString:firstPosition]];
+    stringArray = [stringArray
+        stringByAppendingString:
+            [@"  last: ["
+                stringByAppendingString:[MSMapGeoJsonParser
+                                            arrayToString:lastPosition]]];
+
+    *error = [MSMapGeoJsonParser
+        makeGeoJsonError:[@"First and last coordinate pair of each polygon "
+                          @"ring must be the same. Instead saw: "
+                             stringByAppendingString:stringArray]];
+    return;
+  }
+  for (int i = 0; i < firstPosition.count; i++) {
+    if ([firstPosition objectAtIndex:i] != [lastPosition objectAtIndex:i]) {
+      NSString *stringArray =
+          [@"first: " stringByAppendingString:[MSMapGeoJsonParser
+                                                  arrayToString:firstPosition]];
+      stringArray = [stringArray
+          stringByAppendingString:
+              [@"  last: ["
+                  stringByAppendingString:[MSMapGeoJsonParser
+                                              arrayToString:lastPosition]]];
+
+      *error = [MSMapGeoJsonParser
+          makeGeoJsonError:[@"First and last coordinate pair of each polygon "
+                            @"ring must be the same. Instead saw: "
+                               stringByAppendingString:stringArray]];
+    }
+  }
+}
+
+/*
+ * altitudeReferenceSystem is set by caller to
+ * MSMapAltitudeReferenceSystemEllipsoid, and if a point is found without a
+ * specified alititude, the altitudeReferenceSystem is set to
+ * MSMapAltitudeReferenceSystemSurface.
+ */
+- (NSArray<MSGeoposition *> * _Nullable)parsePositionArray:(NSArray *)array
+                                  altitudeReferenceSystem:
+                                      (MSMapAltitudeReferenceSystem *)system
+                                                    error:(NSError **)error {
+  if (array.count == 0) {
+    *error = [MSMapGeoJsonParser
+        makeGeoJsonError:
+            [@"Geopath must contain an array of positions. Instead saw: "
+                stringByAppendingString:[MSMapGeoJsonParser
+                                            arrayToString:array]]];
+    return nil;
+  }
+
+  NSMutableArray<MSGeoposition *> *validatedArray =
+      [[NSMutableArray alloc] init];
+  bool useAltitude = true;
+  for (id obj in array) {
+    if (![obj isKindOfClass:[NSArray class]]) {
+      *error = [MSMapGeoJsonParser
+          makeGeoJsonError:[@"coordinates must contain an array of "
+                            @"positions. Instead saw: "
+                               stringByAppendingFormat:@"%@", (NSString *)obj]];
+      return nil;
+    }
+    NSArray *latLong = (NSArray *)obj;
+    if (latLong.count < 3) {
+      useAltitude = false;
+      *system = MSMapAltitudeReferenceSystemSurface;
+      if (!mDidWarn) {
+        NSLog(@"Warning: Unless all positions in a Geometry Object contain an "
+              @"altitude coordinate, all altitudes will be set to 0 at surface "
+              @"level for that Geometry Object.");
+        mDidWarn = true;
+      }
+    }
+    MSGeoposition *position = [MSMapGeoJsonParser parseGeoposition:latLong
+                                                             error:error];
+    if (*error != nil) {
+      return nil;
+    }
+    [validatedArray addObject:position];
+  }
+  return validatedArray;
 }
 
 + (MSGeoposition * _Nullable)parseGeoposition:(NSArray *)coordinates
@@ -376,114 +480,13 @@ NS_ASSUME_NONNULL_BEGIN
   }
 }
 
-+ (void)verifyPolygonRing:(NSArray *)path error:(NSError **)error {
-  if (![path isKindOfClass:[NSArray class]]) {
-    *error = [MSMapGeoJsonParser
-        makeGeoJsonError:
-            [@"Polygon rings must be an array of positions. Instead saw: "
-                stringByAppendingFormat:@"%@", path]];
-    return;
-  }
-  if (path.count < 4) {
-    NSString *array = [MSMapGeoJsonParser arrayToString:path];
-    *error = [MSMapGeoJsonParser
-        makeGeoJsonError:
-            [@"Polygon ring must have at least 4 positions, and the first and "
-             @"last position must be the same. Instead saw: "
-                stringByAppendingString:array]];
-    return;
-  }
-  NSArray *firstPosition = [path firstObject];
-  NSArray *lastPosition = [path lastObject];
-  if (firstPosition.count != lastPosition.count) {
-    NSString *stringArray =
-        [@"first: " stringByAppendingString:[MSMapGeoJsonParser
-                                                arrayToString:firstPosition]];
-    stringArray = [stringArray
-        stringByAppendingString:
-            [@"  last: ["
-                stringByAppendingString:[MSMapGeoJsonParser
-                                            arrayToString:lastPosition]]];
-
-    *error = [MSMapGeoJsonParser
-        makeGeoJsonError:[@"First and last coordinate pair of each polygon "
-                          @"ring must be the same. Instead saw: "
-                             stringByAppendingString:stringArray]];
-
-  } else {
-    for (int i = 0; i < firstPosition.count; i++) {
-      if ([firstPosition objectAtIndex:i] != [lastPosition objectAtIndex:i]) {
-        NSString *stringArray = [@"first: "
-            stringByAppendingString:[MSMapGeoJsonParser
-                                        arrayToString:firstPosition]];
-        stringArray = [stringArray
-            stringByAppendingString:
-                [@"  last: ["
-                    stringByAppendingString:[MSMapGeoJsonParser
-                                                arrayToString:lastPosition]]];
-
-        *error = [MSMapGeoJsonParser
-            makeGeoJsonError:[@"First and last coordinate pair of each polygon "
-                              @"ring must be the same. Instead saw: "
-                                 stringByAppendingString:stringArray]];
-        return;
-      }
++ (void)setAltitudesToZeroIfAtSurface:(NSArray<MSGeoposition *> *)array
+              altitudeReferenceSystem:
+                  (MSMapAltitudeReferenceSystem)altitudeReferenceSystem {
+  if (altitudeReferenceSystem == MSMapAltitudeReferenceSystemSurface) {
+    for (MSGeoposition *position in array) {
+      position.altitude = 0;
     }
-  }
-}
-
-- (NSArray<MSGeoposition *> * _Nullable)parsePositionArray:(NSArray *)array
-                                  altitudeReferenceSystem:
-                                      (MSMapAltitudeReferenceSystem *)system
-                                                    error:(NSError **)error {
-  if (![array isKindOfClass:[NSArray class]]) {
-    *error = [MSMapGeoJsonParser
-        makeGeoJsonError:[@"coordinates must contain an array of "
-                          @"positions. Instead saw: "
-                             stringByAppendingFormat:@"%@", (NSString *)array]];
-    return nil;
-  }
-  if (array.count == 0) {
-    *error = [MSMapGeoJsonParser
-        makeGeoJsonError:
-            [@"Geopath must contain an array of positions. Instead saw: "
-                stringByAppendingString:[MSMapGeoJsonParser
-                                            arrayToString:array]]];
-    return nil;
-  }
-
-  NSMutableArray<MSGeoposition *> *validatedArray =
-      [[NSMutableArray alloc] init];
-  bool useAltitude = true;
-  for (id obj in array) {
-    if (![obj isKindOfClass:[NSArray class]]) {
-      *error = [MSMapGeoJsonParser
-          makeGeoJsonError:[@"coordinates must contain an array of "
-                            @"positions. Instead saw: "
-                               stringByAppendingFormat:@"%@", (NSString *)obj]];
-      return nil;
-    }
-    NSArray *latLong = (NSArray *)obj;
-    if (latLong.count < 3) {
-      useAltitude = false;
-      *system = MSMapAltitudeReferenceSystemSurface;
-      if (!mDidWarn) {
-        NSLog(@"%@", mWarning);
-      }
-    }
-    MSGeoposition *position = [MSMapGeoJsonParser parseGeoposition:latLong
-                                                             error:error];
-    if (*error != nil) {
-      return nil;
-    }
-    [validatedArray addObject:position];
-  }
-  return validatedArray;
-}
-
-+ (void)setAltitudesZero:(NSArray<MSGeoposition *> *)array {
-  for (MSGeoposition *position in array) {
-    position.altitude = 0;
   }
 }
 
