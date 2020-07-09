@@ -5,7 +5,7 @@ package com.microsoft.maps.geojson;
 
 import com.microsoft.maps.AltitudeReferenceSystem;
 
-/** Wrapper for AltitudeReferenceSystem to make it an object. */
+/** Wrapper for AltitudeReferenceSystem to make it a mutable object. */
 class AltitudeReferenceSystemWrapper {
 
   private AltitudeReferenceSystem mAltitudeReferenceSystem;
