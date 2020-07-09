@@ -663,6 +663,20 @@ public class GeoJsonParserTest {
   }
 
   @Test(expected = GeoJsonParseException.class)
+  public void testPolygonNotEnoughPositionsThrowsException()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "    \"type\": \"Polygon\", \n"
+            + "    \"coordinates\": [\n"
+            + "        [[30, 10, 5], [40, 40], [20, 40]]\n"
+            + "    ]\n"
+            + "}";
+
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
   public void testPolygonFirstLastLatitudeUnequalThrowsException()
       throws GeoJsonParseException, JSONException {
     String geojson =

@@ -31,7 +31,6 @@ public class GeoJsonParser {
   private MapElementLayer mLayer;
   private MapFactories mFactory;
   private boolean mDidWarn;
-  private AltitudeReferenceSystem mAltitudeReferenceSystem = AltitudeReferenceSystem.ELLIPSOID;
 
   private static final MapFactories DEFAULT_MAP_FACTORIES =
       new MapFactories() {
@@ -142,23 +141,31 @@ public class GeoJsonParser {
     return object.getJSONArray("coordinates");
   }
 
-  private void createIconAndAddToLayer(@NonNull Geoposition position) {
+  private void createIconAndAddToLayer(
+      @NonNull Geoposition position,
+      @NonNull AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper) {
     MapIcon icon = mFactory.createMapIcon();
-    icon.setLocation(new Geopoint(position, mAltitudeReferenceSystem));
+    icon.setLocation(
+        new Geopoint(position, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem()));
     mLayer.getElements().add(icon);
   }
 
-  private void createLineAndAddToLayer(@NonNull ArrayList<Geoposition> positions) {
+  private void createLineAndAddToLayer(
+      @NonNull ArrayList<Geoposition> positions,
+      @NonNull AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper) {
     MapPolyline line = mFactory.createMapPolyline();
-    line.setPath(new Geopath(positions, mAltitudeReferenceSystem));
+    line.setPath(
+        new Geopath(positions, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem()));
     mLayer.getElements().add(line);
   }
 
   private void createPolygonAndAddToLayer(
-      @NonNull ArrayList<ArrayList<Geoposition>> positionLists) {
+      @NonNull ArrayList<ArrayList<Geoposition>> positionLists,
+      @NonNull AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper) {
     ArrayList<Geopath> rings = new ArrayList<>(positionLists.size());
     for (ArrayList<Geoposition> ring : positionLists) {
-      GeopathIndexed path = new GeopathIndexed(ring, mAltitudeReferenceSystem);
+      GeopathIndexed path =
+          new GeopathIndexed(ring, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem());
       rings.add(path);
     }
     MapPolygon polygon = mFactory.createMapPolygon();
@@ -177,7 +184,6 @@ public class GeoJsonParser {
 
   private void parseFeatureCollection(@NonNull JSONObject object)
       throws JSONException, GeoJsonParseException {
-
     verifyNoMembers(object, new String[] {"geometry", "properties", "coordinates", "geometries"});
     JSONArray array = object.getJSONArray("features");
     for (int i = 0; i < array.length(); i++) {
@@ -195,22 +201,26 @@ public class GeoJsonParser {
 
   private void parsePolygon(@NonNull JSONArray jsonRings)
       throws JSONException, GeoJsonParseException {
-    mAltitudeReferenceSystem = AltitudeReferenceSystem.ELLIPSOID;
-    ArrayList<ArrayList<Geoposition>> rings = parsePolygonRings(jsonRings);
+    AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper =
+        new AltitudeReferenceSystemWrapper(AltitudeReferenceSystem.ELLIPSOID);
+    ArrayList<ArrayList<Geoposition>> rings =
+        parsePolygonRings(jsonRings, altitudeReferenceSystemWrapper);
     for (ArrayList<Geoposition> ring : rings) {
-      setAltitudesToZeroIfAtSurface(ring);
+      setAltitudesToZeroIfAtSurface(ring, altitudeReferenceSystemWrapper);
     }
-    createPolygonAndAddToLayer(rings);
+    createPolygonAndAddToLayer(rings, altitudeReferenceSystemWrapper);
   }
 
   @NonNull
-  private ArrayList<ArrayList<Geoposition>> parsePolygonRings(@NonNull JSONArray jsonRings)
+  private ArrayList<ArrayList<Geoposition>> parsePolygonRings(
+      @NonNull JSONArray jsonRings,
+      @NonNull AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper)
       throws JSONException, GeoJsonParseException {
     ArrayList<ArrayList<Geoposition>> rings = new ArrayList<>(jsonRings.length());
     for (int i = 0; i < jsonRings.length(); i++) {
       JSONArray pathArray = jsonRings.getJSONArray(i);
-      verifyPolygonRing(pathArray);
-      ArrayList<Geoposition> path = parsePositionArray(pathArray);
+      ArrayList<Geoposition> path = parsePositionArray(pathArray, altitudeReferenceSystemWrapper);
+      verifyPolygonRing(path);
       rings.add(path);
     }
     return rings;
@@ -219,95 +229,107 @@ public class GeoJsonParser {
   private void parseMultiPolygon(@NonNull JSONArray coordinates)
       throws JSONException, GeoJsonParseException {
     ArrayList<ArrayList> polygons = new ArrayList(coordinates.length());
-    mAltitudeReferenceSystem = AltitudeReferenceSystem.ELLIPSOID;
+    AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper =
+        new AltitudeReferenceSystemWrapper(AltitudeReferenceSystem.ELLIPSOID);
     for (int i = 0; i < coordinates.length(); i++) {
       JSONArray jsonRings = coordinates.getJSONArray(i);
-      polygons.add(parsePolygonRings(jsonRings));
+      polygons.add(parsePolygonRings(jsonRings, altitudeReferenceSystemWrapper));
     }
     for (int i = 0; i < polygons.size(); i++) {
       ArrayList<ArrayList> polygonRings = polygons.get(i);
       for (int ring = 0; ring < polygonRings.size(); ring++) {
-        setAltitudesToZeroIfAtSurface(polygonRings.get(ring));
+        setAltitudesToZeroIfAtSurface(polygonRings.get(ring), altitudeReferenceSystemWrapper);
       }
     }
     for (int i = 0; i < polygons.size(); i++) {
-      createPolygonAndAddToLayer(polygons.get(i));
+      createPolygonAndAddToLayer(polygons.get(i), altitudeReferenceSystemWrapper);
     }
   }
 
-  private static void verifyPolygonRing(@NonNull JSONArray jsonArray)
-      throws GeoJsonParseException, JSONException {
-    if (jsonArray.length() < 4) {
+  private static void verifyPolygonRing(@NonNull ArrayList<Geoposition> positions)
+      throws GeoJsonParseException {
+    if (positions.size() < 4) {
+      StringBuilder positionsStringBuilder = new StringBuilder();
+      for (int i = 0; i < positions.size() - 1; i++) {
+        positionsStringBuilder.append(positions.get(i)).append(", ");
+      }
+      positionsStringBuilder.append(positions.get(positions.size() - 1));
       throw new GeoJsonParseException(
           "Polygon ring must have at least 4 positions, "
-              + "and the first and last position must be the same.");
+              + "and the first and last position must be the same. Instead saw: ["
+              + positionsStringBuilder
+              + "].");
     }
 
-    JSONArray firstPosition = jsonArray.getJSONArray(0);
-    JSONArray lastPosition = jsonArray.getJSONArray(jsonArray.length() - 1);
-    if (firstPosition.length() != lastPosition.length()) {
+    Geoposition firstPosition = positions.get(0);
+    Geoposition lastPosition = positions.get(positions.size() - 1);
+    if (firstPosition.getLongitude() != lastPosition.getLongitude()
+        || firstPosition.getLatitude() != lastPosition.getLatitude()
+        || firstPosition.getAltitude() != lastPosition.getAltitude()) {
       throw new GeoJsonParseException(
-          "First and last coordinate pair of each polygon ring must be the same. Instead saw: "
-              + jsonArray);
-    }
-    for (int i = 0; i < firstPosition.length(); i++) {
-      if (firstPosition.get(i) != lastPosition.get(i)) {
-        throw new GeoJsonParseException(
-            "First and last coordinate pair of each polygon ring must be the same. Instead saw: "
-                + jsonArray);
-      }
+          "First and last coordinate pair of each polygon ring must be the same. Instead saw: first: "
+              + firstPosition
+              + " last: "
+              + lastPosition);
     }
   }
 
   private void parsePoint(@NonNull JSONArray coordinates)
       throws JSONException, GeoJsonParseException {
     Geoposition position = parseGeoposition(coordinates);
-    mAltitudeReferenceSystem =
-        coordinates.length() > 2
-            ? AltitudeReferenceSystem.ELLIPSOID
-            : AltitudeReferenceSystem.SURFACE;
-    createIconAndAddToLayer(position);
+    AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper =
+        new AltitudeReferenceSystemWrapper(AltitudeReferenceSystem.ELLIPSOID);
+    if (coordinates.length() < 3) {
+      altitudeReferenceSystemWrapper.setAltitudeReferenceSystem(AltitudeReferenceSystem.SURFACE);
+    }
+    createIconAndAddToLayer(position, altitudeReferenceSystemWrapper);
   }
 
   private void parseMultiPoint(@NonNull JSONArray coordinates)
       throws JSONException, GeoJsonParseException {
-    mAltitudeReferenceSystem = AltitudeReferenceSystem.ELLIPSOID;
-    ArrayList<Geoposition> positions = parsePositionArray(coordinates);
-    setAltitudesToZeroIfAtSurface(positions);
+    AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper =
+        new AltitudeReferenceSystemWrapper(AltitudeReferenceSystem.ELLIPSOID);
+    ArrayList<Geoposition> positions =
+        parsePositionArray(coordinates, altitudeReferenceSystemWrapper);
+    setAltitudesToZeroIfAtSurface(positions, altitudeReferenceSystemWrapper);
     for (Geoposition position : positions) {
-      createIconAndAddToLayer(position);
+      createIconAndAddToLayer(position, altitudeReferenceSystemWrapper);
     }
   }
 
   @Nullable
-  private ArrayList<Geoposition> parseLineArray(@NonNull JSONArray jsonArray)
+  private ArrayList<Geoposition> parseLineArray(
+      @NonNull JSONArray jsonArray,
+      @NonNull AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper)
       throws GeoJsonParseException, JSONException {
     if (jsonArray.length() < 2) {
       throw new GeoJsonParseException(
           "Linestring must contain at least 2 positions. Instead saw: " + jsonArray);
     }
-    return parsePositionArray(jsonArray);
+    return parsePositionArray(jsonArray, altitudeReferenceSystemWrapper);
   }
 
   private void parseLineString(@NonNull JSONArray pathArray)
       throws JSONException, GeoJsonParseException {
-    mAltitudeReferenceSystem = AltitudeReferenceSystem.ELLIPSOID;
-    ArrayList<Geoposition> positions = parseLineArray(pathArray);
-    setAltitudesToZeroIfAtSurface(positions);
-    createLineAndAddToLayer(positions);
+    AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper =
+        new AltitudeReferenceSystemWrapper(AltitudeReferenceSystem.ELLIPSOID);
+    ArrayList<Geoposition> positions = parseLineArray(pathArray, altitudeReferenceSystemWrapper);
+    setAltitudesToZeroIfAtSurface(positions, altitudeReferenceSystemWrapper);
+    createLineAndAddToLayer(positions, altitudeReferenceSystemWrapper);
   }
 
   private void parseMultiLineString(@NonNull JSONArray coordinates)
       throws JSONException, GeoJsonParseException {
     ArrayList<ArrayList<Geoposition>> lines = new ArrayList<>(coordinates.length());
-    mAltitudeReferenceSystem = AltitudeReferenceSystem.ELLIPSOID;
+    AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper =
+        new AltitudeReferenceSystemWrapper(AltitudeReferenceSystem.ELLIPSOID);
     for (int i = 0; i < coordinates.length(); i++) {
       JSONArray pathArray = coordinates.getJSONArray(i);
-      lines.add(parsePositionArray(pathArray));
+      lines.add(parsePositionArray(pathArray, altitudeReferenceSystemWrapper));
     }
     for (ArrayList<Geoposition> line : lines) {
-      setAltitudesToZeroIfAtSurface(line);
-      createLineAndAddToLayer(line);
+      setAltitudesToZeroIfAtSurface(line, altitudeReferenceSystemWrapper);
+      createLineAndAddToLayer(line, altitudeReferenceSystemWrapper);
     }
   }
 
@@ -339,9 +361,9 @@ public class GeoJsonParser {
 
       if (coordinates.length() > 2) {
         double altitude = coordinates.getDouble(2);
-        return new Geoposition(latitude, longitude, altitude);
+        return new GeopositionPrintable(latitude, longitude, altitude);
       }
-      return new Geoposition(latitude, longitude);
+      return new GeopositionPrintable(latitude, longitude);
     } else {
       throw new GeoJsonParseException(
           "coordinates array must contain at least latitude and longitude, instead saw: "
@@ -350,14 +372,16 @@ public class GeoJsonParser {
   }
 
   @NonNull
-  private ArrayList<Geoposition> parsePositionArray(@NonNull JSONArray pathArray)
+  private ArrayList<Geoposition> parsePositionArray(
+      @NonNull JSONArray pathArray,
+      @NonNull AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper)
       throws JSONException, GeoJsonParseException {
     ArrayList<Geoposition> path = new ArrayList<>(pathArray.length());
     for (int i = 0; i < pathArray.length(); i++) {
       JSONArray latLong = pathArray.getJSONArray(i);
       Geoposition position = parseGeoposition(latLong);
       if (latLong.length() < 3) {
-        mAltitudeReferenceSystem = AltitudeReferenceSystem.SURFACE;
+        altitudeReferenceSystemWrapper.setAltitudeReferenceSystem(AltitudeReferenceSystem.SURFACE);
         if (!mDidWarn) {
           Log.w(
               "Altitude",
@@ -370,8 +394,11 @@ public class GeoJsonParser {
     return path;
   }
 
-  private void setAltitudesToZeroIfAtSurface(@NonNull ArrayList<Geoposition> positions) {
-    if (mAltitudeReferenceSystem == AltitudeReferenceSystem.SURFACE) {
+  private void setAltitudesToZeroIfAtSurface(
+      @NonNull ArrayList<Geoposition> positions,
+      @NonNull AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper) {
+    if (altitudeReferenceSystemWrapper.getAltitudeReferenceSystem()
+        == AltitudeReferenceSystem.SURFACE) {
       for (Geoposition position : positions) {
         position.setAltitude(0);
       }
