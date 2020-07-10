@@ -75,7 +75,10 @@ NS_ASSUME_NONNULL_BEGIN
     // TODO: parseFeatureCollection
   } else {
     if ([type isEqualToString:@"Feature"]) {
-      // TODO: feature
+			jsonObject = [jsonObject objectForKey:@"geometry"];
+			if (jsonObject == nil) {
+				*error = [MSMapGeoJsonParser makeGeoJsonError:@"Feature object must have \"geometry\"."];
+			}
     }
     [self switchToType:jsonObject error:error];
   }

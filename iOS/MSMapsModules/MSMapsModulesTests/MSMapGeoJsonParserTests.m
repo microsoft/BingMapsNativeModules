@@ -477,6 +477,30 @@
            withActualPosition:icon.location.position];
 }
 
+- (void)testParseFeature {
+	NSString *geojson = @"{\"type\": \"Feature\",\"geometry\": {\"type\": \"Point\",\"coordinates\": [30, 10]},\"properties\": {\"prop0\": \"value0\"}}";
+	NSError *error;
+	MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
+	XCTAssertNil(error);
+	MSMapElementCollection *collection = layer.elements;
+	XCTAssertNotNil(collection);
+	XCTAssertEqual(1, collection.count);
+	
+	MSMapIcon *icon;
+	for (id obj in collection) {
+		icon = (MSMapIcon *)obj;
+	}
+	XCTAssertNotNil(icon);
+	XCTAssertEqual(MSMapAltitudeReferenceSystemSurface,
+								 icon.location.altitudeReferenceSystem);
+	NSArray *expectedPoints =
+	[[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:30],
+	 [NSNumber numberWithDouble:10], nil];
+	
+	[self checkExpectedPosition:expectedPoints
+					 withActualPosition:icon.location.position];
+}
+
 - (void)testNullInputGivesError {
   NSError *error;
   MSMapElementLayer *layer = [MSMapGeoJsonParser parse:NULL error:&error];
