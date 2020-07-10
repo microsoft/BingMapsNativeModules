@@ -321,20 +321,10 @@
 
 - (void)testParseMultiPolygonNotAllAltitudes {
   NSString *geojson =
-      @"{"
-      @"\"type\": \"MultiPolygon\","
-      @"\"coordinates\": ["
-      @"								["
-      @"								 [[40, "
-      @"40], [20, 45, 8], [45, 30], [40, 40]]"
-      @"								 ],"
-      @"								["
-      @"								 [[20, "
-      @"35], [10, 30], [10, 10], [30, 5], [45, 20], [20, 35]],"
-      @"								 [[30, "
-      @"20], [20, 15], [20, 25], [30, 20]]]"
-      @"								]"
-      @"}";
+      @"{\"type\": \"MultiPolygon\", \"coordinates\": [[[[40, 40], [20, 45, "
+      @"8], [45, 30], [40, 40]]], [[[20, 35], [10, 30], [10, 10], [30, 5], "
+      @"[45, 20], [20, 35]],						"
+      @"		 [[30, 20], [20, 15], [20, 25], [30, 20]]]]}";
 
   NSError *error;
   MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
@@ -374,21 +364,10 @@
 
 - (void)testParseMultiPolygonWithAllAltitudes {
   NSString *geojson =
-      @"{"
-      @"\"type\": \"MultiPolygon\","
-      @"\"coordinates\": ["
-      @"								["
-      @"								 [[40, "
-      @"40, 8], [20, 45, 11], [45, 30, 22], [40, 40, 8]]],"
-      @"								["
-      @"								 [[20, "
-      @"35, 33], [10, 30, 44], [10, 10, 55], [30, 5, 66], [45, 20, 77], [20, "
-      @"35, 33]],"
-      @"								 [[30, "
-      @"20, 88], [20, 15, 99], [20, 25, 111], [30, 20, 88]]"
-      @"								 ]"
-      @"								]"
-      @"}";
+      @"{\"type\": \"MultiPolygon\", \"coordinates\": [[[[40, 40, 8], [20, 45, "
+      @"11], [45, 30, 22], [40, 40, 8]]], [[[20, 35, 33], [10, 30, 44], [10, "
+      @"10, 55], [30, 5, 66], [45, 20, 77], [20, 35, 33]], [[30, 20, 88], [20, "
+      @"15, 99], [20, 25, 111], [30, 20, 88]]]]}";
 
   NSError *error;
   MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
@@ -861,16 +840,9 @@
 
 - (void)testParseMultiPolygonStringPolygonGivesError {
   NSString *geojson =
-      @"{"
-      @"\"type\": \"MultiPolygon\","
-      @"\"coordinates\": [ \"foo\","
-      @"								["
-      @"								 [[20, "
-      @"35], [10, 30], [10, 10], [30, 5], [45, 20], [20, 35]],"
-      @"								 [[30, "
-      @"20], [20, 15], [20, 25], [30, 20]]]"
-      @"								]"
-      @"}";
+      @"{\"type\": \"MultiPolygon\", \"coordinates\": [ \"foo\", [[[20, 35], "
+      @"[10, 30], [10, 10], [30, 5], [45, 20], [20, 35]], [[30, 20], [20, 15], "
+      @"[20, 25], [30, 20]]]]}";
 
   NSError *error;
   XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
@@ -880,17 +852,10 @@
 
 - (void)testParseMultiPolygonStringRingGivesError {
   NSString *geojson =
-      @"{"
-      @"\"type\": \"MultiPolygon\","
-      @"\"coordinates\": [ [\"foo\", [10, 30], [10, 10], [30, 5], [45, 20], "
-      @"[20, 35]],"
-      @"								["
-      @"								 [[20, "
-      @"35], [10, 30], [10, 10], [30, 5], [45, 20], [20, 35]],"
-      @"								 [[30, "
-      @"20], [20, 15], [20, 25], [30, 20]]]"
-      @"								]"
-      @"}";
+      @"{\"type\": \"MultiPolygon\", \"coordinates\": [ [\"foo\", [10, 30], "
+      @"[10, 10], [30, 5], [45, 20], [20, 35]], [[[20, 35], [10, 30], [10, "
+      @"10], [30, 5], [45, 20], [20, 35]], [[30, 20], [20, 15], [20, 25], [30, "
+      @"20]]]]}";
 
   NSError *error;
   XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
