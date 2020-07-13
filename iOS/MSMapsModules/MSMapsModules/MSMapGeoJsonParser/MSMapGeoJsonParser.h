@@ -9,6 +9,7 @@
 
 #import <Foundation/Foundation.h>
 #import <MicrosoftMaps/MicrosoftMaps.h>
+#import "MSMapGeoJsonLayer.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (MSMapGeoJsonParser *)init NS_UNAVAILABLE;
 + (MSMapGeoJsonParser *)new NS_UNAVAILABLE;
-+ (MSMapElementLayer * _Nullable)parse:(NSString *)geojson
++ (MSMapGeoJsonLayer * _Nullable)parse:(NSString *)geojson
                                 error:(NSError * _Nullable * _Nullable)error;
 
 @end
