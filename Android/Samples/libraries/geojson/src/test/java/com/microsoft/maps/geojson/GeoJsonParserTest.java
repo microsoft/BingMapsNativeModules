@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import androidx.annotation.NonNull;
+import com.microsoft.maps.AltitudeReferenceSystem;
 import com.microsoft.maps.Geopath;
 import com.microsoft.maps.Geoposition;
 import com.microsoft.maps.MapElementLayer;
@@ -46,6 +47,8 @@ public class GeoJsonParserTest {
     MapPolygon polygon = (MapPolygon) elementCollection.getElements().get(0);
     assertNotNull(polygon);
     assertEquals(1, polygon.getPaths().size());
+    assertEquals(
+        AltitudeReferenceSystem.SURFACE, polygon.getPaths().get(0).getAltitudeReferenceSystem());
     double[][] expectedPoints = {{30, 10}, {40, 40}, {20, 40}, {10, 20}, {30, 10}};
     int index = 0;
     for (Geoposition position : polygon.getPaths().get(0)) {
@@ -61,7 +64,7 @@ public class GeoJsonParserTest {
             + "    \"type\": \"Polygon\", \n"
             + "    \"coordinates\": [\n"
             + "        [[35, 10], [45, 45], [15, 40], [10, 20], [35, 10]], \n"
-            + "        [[20, 30], [35, 35], [30, 20], [20, 30]]\n"
+            + "        [[20, 30], [35, 35, 8], [30, 20], [20, 30]]\n"
             + "    ]\n"
             + "}";
 
@@ -78,6 +81,7 @@ public class GeoJsonParserTest {
     };
     for (int ring = 0; ring < polygon.getPaths().size(); ring++) {
       Geopath path = polygon.getPaths().get(ring);
+      assertEquals(AltitudeReferenceSystem.SURFACE, path.getAltitudeReferenceSystem());
       int index = 0;
       for (Geoposition position : path) {
         checkPosition(expectedPoints[ring][index], position);
@@ -103,7 +107,35 @@ public class GeoJsonParserTest {
     MapPolyline polyline = (MapPolyline) elementCollection.getElements().get(0);
     assertNotNull(polyline);
     assertEquals(3, polyline.getPath().size());
-    double[][] expectedPoints = {{30, 10, 3}, {10, 30, 9}, {40, 40, 0}};
+    assertEquals(AltitudeReferenceSystem.SURFACE, polyline.getPath().getAltitudeReferenceSystem());
+    double[][] expectedPoints = {{30, 10}, {10, 30}, {40, 40}};
+    int index = 0;
+    for (Geoposition position : polyline.getPath()) {
+      checkPosition(expectedPoints[index], position);
+      index++;
+    }
+  }
+
+  @Test
+  public void testParsePolylineWithAllAltitudes() throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "    \"type\": \"LineString\", \n"
+            + "    \"coordinates\": [\n"
+            + "        [30, 10, 3], [10, 30, 9], [40, 40, 8]\n"
+            + "    ]\n"
+            + "}";
+
+    MapElementLayer layer = new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    MapPolyline polyline = (MapPolyline) elementCollection.getElements().get(0);
+    assertNotNull(polyline);
+    assertEquals(3, polyline.getPath().size());
+    assertEquals(
+        AltitudeReferenceSystem.ELLIPSOID, polyline.getPath().getAltitudeReferenceSystem());
+    double[][] expectedPoints = {{30, 10, 3}, {10, 30, 9}, {40, 40, 8}};
     int index = 0;
     for (Geoposition position : polyline.getPath()) {
       checkPosition(expectedPoints[index], position);
@@ -122,6 +154,7 @@ public class GeoJsonParserTest {
     assertEquals(1, elementCollection.getElements().size());
     MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
     assertNotNull(icon);
+    assertEquals(AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
     double[] expectedPoints = {30, 10, 0};
     checkPosition(expectedPoints, icon.getLocation().getPosition());
   }
@@ -133,7 +166,7 @@ public class GeoJsonParserTest {
             + "    \"type\": \"MultiPolygon\", \n"
             + "    \"coordinates\": [\n"
             + "        [\n"
-            + "            [[30, 20], [45, 40], [10, 40], [30, 20]]\n"
+            + "            [[30, 20, 6], [45, 40, 7], [10, 40, 8], [30, 20, 6]]\n"
             + "        ], \n"
             + "        [\n"
             + "            [[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]\n"
@@ -153,6 +186,8 @@ public class GeoJsonParserTest {
       MapPolygon polygon = (MapPolygon) elementCollection.getElements().get(i);
       assertNotNull(polygon);
       assertEquals(1, polygon.getPaths().size());
+      assertEquals(
+          AltitudeReferenceSystem.SURFACE, polygon.getPaths().get(0).getAltitudeReferenceSystem());
 
       for (Geoposition position : polygon.getPaths().get(0)) {
         checkPosition(expectedPoints[index], position);
@@ -167,8 +202,8 @@ public class GeoJsonParserTest {
         "{\n"
             + "    \"type\": \"MultiLineString\", \n"
             + "    \"coordinates\": [\n"
-            + "        [[10, 10], [20, 20], [10, 40]], \n"
-            + "        [[40, 40], [30, 30], [40, 20]]\n"
+            + "        [[10, 10, 8], [20, 20, 9], [10, 40, 45]], \n"
+            + "        [[40, 40], [30, 30, 79], [40, 20]]\n"
             + "    ]\n"
             + "}";
 
@@ -182,6 +217,41 @@ public class GeoJsonParserTest {
       MapPolyline polyline = (MapPolyline) elementCollection.getElements().get(i);
       assertNotNull(polyline);
       assertEquals(3, polyline.getPath().size());
+      assertEquals(
+          AltitudeReferenceSystem.SURFACE, polyline.getPath().getAltitudeReferenceSystem());
+
+      for (Geoposition position : polyline.getPath()) {
+        checkPosition(expectedPoints[index], position);
+        index++;
+      }
+    }
+  }
+
+  @Test
+  public void testParseMultiPolylineWithAllAltitudes() throws JSONException, GeoJsonParseException {
+    String geojson =
+        "{\n"
+            + "    \"type\": \"MultiLineString\", \n"
+            + "    \"coordinates\": [\n"
+            + "        [[10, 10, 10], [20, 20, 20], [10, 40, 40]], \n"
+            + "        [[40, 40, 7], [30, 30, 79], [40, 20, 9]]\n"
+            + "    ]\n"
+            + "}";
+
+    MapElementLayer layer = new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(2, elementCollection.getElements().size());
+    double[][] expectedPoints = {
+      {10, 10, 10}, {20, 20, 20}, {10, 40, 40}, {40, 40, 7}, {30, 30, 79}, {40, 20, 9}
+    };
+    int index = 0;
+    for (int i = 0; i < elementCollection.getElements().size(); i++) {
+      MapPolyline polyline = (MapPolyline) elementCollection.getElements().get(i);
+      assertNotNull(polyline);
+      assertEquals(3, polyline.getPath().size());
+      assertEquals(
+          AltitudeReferenceSystem.ELLIPSOID, polyline.getPath().getAltitudeReferenceSystem());
 
       for (Geoposition position : polyline.getPath()) {
         checkPosition(expectedPoints[index], position);
@@ -196,7 +266,7 @@ public class GeoJsonParserTest {
         "{\n"
             + "    \"type\": \"MultiPoint\", \n"
             + "    \"coordinates\": [\n"
-            + "        [10, 40], [40, 30], [20, 20], [30, 10]\n"
+            + "        [10, 40], [40, 30], [20, 20, 8], [30, 10]\n"
             + "    ]\n"
             + "}";
 
@@ -208,6 +278,32 @@ public class GeoJsonParserTest {
     for (int i = 0; i < elementCollection.getElements().size(); i++) {
       MapIcon icon = (MapIcon) elementCollection.getElements().get(i);
       assertNotNull(icon);
+      assertEquals(
+          AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
+      checkPosition(expectedPoints[i], icon.getLocation().getPosition());
+    }
+  }
+
+  @Test
+  public void testParseMultiPointWithAllAltitudes() throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "    \"type\": \"MultiPoint\", \n"
+            + "    \"coordinates\": [\n"
+            + "        [10, 40, 5], [40, 30, 6], [20, 20, 8], [30, 10, 7]\n"
+            + "    ]\n"
+            + "}";
+
+    MapElementLayer layer = new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(4, elementCollection.getElements().size());
+    double[][] expectedPoints = {{10, 40, 5}, {40, 30, 6}, {20, 20, 8}, {30, 10, 7}};
+    for (int i = 0; i < elementCollection.getElements().size(); i++) {
+      MapIcon icon = (MapIcon) elementCollection.getElements().get(i);
+      assertNotNull(icon);
+      assertEquals(
+          AltitudeReferenceSystem.ELLIPSOID, icon.getLocation().getAltitudeReferenceSystem());
       checkPosition(expectedPoints[i], icon.getLocation().getPosition());
     }
   }
@@ -331,6 +427,8 @@ public class GeoJsonParserTest {
     assertEquals(1, elementCollection.getElements().size());
     MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
     assertNotNull(icon);
+    assertEquals(
+        AltitudeReferenceSystem.ELLIPSOID, icon.getLocation().getAltitudeReferenceSystem());
     double[] expectedPoints = {30, 45, 2};
     checkPosition(expectedPoints, icon.getLocation().getPosition());
   }
@@ -558,6 +656,20 @@ public class GeoJsonParserTest {
             + "    \"type\": \"Polygon\", \n"
             + "    \"coordinates\": [\n"
             + "        [[30, 10, 5], [40, 40], [20, 40], [10, 20], [30, 10]]\n"
+            + "    ]\n"
+            + "}";
+
+    new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
+  }
+
+  @Test(expected = GeoJsonParseException.class)
+  public void testPolygonNotEnoughPositionsThrowsException()
+      throws GeoJsonParseException, JSONException {
+    String geojson =
+        "{\n"
+            + "    \"type\": \"Polygon\", \n"
+            + "    \"coordinates\": [\n"
+            + "        [[30, 10, 5], [40, 40], [20, 40]]\n"
             + "    ]\n"
             + "}";
 

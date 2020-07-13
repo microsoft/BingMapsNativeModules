@@ -72,13 +72,32 @@ NS_ASSUME_NONNULL_BEGIN
 
   NSString *type = [NSString stringWithFormat:@"%@", typeObject];
   if ([type isEqualToString:@"FeatureCollection"]) {
-    // TODO: parseFeatureCollection
+    [self parseFeatureCollection:jsonObject error:error];
   } else {
     if ([type isEqualToString:@"Feature"]) {
-			jsonObject = [jsonObject objectForKey:@"geometry"];
-			if (jsonObject == nil) {
-				*error = [MSMapGeoJsonParser makeGeoJsonError:@"Feature object must have \"geometry\"."];
-			}
+      NSArray<NSString *> *members =
+          [[NSArray alloc] initWithObjects:@"features", nil];
+      [MSMapGeoJsonParser verifyNoMembers:jsonObject
+                                  members:members
+                                    error:error];
+      if (*error != nil) {
+        return nil;
+      }
+      jsonObject = [jsonObject objectForKey:@"geometry"];
+      if (jsonObject == nil) {
+        *error = [MSMapGeoJsonParser
+            makeGeoJsonError:@"Feature object must have \"geometry\"."];
+        return nil;
+      }
+      if (![jsonObject isKindOfClass:[NSDictionary class]]) {
+        *error = [MSMapGeoJsonParser
+            makeGeoJsonError:
+                [NSString
+                    stringWithFormat:@"Feature object \"geometry\" must be a "
+                                     @"GeoJSON object. Instead saw: %@",
+                                     jsonObject]];
+        return nil;
+      }
     }
     [self switchToType:jsonObject error:error];
   }
@@ -137,7 +156,9 @@ NS_ASSUME_NONNULL_BEGIN
     }
     [self parseMultiPolygon:polygons error:error];
   }
-  // TODO: rest of geometry types
+  NSArray<NSString *> *members = [[NSArray alloc]
+      initWithObjects:@"geometry", @"properties", @"features", nil];
+  [MSMapGeoJsonParser verifyNoMembers:object members:members error:error];
 }
 
 + (NSArray * _Nullable)getCoordinates:(NSDictionary *)object
@@ -382,6 +403,79 @@ NS_ASSUME_NONNULL_BEGIN
   }
 }
 
+- (void)parseFeatureCollection:(NSDictionary *)object error:(NSError **)error {
+  NSArray<NSString *> *members =
+      [[NSArray alloc] initWithObjects:@"geometry", @"properties",
+                                       @"coordinates", @"geometries", nil];
+  [MSMapGeoJsonParser verifyNoMembers:object members:members error:error];
+  if (*error != nil) {
+    return;
+  }
+  NSArray *array = [object objectForKey:@"features"];
+  if (array == nil) {
+    *error = [MSMapGeoJsonParser
+        makeGeoJsonError:@"FeatureCollection must contain \"features\"."];
+    return;
+  }
+  if (![array isKindOfClass:[NSArray class]]) {
+    *error = [MSMapGeoJsonParser
+        makeGeoJsonError:
+            [NSString
+                stringWithFormat:@"\"features\" from \"FeatureCollection\" "
+                                 @"must contain an array. Instead saw: %@",
+                                 array]];
+    return;
+  }
+  if (array.count == 0) {
+    *error = [MSMapGeoJsonParser
+        makeGeoJsonError:@"\"features\" from \"FeatureCollection\" must "
+                         @"contain an array with at least one Feature object."];
+    return;
+  }
+  for (id obj in array) {
+    if (![obj isKindOfClass:[NSDictionary class]]) {
+      *error = [MSMapGeoJsonParser
+          makeGeoJsonError:
+              [NSString stringWithFormat:
+                            @"\"features\" from \"FeatureCollection\" must be "
+                            @"an array of geometry objects. Instead saw: %@",
+                            obj]];
+      return;
+    }
+    NSDictionary *element = (NSDictionary *)obj;
+    NSString *type = [element objectForKey:@"type"];
+    if (![type isEqualToString:@"Feature"]) {
+      *error = [MSMapGeoJsonParser
+          makeGeoJsonError:
+              [NSString stringWithFormat:@"GeoJSON Features must have type "
+                                         @"\"Feature\" instead saw: %@",
+                                         type]];
+      return;
+    }
+    NSArray<NSString *> *members =
+        [[NSArray alloc] initWithObjects:@"features", nil];
+    [MSMapGeoJsonParser verifyNoMembers:obj members:members error:error];
+    NSDictionary *shape = [element objectForKey:@"geometry"];
+    if (shape == nil) {
+      *error = [MSMapGeoJsonParser
+          makeGeoJsonError:@"Feature must contain \"geometry\"."];
+      return;
+    }
+    if (![shape isKindOfClass:[NSDictionary class]]) {
+      *error = [MSMapGeoJsonParser
+          makeGeoJsonError:
+              [NSString stringWithFormat:@"\"geometry\" of Feature must be a "
+                                         @"GeoJSON object. Instead saw: %@",
+                                         shape]];
+      return;
+    }
+    [self switchToType:shape error:error];
+    if (*error != nil) {
+      return;
+    }
+  }
+}
+
 /*
  * altitudeReferenceSystem is set by caller to
  * MSMapAltitudeReferenceSystemEllipsoid, and if a point is found without a
@@ -512,6 +606,21 @@ NS_ASSUME_NONNULL_BEGIN
   if (altitudeReferenceSystem == MSMapAltitudeReferenceSystemSurface) {
     for (MSGeoposition *position in array) {
       position.altitude = 0;
+    }
+  }
+}
+
++ (void)verifyNoMembers:(NSDictionary *)object
+                members:(NSArray<NSString *> *)members
+                  error:(NSError **)error {
+  for (NSString *str in members) {
+    if ([object objectForKey:str] != nil) {
+      NSString *objectType = [object objectForKey:@"type"];
+      *error = [MSMapGeoJsonParser
+          makeGeoJsonError:
+              [NSString stringWithFormat:@"%@ cannot have a \"%@\" member.",
+                                         objectType, str]];
+      return;
     }
   }
 }

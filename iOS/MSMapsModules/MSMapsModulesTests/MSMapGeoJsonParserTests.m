@@ -52,12 +52,12 @@
   XCTAssertEqual(4, collection.count);
 
   double expected[4][2] = {{10, 40}, {40, 30}, {20, 20}, {30, 10}};
-  NSArray *expectedPoints = [[NSArray alloc] init];
+  NSMutableArray *expectedPoints = [[NSMutableArray alloc] init];
   for (int row = 0; row < 4; row++) {
     NSArray *pair = [[NSArray alloc]
         initWithObjects:[NSNumber numberWithDouble:expected[row][0]],
                         [NSNumber numberWithDouble:expected[row][1]], nil];
-    expectedPoints = [expectedPoints arrayByAddingObject:pair];
+    [expectedPoints addObject:pair];
   }
 
   MSMapIcon *icon;
@@ -84,13 +84,13 @@
   XCTAssertEqual(1, collection.count);
 
   double expected[3][2] = {{30, 10}, {10, 30}, {40, 40}};
-  NSArray *expectedPoints = [[NSArray alloc] init];
+  NSMutableArray *expectedPoints = [[NSMutableArray alloc] init];
   for (int row = 0; row < 3; row++) {
     NSArray *pair;
     pair = [[NSArray alloc]
         initWithObjects:[NSNumber numberWithDouble:expected[row][0]],
                         [NSNumber numberWithDouble:expected[row][1]], nil];
-    expectedPoints = [expectedPoints arrayByAddingObject:pair];
+    [expectedPoints addObject:pair];
   }
 
   MSMapPolyline *line;
@@ -125,12 +125,12 @@
 
   double expected[7][2] = {{10, 10}, {20, 20}, {10, 40}, {40, 40},
                            {30, 30}, {40, 20}, {30, 10}};
-  NSArray *expectedPoints = [[NSArray alloc] init];
+  NSMutableArray *expectedPoints = [[NSMutableArray alloc] init];
   for (int row = 0; row < 7; row++) {
     NSArray *pair = [[NSArray alloc]
         initWithObjects:[NSNumber numberWithDouble:expected[row][0]],
                         [NSNumber numberWithDouble:expected[row][1]], nil];
-    expectedPoints = [expectedPoints arrayByAddingObject:pair];
+    [expectedPoints addObject:pair];
   }
   MSMapPolyline *line;
   int index = 0;
@@ -161,12 +161,12 @@
   XCTAssertEqual(1, collection.count);
 
   double expected[5][2] = {{30, 10}, {40, 40}, {20, 40}, {10, 20}, {30, 10}};
-  NSArray *expectedPoints = [[NSArray alloc] init];
+  NSMutableArray *expectedPoints = [[NSMutableArray alloc] init];
   for (int row = 0; row < 5; row++) {
     NSArray *pair = [[NSArray alloc]
         initWithObjects:[NSNumber numberWithDouble:expected[row][0]],
                         [NSNumber numberWithDouble:expected[row][1]], nil];
-    expectedPoints = [expectedPoints arrayByAddingObject:pair];
+    [expectedPoints addObject:pair];
   }
   MSMapPolygon *polygon;
   for (id obj in collection) {
@@ -204,12 +204,12 @@
 
   double expected[9][2] = {{35, 10}, {45, 45}, {15, 40}, {10, 20}, {35, 10},
                            {20, 30}, {35, 35}, {30, 20}, {20, 30}};
-  NSArray *expectedPoints = [[NSArray alloc] init];
+  NSMutableArray *expectedPoints = [[NSMutableArray alloc] init];
   for (int row = 0; row < 9; row++) {
     NSArray *pair = [[NSArray alloc]
         initWithObjects:[NSNumber numberWithDouble:expected[row][0]],
                         [NSNumber numberWithDouble:expected[row][1]], nil];
-    expectedPoints = [expectedPoints arrayByAddingObject:pair];
+    [expectedPoints addObject:pair];
   }
   MSMapPolygon *polygon;
   for (id obj in collection) {
@@ -246,12 +246,12 @@
 
   double expected[9][2] = {{35, 10}, {45, 45}, {15, 40}, {10, 20}, {35, 10},
                            {20, 30}, {35, 35}, {30, 20}, {20, 30}};
-  NSArray *expectedPoints = [[NSArray alloc] init];
+  NSMutableArray *expectedPoints = [[NSMutableArray alloc] init];
   for (int row = 0; row < 9; row++) {
     NSArray *pair = [[NSArray alloc]
         initWithObjects:[NSNumber numberWithDouble:expected[row][0]],
                         [NSNumber numberWithDouble:expected[row][1]], nil];
-    expectedPoints = [expectedPoints arrayByAddingObject:pair];
+    [expectedPoints addObject:pair];
   }
   MSMapPolygon *polygon;
   for (id obj in collection) {
@@ -290,13 +290,13 @@
   double expected[9][3] = {{35, 10, 7},  {45, 45, 66}, {15, 40, 77},
                            {10, 20, 88}, {35, 10, 7},  {20, 30, 8},
                            {35, 35, 66}, {30, 20, 77}, {20, 30, 8}};
-  NSArray *expectedPoints = [[NSArray alloc] init];
+  NSMutableArray *expectedPoints = [[NSMutableArray alloc] init];
   for (int row = 0; row < 9; row++) {
     NSArray *pair = [[NSArray alloc]
         initWithObjects:[NSNumber numberWithDouble:expected[row][0]],
                         [NSNumber numberWithDouble:expected[row][1]],
                         [NSNumber numberWithDouble:expected[row][2]], nil];
-    expectedPoints = [expectedPoints arrayByAddingObject:pair];
+    [expectedPoints addObject:pair];
   }
   MSMapPolygon *polygon;
   for (id obj in collection) {
@@ -321,20 +321,10 @@
 
 - (void)testParseMultiPolygonNotAllAltitudes {
   NSString *geojson =
-      @"{"
-      @"\"type\": \"MultiPolygon\","
-      @"\"coordinates\": ["
-      @"								["
-      @"								 [[40, "
-      @"40], [20, 45, 8], [45, 30], [40, 40]]"
-      @"								 ],"
-      @"								["
-      @"								 [[20, "
-      @"35], [10, 30], [10, 10], [30, 5], [45, 20], [20, 35]],"
-      @"								 [[30, "
-      @"20], [20, 15], [20, 25], [30, 20]]]"
-      @"								]"
-      @"}";
+      @"{\"type\": \"MultiPolygon\", \"coordinates\": [[[[40, 40], [20, 45, "
+      @"8], [45, 30], [40, 40]]], [[[20, 35], [10, 30], [10, 10], [30, 5], "
+      @"[45, 20], [20, 35]],						"
+      @"		 [[30, 20], [20, 15], [20, 25], [30, 20]]]]}";
 
   NSError *error;
   MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
@@ -346,12 +336,12 @@
   double expected[14][2] = {{40, 40}, {20, 45}, {45, 30}, {40, 40}, {20, 35},
                             {10, 30}, {10, 10}, {30, 5},  {45, 20}, {20, 35},
                             {30, 20}, {20, 15}, {20, 25}, {30, 20}};
-  NSArray *expectedPoints = [[NSArray alloc] init];
+  NSMutableArray *expectedPoints = [[NSMutableArray alloc] init];
   for (int row = 0; row < 14; row++) {
     NSArray *pair = [[NSArray alloc]
         initWithObjects:[NSNumber numberWithDouble:expected[row][0]],
                         [NSNumber numberWithDouble:expected[row][1]], nil];
-    expectedPoints = [expectedPoints arrayByAddingObject:pair];
+    [expectedPoints addObject:pair];
   }
   int index = 0;
   for (id obj in collection) {
@@ -374,21 +364,10 @@
 
 - (void)testParseMultiPolygonWithAllAltitudes {
   NSString *geojson =
-      @"{"
-      @"\"type\": \"MultiPolygon\","
-      @"\"coordinates\": ["
-      @"								["
-      @"								 [[40, "
-      @"40, 8], [20, 45, 11], [45, 30, 22], [40, 40, 8]]],"
-      @"								["
-      @"								 [[20, "
-      @"35, 33], [10, 30, 44], [10, 10, 55], [30, 5, 66], [45, 20, 77], [20, "
-      @"35, 33]],"
-      @"								 [[30, "
-      @"20, 88], [20, 15, 99], [20, 25, 111], [30, 20, 88]]"
-      @"								 ]"
-      @"								]"
-      @"}";
+      @"{\"type\": \"MultiPolygon\", \"coordinates\": [[[[40, 40, 8], [20, 45, "
+      @"11], [45, 30, 22], [40, 40, 8]]], [[[20, 35, 33], [10, 30, 44], [10, "
+      @"10, 55], [30, 5, 66], [45, 20, 77], [20, 35, 33]], [[30, 20, 88], [20, "
+      @"15, 99], [20, 25, 111], [30, 20, 88]]]]}";
 
   NSError *error;
   MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
@@ -401,13 +380,13 @@
       {40, 40, 8},  {20, 45, 11}, {45, 30, 22},  {40, 40, 8},  {20, 35, 33},
       {10, 30, 44}, {10, 10, 55}, {30, 5, 66},   {45, 20, 77}, {20, 35, 33},
       {30, 20, 88}, {20, 15, 99}, {20, 25, 111}, {30, 20, 88}};
-  NSArray *expectedPoints = [[NSArray alloc] init];
+  NSMutableArray *expectedPoints = [[NSMutableArray alloc] init];
   for (int row = 0; row < 14; row++) {
     NSArray *pair = [[NSArray alloc]
         initWithObjects:[NSNumber numberWithDouble:expected[row][0]],
                         [NSNumber numberWithDouble:expected[row][1]],
                         [NSNumber numberWithDouble:expected[row][2]], nil];
-    expectedPoints = [expectedPoints arrayByAddingObject:pair];
+    [expectedPoints addObject:pair];
   }
   int index = 0;
   for (id obj in collection) {
@@ -478,27 +457,97 @@
 }
 
 - (void)testParseFeature {
-	NSString *geojson = @"{\"type\": \"Feature\",\"geometry\": {\"type\": \"Point\",\"coordinates\": [30, 10]},\"properties\": {\"prop0\": \"value0\"}}";
-	NSError *error;
-	MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
-	XCTAssertNil(error);
-	MSMapElementCollection *collection = layer.elements;
-	XCTAssertNotNil(collection);
-	XCTAssertEqual(1, collection.count);
-	
-	MSMapIcon *icon;
-	for (id obj in collection) {
-		icon = (MSMapIcon *)obj;
-	}
-	XCTAssertNotNil(icon);
-	XCTAssertEqual(MSMapAltitudeReferenceSystemSurface,
-								 icon.location.altitudeReferenceSystem);
-	NSArray *expectedPoints =
-	[[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:30],
-	 [NSNumber numberWithDouble:10], nil];
-	
-	[self checkExpectedPosition:expectedPoints
-					 withActualPosition:icon.location.position];
+  NSString *geojson = @"{\"type\": \"Feature\",\"geometry\": {\"type\": "
+                      @"\"Point\",\"coordinates\": [30, 10]},\"properties\": "
+                      @"{\"prop0\": \"value0\"}}";
+  NSError *error;
+  MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
+  XCTAssertNil(error);
+  MSMapElementCollection *collection = layer.elements;
+  XCTAssertNotNil(collection);
+  XCTAssertEqual(1, collection.count);
+
+  MSMapIcon *icon;
+  for (id obj in collection) {
+    icon = (MSMapIcon *)obj;
+  }
+  XCTAssertNotNil(icon);
+  XCTAssertEqual(MSMapAltitudeReferenceSystemSurface,
+                 icon.location.altitudeReferenceSystem);
+  NSArray *expectedPoints =
+      [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:30],
+                                       [NSNumber numberWithDouble:10], nil];
+
+  [self checkExpectedPosition:expectedPoints
+           withActualPosition:icon.location.position];
+}
+
+- (void)testParseFeatureCollection {
+  NSString *geojson =
+      @"{\"type\": \"FeatureCollection\",\"features\": [{\"type\": "
+      @"\"Feature\",\"geometry\": {\"type\": \"Point\", \"coordinates\": "
+      @"[102.0, 0.5]}, \"properties\": {\"prop0\": \"value0\"}}, {\"type\": "
+      @"\"Feature\", \"geometry\": {\"type\": \"LineString\", \"coordinates\": "
+      @"[[102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]]}, "
+      @"\"properties\": {\"prop0\": \"value0\", \"prop1\": 0.0}}, {\"type\": "
+      @"\"Feature\", \"geometry\": {\"type\": \"Polygon\", \"coordinates\": "
+      @"[[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, "
+      @"0.0]]]},\"properties\": {\"prop0\": \"value0\",\"prop1\": { \"this\": "
+      @"\"that\" }}}]}";
+
+  NSError *error;
+  MSMapElementLayer *layer = [MSMapGeoJsonParser parse:geojson error:&error];
+  XCTAssertNil(error);
+  MSMapElementCollection *collection = layer.elements;
+  XCTAssertNotNil(collection);
+  XCTAssertEqual(3, collection.count);
+
+  double expected[10][2] = {{102, 0.5}, {102, 0}, {103, 1}, {104, 0}, {105, 1},
+                            {100, 0},   {101, 0}, {101, 1}, {100, 1}, {100, 0}};
+  NSMutableArray *expectedPoints = [[NSMutableArray alloc] init];
+  for (int row = 0; row < 10; row++) {
+    NSArray *pair = [[NSArray alloc]
+        initWithObjects:[NSNumber numberWithDouble:expected[row][0]],
+                        [NSNumber numberWithDouble:expected[row][1]], nil];
+    [expectedPoints addObject:pair];
+  }
+  int objectNum = 0;
+  int expectedPointsIndex = 0;
+  for (id obj in collection) {
+    if (objectNum == 0) {
+      XCTAssertEqual([MSMapIcon class], [obj class]);
+      MSMapIcon *icon = (MSMapIcon *)obj;
+      XCTAssertEqual(MSMapAltitudeReferenceSystemSurface,
+                     icon.location.altitudeReferenceSystem);
+      [self checkExpectedPosition:expectedPoints[expectedPointsIndex]
+               withActualPosition:icon.location.position];
+      expectedPointsIndex++;
+    } else if (objectNum == 1) {
+      XCTAssertEqual([MSMapPolyline class], [obj class]);
+      MSMapPolyline *polyline = (MSMapPolyline *)obj;
+      MSGeopath *path = polyline.path;
+      XCTAssertEqual(MSMapAltitudeReferenceSystemSurface,
+                     path.altitudeReferenceSystem);
+      for (MSGeoposition *position in path) {
+        [self checkExpectedPosition:expectedPoints[expectedPointsIndex]
+                 withActualPosition:position];
+        expectedPointsIndex++;
+      }
+    } else if (objectNum == 2) {
+      XCTAssertEqual([MSMapPolygon class], [obj class]);
+      MSMapPolygon *polygon = (MSMapPolygon *)obj;
+      for (MSGeopath *path in polygon.paths) {
+        XCTAssertEqual(MSMapAltitudeReferenceSystemSurface,
+                       path.altitudeReferenceSystem);
+        for (MSGeoposition *position in path) {
+          [self checkExpectedPosition:expectedPoints[expectedPointsIndex]
+                   withActualPosition:position];
+          expectedPointsIndex++;
+        }
+      }
+    }
+    objectNum++;
+  }
 }
 
 - (void)testNullInputGivesError {
@@ -885,16 +934,9 @@
 
 - (void)testParseMultiPolygonStringPolygonGivesError {
   NSString *geojson =
-      @"{"
-      @"\"type\": \"MultiPolygon\","
-      @"\"coordinates\": [ \"foo\","
-      @"								["
-      @"								 [[20, "
-      @"35], [10, 30], [10, 10], [30, 5], [45, 20], [20, 35]],"
-      @"								 [[30, "
-      @"20], [20, 15], [20, 25], [30, 20]]]"
-      @"								]"
-      @"}";
+      @"{\"type\": \"MultiPolygon\", \"coordinates\": [ \"foo\", [[[20, 35], "
+      @"[10, 30], [10, 10], [30, 5], [45, 20], [20, 35]], [[30, 20], [20, 15], "
+      @"[20, 25], [30, 20]]]]}";
 
   NSError *error;
   XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
@@ -904,18 +946,157 @@
 
 - (void)testParseMultiPolygonStringRingGivesError {
   NSString *geojson =
-      @"{"
-      @"\"type\": \"MultiPolygon\","
-      @"\"coordinates\": [ [\"foo\", [10, 30], [10, 10], [30, 5], [45, 20], "
-      @"[20, 35]],"
-      @"								["
-      @"								 [[20, "
-      @"35], [10, 30], [10, 10], [30, 5], [45, 20], [20, 35]],"
-      @"								 [[30, "
-      @"20], [20, 15], [20, 25], [30, 20]]]"
-      @"								]"
-      @"}";
+      @"{\"type\": \"MultiPolygon\", \"coordinates\": [ [\"foo\", [10, 30], "
+      @"[10, 10], [30, 5], [45, 20], [20, 35]], [[[20, 35], [10, 30], [10, "
+      @"10], [30, 5], [45, 20], [20, 35]], [[30, 20], [20, 15], [20, 25], [30, "
+      @"20]]]]}";
 
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testParseFeatureNoGeometryGivesError {
+  NSString *geojson = @"{\"type\": \"Feature\"}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testParseFeatureGeometryNotObjectGivesError {
+  NSString *geojson = @"{\"type\": \"Feature\",\"geometry\": \"foo\"}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testFeatureCollectionNoFeaturesGivesError {
+  NSString *geojson = @"{\"type\": \"FeatureCollection\"}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testFeatureCollectionFeaturesNotArrayGivesError {
+  NSString *geojson = @"{\"type\": \"FeatureCollection\", \"features\": {}}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testFeatureCollectionFeaturesEmptyArrayGivesError {
+  NSString *geojson = @"{\"type\": \"FeatureCollection\", \"features\": []}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testFeatureCollectionFeatureNotObjectGivesError {
+  NSString *geojson =
+      @"{\"type\": \"FeatureCollection\", \"features\": [\"foo\"]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testFeatureCollectionFeatureTypeNotFeatureGivesError {
+  NSString *geojson =
+      @"{\"type\": \"FeatureCollection\", \"features\": [{\"type\": \"foo\", "
+      @"\"geometry\": {\"type\": \"Point\", \"coordinates\": [102.0, 0.5]}, "
+      @"\"properties\": {\"prop0\": \"value0\"}}]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testFeatureCollectionFeatureNoGeometryGivesError {
+  NSString *geojson = @"{\"type\": \"FeatureCollection\", \"features\": "
+                      @"[{\"type\": \"Feature\"}]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testFeatureCollectionGeometryNotObjectGivesError {
+  NSString *geojson = @"{\"type\": \"FeatureCollection\", \"features\": "
+                      @"[{\"type\": \"Feature\", \"geometry\": []}]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testFeatureContainesFeaturesGivesError {
+  NSString *geojson = @"{\"type\": \"Feature\",\"geometry\": {\"type\": "
+                      @"\"Point\",\"coordinates\": [30, 10]},\"properties\": "
+                      @"{\"prop0\": \"value0\"}, \"features\": \"foo\"}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testPointContainsGeometryMemberGivesError {
+  NSString *geojson =
+      @"{\"type\": \"Point\", \"coordinates\": [30, 10], \"geometry\": {}}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testLineStringContainsPropertiesMemberGivesError {
+  NSString *geojson = @"{\"type\": \"LineString\",\"coordinates\": [[30, 10], "
+                      @"[10, 30, 8], [40, 40]], \"properties\": {}}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testPolygonContainsFeaturesMemberGivesError {
+  NSString *geojson =
+      @"{\"type\": \"Polygon\", \"coordinates\": [[[30, 10], [40, 40], [20, "
+      @"40], [10, 20], [30, 10]]], \"features\": {}}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testFeatureCollectionMemberContainsFeaturesGivesError {
+  NSString *geojson =
+      @"{\"type\": \"FeatureCollection\",\"features\": [{\"type\": "
+      @"\"Feature\",\"geometry\": {\"type\": \"Point\", \"coordinates\": "
+      @"[102.0, 0.5]}, \"properties\": {\"prop0\": \"value0\"}}, "
+      @"{\"features\": {}, \"type\": \"Feature\", \"geometry\": {\"type\": "
+      @"\"LineString\", \"coordinates\": [[102.0, 0.0], [103.0, 1.0], [104.0, "
+      @"0.0], [105.0, 1.0]]}, \"properties\": {\"prop0\": \"value0\", "
+      @"\"prop1\": 0.0}}, {\"type\": \"Feature\", \"geometry\": {\"type\": "
+      @"\"Polygon\", \"coordinates\": [[[100.0, 0.0], [101.0, 0.0], [101.0, "
+      @"1.0], [100.0, 1.0], [100.0, 0.0]]]},\"properties\": {\"prop0\": "
+      @"\"value0\",\"prop1\": { \"this\": \"that\" }}}]}";
+  NSError *error;
+  XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(-500, error.code);
+}
+
+- (void)testFeatureCollectionContainsGeometryGivesError {
+  NSString *geojson =
+      @"{\"type\": \"FeatureCollection\",\"features\": [{\"type\": "
+      @"\"Feature\",\"geometry\": {\"type\": \"Point\", \"coordinates\": "
+      @"[102.0, 0.5]}, \"properties\": {\"prop0\": \"value0\"}}], "
+      @"\"geometries\": {}}";
   NSError *error;
   XCTAssertNil([MSMapGeoJsonParser parse:geojson error:&error]);
   XCTAssertNotNil(error);
