@@ -7,9 +7,9 @@
 //  Licensed under the MIT license.
 //
 
+#import "MSMapGeoJsonLayer.h"
 #import <Foundation/Foundation.h>
 #import <MicrosoftMaps/MicrosoftMaps.h>
-#import "MSMapGeoJsonLayer.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
