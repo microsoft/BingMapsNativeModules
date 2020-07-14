@@ -160,7 +160,7 @@ public class GeoJsonParser {
       AltitudeReferenceSystem altitudeReferenceSystem) {
     ArrayList<Geopath> rings = new ArrayList<>(positionLists.size());
     for (ArrayList<Geoposition> ring : positionLists) {
-      GeopathIndexed path = new GeopathIndexed(ring, altitudeReferenceSystem);
+      Geopath path = new Geopath(ring, altitudeReferenceSystem);
       rings.add(path);
     }
     MapPolygon polygon = mFactory.createMapPolygon();
@@ -253,7 +253,7 @@ public class GeoJsonParser {
       positionsStringBuilder.append(positions.get(positions.size() - 1));
       throw new GeoJsonParseException(
           "Polygon ring must have at least 4 positions, "
-              + "and the first and last position must be the same. Instead saw: ["
+              + "and the first and last position must be the same. Instead saw Geopositions: ["
               + positionsStringBuilder
               + "].");
     }
@@ -264,7 +264,7 @@ public class GeoJsonParser {
         || firstPosition.getLatitude() != lastPosition.getLatitude()
         || firstPosition.getAltitude() != lastPosition.getAltitude()) {
       throw new GeoJsonParseException(
-          "First and last coordinate pair of each polygon ring must be the same. Instead saw: first: "
+          "First and last coordinate pair of each polygon ring must be the same. Instead saw Geopositions: first: "
               + firstPosition
               + " last: "
               + lastPosition);
