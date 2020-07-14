@@ -24,15 +24,15 @@ class ViewController: UIViewController {
         mMapView.credentialsKey = keys?.object(forKey: "credentialsKey") as! String
 
         let LOCATION = MSGeopoint(latitude: 10, longitude: 30)
-		let scene = MSMapScene(location: LOCATION, zoomLevel: 10)
-		mMapView.setScene(scene, with: .none)
+        let scene = MSMapScene(location: LOCATION, zoomLevel: 10)
+        mMapView.setScene(scene, with: .none)
 
-		let geojson = "{\"type\": \"Polygon\", \"coordinates\": [[[30, 10], [40, 40], [20, 40],[10, 20], [30, 10]]]}"
-		
+        let geojson = "{\"type\": \"Polygon\", \"coordinates\": [[[30, 10], [40, 40], [20, 40],[10, 20], [30, 10]]]}"
+
         do {
-			let layer : MSMapGeoJsonLayer = try MSMapGeoJsonParser.parse(geojson)
-			layer.strokeColor = UIColor.green
-			layer.fillColor = UIColor.orange
+            let layer: MSMapGeoJsonLayer = try MSMapGeoJsonParser.parse(geojson)
+            layer.strokeColor = UIColor.green
+            layer.fillColor = UIColor.orange
             mMapView.layers.add(layer)
         } catch {
             print(error.self)
