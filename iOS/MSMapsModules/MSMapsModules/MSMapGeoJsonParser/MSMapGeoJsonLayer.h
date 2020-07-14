@@ -8,15 +8,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 #import <MicrosoftMaps/MicrosoftMaps.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MSMapGeoJsonLayer : MSMapElementLayer
 
-@property (nonatomic) UIColor *fillColor;
-@property (nonatomic) UIColor *strokeColor;
+@property(nonatomic) UIColor *fillColor;
+@property(nonatomic) UIColor *strokeColor;
 
 - (id)init;
 
