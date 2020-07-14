@@ -15,8 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MSMapGeoJsonLayer : MSMapElementLayer
 
-@property (nonatomic) UIColor *fillColor;
-@property (nonatomic) UIColor *strokeColor;
+@property(nonatomic) UIColor *fillColor;
+@property(nonatomic) UIColor *strokeColor;
 @property(nonatomic) BOOL strokeDashed;
 @property(nonatomic) int strokeWidth;
 
