@@ -15,17 +15,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MSMapGeoJsonLayer : MSMapElementLayer
 
-@property(nonatomic) UIColor *fillColor;
-@property(nonatomic) UIColor *strokeColor;
-@property(nonatomic) BOOL strokeDashed;
-@property(nonatomic) int strokeWidth;
+/* Setter methods set the style of all elements existing in the layer. The
+ * setter methods do not apply to new elements added afterwards. */
+- (void)setFillColor:(UIColor * _Nonnull)fillColor;
+- (void)setStrokeColor:(UIColor * _Nonnull)strokeColor;
+- (void)setStrokeDashed:(BOOL)strokeDashed;
+- (void)setStrokeWidth:(int)strokeWidth;
+- (void)setPolygonsVisible:(BOOL)polygonsVisible;
+- (void)setPolylinesVisible:(BOOL)polylinesVisible;
+- (void)setIconsVisible:(BOOL)iconsVisible;
 
-@property(nonatomic) BOOL polygonsVisible;
-@property(nonatomic) BOOL polylinesVisible;
-@property(nonatomic) BOOL iconsVisible;
-
-- (id)init;
 - (NSArray<MSMapElement *> *)removePolygons;
+- (NSArray<MSMapElement *> *)removePolylines;
+- (NSArray<MSMapElement *> *)removeIcons;
 
 @end
 

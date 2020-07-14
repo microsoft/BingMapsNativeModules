@@ -16,26 +16,11 @@
 
 @implementation MSMapGeoJsonLayerTest
 
-- (void)testGetFillColorDefault {
-  MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertEqual(UIColor.blueColor, layer.fillColor);
-  XCTAssertNotNil(layer.elements);
-  [layer.elements addMapElement:[[MSMapPolygon alloc] init]];
-  XCTAssertEqual(1, layer.elements.count);
-  for (MSMapElement *element in layer.elements) {
-    XCTAssertTrue([element isKindOfClass:[MSMapPolygon class]]);
-    MSMapPolygon *polygon = (MSMapPolygon *)element;
-    XCTAssertTrue([polygon.fillColor isEqual:UIColor.blueColor]);
-  }
-}
-
 - (void)testSetFillColorOnePolygon {
   MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertEqual(UIColor.blueColor, layer.fillColor);
   XCTAssertNotNil(layer.elements);
   [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
   [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:1];
-
   XCTAssertEqual(2, layer.elements.count);
   layer.fillColor = UIColor.yellowColor;
   int objectIndex = 0;
@@ -51,7 +36,6 @@
 
 - (void)testSetFillColorMultiplePolygon {
   MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertEqual(UIColor.blueColor, layer.fillColor);
   XCTAssertNotNil(layer.elements);
   [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:0];
   [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:1];
@@ -70,32 +54,8 @@
   }
 }
 
-- (void)testGetStrokeColorDefault {
+- (void)testSetStrokeColor {
   MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertEqual(UIColor.blueColor, layer.strokeColor);
-  XCTAssertNotNil(layer.elements);
-  [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
-  [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:1];
-  XCTAssertEqual(2, layer.elements.count);
-  layer.strokeColor = UIColor.greenColor;
-  int objectIndex = 0;
-  for (MSMapElement *element in layer.elements) {
-    if (objectIndex == 0) {
-      XCTAssertTrue([element isKindOfClass:[MSMapPolyline class]]);
-      MSMapPolyline *polyline = (MSMapPolyline *)element;
-      XCTAssertTrue([polyline.strokeColor isEqual:UIColor.greenColor]);
-    } else {
-      XCTAssertTrue([element isKindOfClass:[MSMapPolygon class]]);
-      MSMapPolygon *polygon = (MSMapPolygon *)element;
-      XCTAssertTrue([polygon.strokeColor isEqual:UIColor.greenColor]);
-    }
-    objectIndex++;
-  }
-}
-
-- (void)testSetStrokeColorAllShapes {
-  MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertEqual(UIColor.blueColor, layer.fillColor);
   XCTAssertNotNil(layer.elements);
   [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
   [layer.elements insertMapElement:[[MSMapIcon alloc] init] atIndex:1];
@@ -117,32 +77,8 @@
   }
 }
 
-- (void)testGetStrokeDashedDefault {
+- (void)testSetStrokeDashed {
   MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertFalse(layer.strokeDashed);
-  XCTAssertNotNil(layer.elements);
-  [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
-  [layer.elements insertMapElement:[[MSMapIcon alloc] init] atIndex:1];
-  [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:2];
-  XCTAssertEqual(3, layer.elements.count);
-  int objectIndex = 0;
-  for (MSMapElement *element in layer.elements) {
-    if (objectIndex == 0) {
-      XCTAssertTrue([element isKindOfClass:[MSMapPolyline class]]);
-      MSMapPolyline *polyline = (MSMapPolyline *)element;
-      XCTAssertFalse(polyline.strokeDashed);
-    } else if (objectIndex == 2) {
-      XCTAssertTrue([element isKindOfClass:[MSMapPolygon class]]);
-      MSMapPolygon *polygon = (MSMapPolygon *)element;
-      XCTAssertFalse(polygon.strokeDashed);
-    }
-    objectIndex++;
-  }
-}
-
-- (void)testSetStrokeDashedAllShapes {
-  MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertFalse(layer.strokeDashed);
   XCTAssertNotNil(layer.elements);
   [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
   [layer.elements insertMapElement:[[MSMapIcon alloc] init] atIndex:1];
@@ -164,32 +100,8 @@
   }
 }
 
-- (void)testGetStrokeWidthDefault {
+- (void)testSetStrokeWidth {
   MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertEqual(1, layer.strokeWidth);
-  XCTAssertNotNil(layer.elements);
-  [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
-  [layer.elements insertMapElement:[[MSMapIcon alloc] init] atIndex:1];
-  [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:2];
-  XCTAssertEqual(3, layer.elements.count);
-  int objectIndex = 0;
-  for (MSMapElement *element in layer.elements) {
-    if (objectIndex == 0) {
-      XCTAssertTrue([element isKindOfClass:[MSMapPolyline class]]);
-      MSMapPolyline *polyline = (MSMapPolyline *)element;
-      XCTAssertEqual(1, polyline.strokeWidth);
-    } else if (objectIndex == 2) {
-      XCTAssertTrue([element isKindOfClass:[MSMapPolygon class]]);
-      MSMapPolygon *polygon = (MSMapPolygon *)element;
-      XCTAssertEqual(1, polygon.strokeWidth);
-    }
-    objectIndex++;
-  }
-}
-
-- (void)testSetStrokeWidthAllShapes {
-  MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertEqual(1, layer.strokeWidth);
   XCTAssertNotNil(layer.elements);
   [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
   [layer.elements insertMapElement:[[MSMapIcon alloc] init] atIndex:1];
@@ -211,37 +123,8 @@
   }
 }
 
-- (void)testGetArePolygonsVisibleDefault {
-  MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertTrue(layer.polygonsVisible);
-  XCTAssertNotNil(layer.elements);
-  [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
-  [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:1];
-  [layer.elements insertMapElement:[[MSMapIcon alloc] init] atIndex:2];
-  [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:3];
-  XCTAssertEqual(4, layer.elements.count);
-  int objectIndex = 0;
-  for (MSMapElement *element in layer.elements) {
-    if (objectIndex == 0) {
-      XCTAssertTrue([element isKindOfClass:[MSMapPolyline class]]);
-      MSMapPolyline *polyline = (MSMapPolyline *)element;
-      XCTAssertTrue(polyline.visible);
-    } else if (objectIndex == 2) {
-      XCTAssertTrue([element isKindOfClass:[MSMapIcon class]]);
-      MSMapIcon *icon = (MSMapIcon *)element;
-      XCTAssertTrue(icon.visible);
-    } else {
-      XCTAssertTrue([element isKindOfClass:[MSMapPolygon class]]);
-      MSMapPolygon *polygon = (MSMapPolygon *)element;
-      XCTAssertTrue(polygon.visible);
-    }
-    objectIndex++;
-  }
-}
-
 - (void)testSetArePolygonsVisible {
   MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertTrue(layer.polygonsVisible);
   XCTAssertNotNil(layer.elements);
   [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
   [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:1];
@@ -249,7 +132,6 @@
   [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:3];
   XCTAssertEqual(4, layer.elements.count);
   layer.polygonsVisible = NO;
-  XCTAssertFalse(layer.polygonsVisible);
   int objectIndex = 0;
   for (MSMapElement *element in layer.elements) {
     if (objectIndex == 0) {
@@ -269,37 +151,8 @@
   }
 }
 
-- (void)testGetArePolylinesVisibleDefault {
-  MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertTrue(layer.polylinesVisible);
-  XCTAssertNotNil(layer.elements);
-  [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
-  [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:1];
-  [layer.elements insertMapElement:[[MSMapIcon alloc] init] atIndex:2];
-  [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:3];
-  XCTAssertEqual(4, layer.elements.count);
-  int objectIndex = 0;
-  for (MSMapElement *element in layer.elements) {
-    if (objectIndex == 3) {
-      XCTAssertTrue([element isKindOfClass:[MSMapPolygon class]]);
-      MSMapPolygon *polygon = (MSMapPolygon *)element;
-      XCTAssertTrue(polygon.visible);
-    } else if (objectIndex == 2) {
-      XCTAssertTrue([element isKindOfClass:[MSMapIcon class]]);
-      MSMapIcon *icon = (MSMapIcon *)element;
-      XCTAssertTrue(icon.visible);
-    } else {
-      XCTAssertTrue([element isKindOfClass:[MSMapPolyline class]]);
-      MSMapPolyline *polyline = (MSMapPolyline *)element;
-      XCTAssertTrue(polyline.visible);
-    }
-    objectIndex++;
-  }
-}
-
 - (void)testSetArePolylinesVisible {
   MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertTrue(layer.polylinesVisible);
   XCTAssertNotNil(layer.elements);
   [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
   [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:1];
@@ -307,7 +160,6 @@
   [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:3];
   XCTAssertEqual(4, layer.elements.count);
   layer.polylinesVisible = NO;
-  XCTAssertFalse(layer.polylinesVisible);
   int objectIndex = 0;
   for (MSMapElement *element in layer.elements) {
     if (objectIndex == 3) {
@@ -327,37 +179,8 @@
   }
 }
 
-- (void)testGetAreIconsVisibleDefault {
-  MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertTrue(layer.iconsVisible);
-  XCTAssertNotNil(layer.elements);
-  [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
-  [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:1];
-  [layer.elements insertMapElement:[[MSMapIcon alloc] init] atIndex:2];
-  [layer.elements insertMapElement:[[MSMapIcon alloc] init] atIndex:3];
-  XCTAssertEqual(4, layer.elements.count);
-  int objectIndex = 0;
-  for (MSMapElement *element in layer.elements) {
-    if (objectIndex == 0) {
-      XCTAssertTrue([element isKindOfClass:[MSMapPolyline class]]);
-      MSMapPolyline *polyline = (MSMapPolyline *)element;
-      XCTAssertTrue(polyline.visible);
-    } else if (objectIndex == 1) {
-      XCTAssertTrue([element isKindOfClass:[MSMapPolygon class]]);
-      MSMapPolygon *polygon = (MSMapPolygon *)element;
-      XCTAssertTrue(polygon.visible);
-    } else {
-      XCTAssertTrue([element isKindOfClass:[MSMapIcon class]]);
-      MSMapIcon *icon = (MSMapIcon *)element;
-      XCTAssertTrue(icon.visible);
-    }
-    objectIndex++;
-  }
-}
-
 - (void)testSetAreIconsVisible {
   MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
-  XCTAssertTrue(layer.iconsVisible);
   XCTAssertNotNil(layer.elements);
   [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
   [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:1];
@@ -365,7 +188,6 @@
   [layer.elements insertMapElement:[[MSMapIcon alloc] init] atIndex:3];
   XCTAssertEqual(4, layer.elements.count);
   layer.iconsVisible = NO;
-  XCTAssertFalse(layer.iconsVisible);
   int objectIndex = 0;
   for (MSMapElement *element in layer.elements) {
     if (objectIndex == 0) {
@@ -401,6 +223,45 @@
   XCTAssertEqual(2, layer.elements.count);
   for (MSMapElement *element in layer.elements) {
     XCTAssertFalse([element isKindOfClass:[MSMapPolygon class]]);
+  }
+}
+
+- (void)testRemovePolylines {
+  MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
+  [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
+  [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:1];
+  [layer.elements insertMapElement:[[MSMapIcon alloc] init] atIndex:2];
+  [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:3];
+  XCTAssertNotNil(layer.elements);
+  XCTAssertEqual(4, layer.elements.count);
+  NSArray *removedElements = [layer removePolylines];
+  XCTAssertEqual(2, removedElements.count);
+  for (MSMapElement *element in removedElements) {
+    XCTAssertTrue([element isKindOfClass:[MSMapPolyline class]]);
+  }
+  XCTAssertEqual(2, layer.elements.count);
+  for (MSMapElement *element in layer.elements) {
+    XCTAssertFalse([element isKindOfClass:[MSMapPolyline class]]);
+  }
+}
+
+- (void)testRemoveIcons {
+  MSMapGeoJsonLayer *layer = [[MSMapGeoJsonLayer alloc] init];
+  [layer.elements insertMapElement:[[MSMapPolyline alloc] init] atIndex:0];
+  [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:1];
+  [layer.elements insertMapElement:[[MSMapIcon alloc] init] atIndex:2];
+  [layer.elements insertMapElement:[[MSMapPolygon alloc] init] atIndex:3];
+  [layer.elements insertMapElement:[[MSMapIcon alloc] init] atIndex:4];
+  XCTAssertNotNil(layer.elements);
+  XCTAssertEqual(5, layer.elements.count);
+  NSArray *removedElements = [layer removeIcons];
+  XCTAssertEqual(2, removedElements.count);
+  for (MSMapElement *element in removedElements) {
+    XCTAssertTrue([element isKindOfClass:[MSMapIcon class]]);
+  }
+  XCTAssertEqual(3, layer.elements.count);
+  for (MSMapElement *element in layer.elements) {
+    XCTAssertFalse([element isKindOfClass:[MSMapIcon class]]);
   }
 }
 
