@@ -662,7 +662,7 @@ public class GeoJsonParserTest {
     new GeoJsonParser().internalParse(geojson, MOCK_MAP_FACTORIES);
   }
 
-  @Test (expected = GeoJsonParseException.class)
+  @Test(expected = GeoJsonParseException.class)
   public void testPolygonNotEnoughPositionsThrowsException()
       throws GeoJsonParseException, JSONException {
     String geojson =
