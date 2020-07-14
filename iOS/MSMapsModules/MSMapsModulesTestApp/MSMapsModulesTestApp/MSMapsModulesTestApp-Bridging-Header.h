@@ -11,5 +11,6 @@
 #define MSMapsModulesTestApp_Bridging_Header_h
 
 #import "../../MSMapsModules/MSMapGeoJsonParser/MSMapGeoJsonParser.h"
+#import "../../MSMapsModules/MSMapGeoJsonParser/MSMapGeoJsonLayer.h"
 
 #endif /* MSMapsModulesTestApp_Bridging_Header_h */
