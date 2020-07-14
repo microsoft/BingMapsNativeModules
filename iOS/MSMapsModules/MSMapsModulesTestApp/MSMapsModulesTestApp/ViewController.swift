@@ -23,16 +23,18 @@ class ViewController: UIViewController {
         }
         mMapView.credentialsKey = keys?.object(forKey: "credentialsKey") as! String
 
-        let LOCATION = MSGeopoint(latitude: 10, longitude: 30)
+        let LOCATION = MSGeopoint(latitude: 10, longitude: 40)
         let scene = MSMapScene(location: LOCATION, zoomLevel: 10)
         mMapView.setScene(scene, with: .none)
 
-        let geojson = "{\"type\": \"Polygon\", \"coordinates\": [[[30, 10], [40, 40], [20, 40],[10, 20], [30, 10]]]}"
+        let geojson = "{\"type\": \"GeometryCollection\", \"geometries\": [{\"type\":\"Point\", \"coordinates\": [40, 10]}, {\"type\": \"LineString\", \"coordinates\": [[10, 10, 9], [20, 20, 8], [10, 40, 7]]}, {\"type\": \"Polygon\", \"coordinates\": [[[40, 40], [20, 45], [45, 30], [40, 40]]]}]}"
 
         do {
             let layer: MSMapGeoJsonLayer = try MSMapGeoJsonParser.parse(geojson)
             layer.strokeColor = UIColor.green
             layer.fillColor = UIColor.orange
+            layer.strokeWidth = 4
+            layer.strokeDashed = true
             mMapView.layers.add(layer)
         } catch {
             print(error.self)

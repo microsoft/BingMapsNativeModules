@@ -108,10 +108,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)switchToType:(NSDictionary *)object error:(NSError **)error {
   NSString *type =
       [NSString stringWithFormat:@"%@", [object objectForKey:@"type"]];
-	if (type == nil) {
-		*error = [MSMapGeoJsonParser makeGeoJsonError: @"GeoJSON object must be contain \"type\"."];
-		return ;
-	}
+  if (type == nil) {
+    *error = [MSMapGeoJsonParser
+        makeGeoJsonError:@"GeoJSON object must be contain \"type\"."];
+    return;
+  }
   if ([type isEqualToString:@"Point"]) {
     NSArray *coordinates = [MSMapGeoJsonParser getCoordinates:object
                                                         error:error];
@@ -159,12 +160,15 @@ NS_ASSUME_NONNULL_BEGIN
       return;
     }
     [self parseMultiPolygon:polygons error:error];
-	} else if ([type isEqualToString:@"GeometryCollection"]) {
-		[self parseGeometryCollection:object error:error];
-	} else {
-		*error = [MSMapGeoJsonParser makeGeoJsonError:[NSString stringWithFormat:@"%@ is not a valid Geometry type.", type]];
-		return;
-	}
+  } else if ([type isEqualToString:@"GeometryCollection"]) {
+    [self parseGeometryCollection:object error:error];
+  } else {
+    *error = [MSMapGeoJsonParser
+        makeGeoJsonError:
+            [NSString
+                stringWithFormat:@"%@ is not a valid Geometry type.", type]];
+    return;
+  }
   NSArray<NSString *> *members = [[NSArray alloc]
       initWithObjects:@"geometry", @"properties", @"features", nil];
   [MSMapGeoJsonParser verifyNoMembers:object members:members error:error];
@@ -486,28 +490,36 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)parseGeometryCollection:(NSDictionary *)object error:(NSError **)error {
-	NSArray *array = [object objectForKey:@"geometries"];
-	if (array == nil) {
-		*error = [MSMapGeoJsonParser
-							makeGeoJsonError:@"GeometryCollection must contain \"geometries\"."];
-		return;
-	}
-	if (![array isKindOfClass:[NSArray class]]) {
-		*error = [MSMapGeoJsonParser
-							makeGeoJsonError:[NSString stringWithFormat:@"GeometryCollection \"geometries\" must be an array of GeoJSON object. Instead saw: %@", array]];
-		return;
-	}
-	for (id obj in array) {
-		if (![obj isKindOfClass:[NSDictionary class]]) {
-			*error = [MSMapGeoJsonParser
-								makeGeoJsonError:[NSString stringWithFormat:@"GeometryCollection must contain an array of GeoJSON objects. Instead saw: %@", obj]];
-			return;
-		}
-		[self switchToType:(NSDictionary *)obj error:error];
-		if (*error != nil) {
-			return;
-		}
-	}
+  NSArray *array = [object objectForKey:@"geometries"];
+  if (array == nil) {
+    *error = [MSMapGeoJsonParser
+        makeGeoJsonError:@"GeometryCollection must contain \"geometries\"."];
+    return;
+  }
+  if (![array isKindOfClass:[NSArray class]]) {
+    *error = [MSMapGeoJsonParser
+        makeGeoJsonError:
+            [NSString
+                stringWithFormat:@"GeometryCollection \"geometries\" must be "
+                                 @"an array of GeoJSON object. Instead saw: %@",
+                                 array]];
+    return;
+  }
+  for (id obj in array) {
+    if (![obj isKindOfClass:[NSDictionary class]]) {
+      *error = [MSMapGeoJsonParser
+          makeGeoJsonError:
+              [NSString
+                  stringWithFormat:@"GeometryCollection must contain an array "
+                                   @"of GeoJSON objects. Instead saw: %@",
+                                   obj]];
+      return;
+    }
+    [self switchToType:(NSDictionary *)obj error:error];
+    if (*error != nil) {
+      return;
+    }
+  }
 }
 
 /*
