@@ -46,8 +46,6 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
         .when(layer)
         .setFillColor(Mockito.anyInt());
 
-    doAnswer(invocation -> fillColor.get()).when(layer).getFillColor();
-
     final AtomicReference<Integer> strokeColor = new AtomicReference();
     // set the default value
     strokeColor.set(Color.BLUE);
@@ -67,8 +65,6 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
             })
         .when(layer)
         .setStrokeColor(Mockito.anyInt());
-
-    doAnswer(invocation -> strokeColor.get()).when(layer).getStrokeColor();
 
     final AtomicReference<Boolean> isStrokeDashed = new AtomicReference();
     // set the default value
@@ -91,8 +87,6 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
         .when(layer)
         .setStrokeDashed(Mockito.anyBoolean());
 
-    doAnswer(invocation -> isStrokeDashed.get()).when(layer).getStrokeDashed();
-
     final AtomicReference<Integer> strokeWidth = new AtomicReference();
     // set the default value
     strokeWidth.set(1);
@@ -114,8 +108,6 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
         .when(layer)
         .setStrokeWidth(Mockito.anyInt());
 
-    doAnswer(invocation -> strokeWidth.get()).when(layer).getStrokeWidth();
-
     final AtomicReference<Boolean> polygonsVisible = new AtomicReference();
     // set the default value
     polygonsVisible.set(true);
@@ -134,8 +126,6 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
             })
         .when(layer)
         .setPolygonsVisible(Mockito.anyBoolean());
-
-    doAnswer(invocation -> polygonsVisible.get()).when(layer).getPolygonsVisible();
 
     final AtomicReference<Boolean> polylinesVisible = new AtomicReference();
     // set the default value
@@ -156,8 +146,6 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
         .when(layer)
         .setPolylinesVisible(Mockito.anyBoolean());
 
-    doAnswer(invocation -> polylinesVisible.get()).when(layer).getPolylinesVisible();
-
     final AtomicReference<Boolean> iconsVisible = new AtomicReference();
     // set the default value
     iconsVisible.set(true);
@@ -176,8 +164,6 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
             })
         .when(layer)
         .setIconsVisible(Mockito.anyBoolean());
-
-    doAnswer(invocation -> iconsVisible.get()).when(layer).getIconsVisible();
 
     doAnswer(
             invocation -> {

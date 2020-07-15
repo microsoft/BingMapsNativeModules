@@ -1,75 +1,20 @@
 
+
 # MapGeoJsonLayer API
 
-Contains shapes to display on the map, as defined in a GeoJson string. Optionally, the overall style of the shapes in the layer can be set programmatically (the same style will be applied to all applicable shapes).
+Contains shapes to display on the map, as defined in a GeoJson string. Optionally, the overall style of the shapes in the layer can be set programmatically (the same style will be applied to all applicable shapes). _Note: the style-updating methods for the MapGeoJsonLayer only apply to existing elements in the layer. 
 
-```Java
-class MapGeoJsonLayer extends MapElementLayer
-```
+**Android**
 
-## Properties
+>```Java
+> class MapGeoJsonLayer extends MapElementLayer
+>```
 
-### FillColor
+**iOS**
 
-The color in ARGB format to use to fill in [polygons](https://docs.microsoft.com/en-us/bingmaps/sdk-native/map-control-api/mappolygon-class). The default color is blue (0xff0000ff).
-
-```Java
-int getFillColor()
-void setFillColor(int fillColor)
-```
-
-### PointsVisible
-
-Whether the points are rendered or not.
-
-```Java
-boolean getPointsVisible()
-void setPointsVisible(boolean visible)
-```
-
-### PolygonsVisible
-
-Whether the polygons are rendered or not.
-
-```Java
-boolean getPolygonsVisible()
-void setPolygonsVisible(boolean visible)
-```
-
-### PolylinesVisible
-
-Whether the [polylines](https://docs.microsoft.com/en-us/bingmaps/sdk-native/map-control-api/mappolyline-class) are rendered or not.
-
-```Java
-boolean getPolylinesVisible()
-void setPolylinesVisible(boolean visible)
-```
-
-### StrokeColor
-The color in ARGB format to use to draw polylines and the border of polygons. The default color is blue (0xff0000ff).
-
-```Java
-int getStrokeColor()
-void setStrokeColor(int strokeColor)
-```
-
-### StrokeDashed
-
-Indicates whether the lines are dashed in polylines and polygons.
-
-```Java
-boolean getStrokeDashed()
-void setStrokeDashed(boolean isDashed)
-```
-
-### StrokeWidth
-
-The width of the line to use for polylines and the outside of the polygon. The default width is 1.
-
-```Java
-float getStrokeWidth()
-void setStrokeWidth(float strokeWidth)
-```
+>```objectivec
+> @interface MSMapGeoJsonLayer : MSMapElementLayer
+> ```
 
 ## Methods
 
@@ -77,25 +22,160 @@ void setStrokeWidth(float strokeWidth)
 
 Removes all icons from the layer and returns them in a list of MapElements.
 
-```Java
-List<MapElement> removeIcons()
-```
+**Java**
+
+>```Java
+> List<MapElement> removeIcons()
+>```
+
+**iOS**
+
+>```objectivec
+> - (NSArray<MSMapElement *> *)removeIcons
+> ```
 
 ### RemovePolylines
 
 Removes all polylines from the layer and returns them in a list of MapElements.
 
-```Java
-List<MapElement> removePolylines()
-```
+**Java**
+
+>```Java
+> List<MapElement> removePolylines()
+>```
+
+**iOS**
+
+>```objectivec
+> - (NSArray<MSMapElement *> *)removePolylines
+> ```
 
 ### RemovePolygons
 
 Removes all polygons from the layer and returns them in a list of MapElements.
 
-```Java
-List<MapElement> removePolygons()
-```
+**Java**
+
+>```Java
+> List<MapElement> removePolygons()
+>```
+
+**iOS**
+
+>```objectivec
+> - (NSArray<MSMapElement *> *)removePolygons
+> ```
+
+### SetFillColor
+
+The color in ARGB format to use to fill in [polygons](https://docs.microsoft.com/en-us/bingmaps/sdk-native/map-control-api/mappolygon-class). The default color is blue (0xff0000ff).
+
+**Java**
+
+>```Java
+> void setFillColor(int fillColor)
+>```
+
+**iOS**
+
+>```objectivec
+> - (void)setFillColor:(UIColor *)fillColor
+> ```
+
+### SetIconsVisible
+
+Whether the icons are rendered or not.
+
+**Java**
+
+>```Java
+> void setIconsVisible(boolean visible)
+> ```
+
+**iOS**
+
+>```objectivec
+> - (void)setIconsVisible:(BOOL)iconsVisible
+> ```
+
+### SetPolygonsVisible
+
+Whether the polygons are rendered or not.
+
+**Java**
+
+>```Java
+> void setPolygonsVisible(boolean visible)
+>```
+
+**iOS**
+
+>```objectivec
+> - (void)setPolygonsVisible:(BOOL)polygonsVisible
+> ```
+
+### SetPolylinesVisible
+
+Whether the [polylines](https://docs.microsoft.com/en-us/bingmaps/sdk-native/map-control-api/mappolyline-class) are rendered or not.
+
+**Java**
+
+>```Java
+> void setPolylinesVisible(boolean visible)
+>```
+
+**iOS**
+
+>```objectivec
+> - (void)setPolylinesVisible:(BOOL)polylinesVisible
+> ```
+
+### SetStrokeColor
+The color in ARGB format to use to draw polylines and the border of polygons. The default color is blue (0xff0000ff).
+
+**Java**
+
+>```Java
+> void setStrokeColor(int strokeColor)
+>```
+
+**iOS**
+
+>```objectivec
+> - (void)setStrokeColor:(UIColor *)strokeColor
+> ```
+
+### SetStrokeDashed
+
+Indicates whether the lines are dashed in polylines and polygons.
+
+**Java**
+
+>```Java
+> void setStrokeDashed(boolean isDashed)
+>```
+
+**iOS**
+
+>```objectivec
+> - (void)setStrokeDashed:(BOOL)strokeDashed
+> ```
+
+### SetStrokeWidth
+
+The width of the line to use for polylines and the outside of the polygon. The default width is 1.
+
+**Java**
+
+>```Java
+> void setStrokeWidth(float strokeWidth)
+>```
+
+**iOS**
+
+>```objectivec
+> - (void)setStrokeWidth:(int)strokeWidth
+> ```
 
 ## Examples
 
@@ -122,11 +202,13 @@ Parse the following GeoJSON string (called `geojson`) and add to map:
 
 In the Activity's onCreate method:
 
-```Java
-// MapView map = ...
-MapGeoJsonLayer layer = GeoJsonParser.parse(geojson);
-map.getLayers().add(layer);
-```
+**Java**
+
+>```Java
+> // MapView map = ...
+> MapGeoJsonLayer layer = GeoJsonParser.parse(geojson);
+> map.getLayers().add(layer);
+>```
 
 
 Result: 
@@ -134,15 +216,16 @@ Result:
 
 Or to change the style before adding to the map:
 
-```Java
-// MapView map = ...
-MapGeoJsonLayer layer = GeoJsonParser.parse(geojson);
-layer.setFillColor(Color.RED);
-layer.setStrokeColor(Color.GREEN);
-layer.setStrokeWidth(3);
-layer.setStrokeDashed(true);
-map.getLayers().add(layer);
-```
+**Java**
+
+>```Java
+> // MapView map = ...
+> MapGeoJsonLayer layer = GeoJsonParser.parse(geojson);
+> layer.setFillColor(Color.RED);
+> layer.setStrokeColor(Color.GREEN);
+> layer.setStrokeWidth(3);
+> map.getLayers().add(layer);
+>```
 
 Result:
 ![New styling](https://github.com/microsoft/BingMapsNativeModules/blob/master/documentation/withStyle.png?raw=true)
@@ -150,12 +233,14 @@ Result:
 
 Filter out points:
 
-```Java
-// MapView map = ...
-MapGeoJsonLayer layer = GeoJsonParser.parse(geojson);
-layer.setPointsVisible(false);
-map.getLayers().add(layer);
-```
+**Java**
+
+>```Java
+> // MapView map = ...
+> MapGeoJsonLayer layer = GeoJsonParser.parse(geojson);
+> layer.setPointsVisible(false);
+> map.getLayers().add(layer);
+>```
 
 Result:
 
