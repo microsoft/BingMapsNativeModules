@@ -516,7 +516,7 @@ NS_ASSUME_NONNULL_BEGIN
       return;
     }
     [self switchToType:(NSDictionary *)obj error:error];
-    if(*error != nil){
+    if (*error != nil) {
       return;
     }
   }
