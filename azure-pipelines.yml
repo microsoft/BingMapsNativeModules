@@ -39,22 +39,24 @@ jobs:
       echo '<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"> <plist version="1.0"> <dict> <key>credentialsKey</key> <string>DummyKey</string> </dict> </plist>' > $(testAppKeysPath)
     displayName: 'Create keys.plist for MSMapsModulesTestApp'
   - bash: |
-      cd $(referenceAppPath)
-      pod install
-      cd $(msMapsModulesToRootPath)
-    displayName: 'pod install for MSMapsModulesReferenceApp'
-  - bash: |
       echo '<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"> <plist version="1.0"> <dict> <key>credentialsKey</key> <string>DummyKey</string> </dict> </plist>' > $(referenceAppPath)/keys.plist
     displayName: 'Create keys.plist for MSMapsModulesReferenceApp'
   - task: CocoaPods@0
     displayName: 'Install pods for MSMapsModules'
     inputs:
+      workingDirectory: '$(referenceAppPath)'
+      projectDirectory: '$(referenceAppPath)'
+      forceRepoUpdate: true
+  - task: CocoaPods@0
+    displayName: 'Install pods for MSMapsModulesReferenceApp'
+    inputs:
       workingDirectory: '$(msMapsModulesPath)'
       projectDirectory: '$(msMapsModulesPath)'
       forceRepoUpdate: true
   - task: Xcode@5
-    displayName: 'Build static library MSMapsModules.'
+    displayName: 'Build Static Library MSMapsModules'
     inputs:
+      actions: 'clean build'
       sdk: '$(sdk)'
       xcWorkspacePath: '$(msMapsModulesWorkspacePath)'
       scheme: 'MSMapsModules'
@@ -62,8 +64,9 @@ jobs:
       xcodeVersion: 'default'
       packageApp: false
   - task: Xcode@5
-    displayName: 'Build MSMapsModulesTestApp.'
+    displayName: 'Build MSMapsModulesTestApp'
     inputs:
+      actions: 'clean build'
       sdk: '$(sdk)'
       xcWorkspacePath: '$(msMapsModulesWorkspacePath)'
       scheme: 'MSMapsModulesTestApp'
@@ -71,8 +74,9 @@ jobs:
       xcodeVersion: 'default'
       packageApp: false
   - task: Xcode@5
-    displayName: 'Build MSMapsModulesReferenceApp.'
+    displayName: 'Build MSMapsModulesReferenceApp'
     inputs:
+      actions: 'clean build'
       sdk: '$(sdk)'
       xcWorkspacePath: '$(referenceAppWorkspacePath)'
       scheme: 'MSMapsModulesReferenceApp'
