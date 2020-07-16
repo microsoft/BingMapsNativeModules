@@ -31,8 +31,8 @@ class ViewController: UIViewController {
 
         do {
             let layer: MSMapGeoJsonLayer = try MSMapGeoJsonParser.parse(geojson)
-            layer.strokeColor = UIColor.green
-            layer.fillColor = UIColor.orange
+            layer.setStroke(UIColor.green)
+            layer.setFill(UIColor.orange)
             mMapView.layers.add(layer)
         } catch {
             print(error.self)

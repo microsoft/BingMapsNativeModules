@@ -2,7 +2,7 @@
 
 # MapGeoJsonLayer API
 
-Contains shapes to display on the map, as defined in a GeoJson string. Optionally, the overall style of the shapes in the layer can be set programmatically (the same style will be applied to all applicable shapes). _Note: the style-updating methods for the MapGeoJsonLayer only apply to existing elements in the layer. 
+Contains shapes to display on the map, as defined in a GeoJson string. Optionally, the overall style of the shapes in the layer can be set programmatically (the same style will be applied to all applicable shapes). _Note: the style-updating methods for the MapGeoJsonLayer only apply to existing elements in the layer._
 
 **Android**
 
