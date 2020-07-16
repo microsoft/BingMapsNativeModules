@@ -36,6 +36,12 @@ jobs:
     vmImage: 'macOS-10.14'
   steps:
   - bash: |
+      brew install clang-format
+      cd $(msMapsModulesPath)
+      ./format-all.txt
+      ../../BuildScripts/CheckForChanges.sh "iOS code is not properly formatted; run iOS/MSMapsModules/format-all.txt"
+    displayName: 'Check source code formatting'
+  - bash: |
       echo '<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"> <plist version="1.0"> <dict> <key>credentialsKey</key> <string>DummyKey</string> </dict> </plist>' > $(testAppKeysPath)
     displayName: 'Create keys.plist for MSMapsModulesTestApp'
   - bash: |
