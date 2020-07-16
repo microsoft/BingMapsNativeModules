@@ -376,7 +376,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.modules.MSMapsModulesTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/admin/Desktop/internProject/BingMapsNativeModules/iOS/MSMapsModules/MSMapsModulesTestApp/MSMapsModulesTestApp/MSMapsModulesTestApp-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/$(PROJECT_NAME)/$(PROJECT_NAME)-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -397,7 +397,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.microsoft.modules.MSMapsModulesTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/admin/Desktop/internProject/BingMapsNativeModules/iOS/MSMapsModules/MSMapsModulesTestApp/MSMapsModulesTestApp/MSMapsModulesTestApp-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/$(PROJECT_NAME)/$(PROJECT_NAME)-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
