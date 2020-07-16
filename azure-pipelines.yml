@@ -4,6 +4,7 @@ variables:
   msMapsModulesPath: 'iOS/MSMapsModules'
   msMapsModulesToRootPath: '../../'
   msMapsModulesWorkspacePath: '$(msMapsModulesPath)/MSMapsModules.xcworkspace'
+  testAppKeysPath: '$(msMapsModulesPath)/MSMapsModulesTestApp/keys.plist'
   
 trigger:
 - master
@@ -37,6 +38,9 @@ jobs:
       pod install
       cd $(msMapsModulesToRootPath)
     displayName: 'pod install'
+  - bash: |
+      echo '<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"> <plist version="1.0"> <dict> <key>credentialsKey</key> <string>DummyKey</string> </dict> </plist>' > $(testAppKeysPath)
+    displayName: 'Create keys.plist for MSMapsModulesTestApp'
   - task: Xcode@5
     inputs:
       sdk: '$(sdk)'
