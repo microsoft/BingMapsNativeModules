@@ -36,11 +36,6 @@ jobs:
     vmImage: 'macOS-10.14'
   steps:
   - bash: |
-      cd $(msMapsModulesPath)
-      pod install
-      cd $(msMapsModulesToRootPath)
-    displayName: 'pod install for MSMapsModules'
-  - bash: |
       echo '<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"> <plist version="1.0"> <dict> <key>credentialsKey</key> <string>DummyKey</string> </dict> </plist>' > $(testAppKeysPath)
     displayName: 'Create keys.plist for MSMapsModulesTestApp'
   - bash: |
@@ -51,7 +46,14 @@ jobs:
   - bash: |
       echo '<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"> <plist version="1.0"> <dict> <key>credentialsKey</key> <string>DummyKey</string> </dict> </plist>' > $(referenceAppPath)/keys.plist
     displayName: 'Create keys.plist for MSMapsModulesReferenceApp'
+  - task: CocoaPods@0
+    displayName: 'Install pods for MSMapsModules'
+    inputs:
+      workingDirectory: '$(msMapsModulesPath)'
+      projectDirectory: '$(msMapsModulesPath)'
+      forceRepoUpdate: true
   - task: Xcode@5
+    displayName: 'Build static library MSMapsModules.'
     inputs:
       sdk: '$(sdk)'
       xcWorkspacePath: '$(msMapsModulesWorkspacePath)'
@@ -60,6 +62,7 @@ jobs:
       xcodeVersion: 'default'
       packageApp: false
   - task: Xcode@5
+    displayName: 'Build MSMapsModulesTestApp.'
     inputs:
       sdk: '$(sdk)'
       xcWorkspacePath: '$(msMapsModulesWorkspacePath)'
@@ -68,6 +71,7 @@ jobs:
       xcodeVersion: 'default'
       packageApp: false
   - task: Xcode@5
+    displayName: 'Build MSMapsModulesReferenceApp.'
     inputs:
       sdk: '$(sdk)'
       xcWorkspacePath: '$(referenceAppWorkspacePath)'
