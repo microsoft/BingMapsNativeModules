@@ -4,7 +4,6 @@
 package com.microsoft.maps.kml;
 
 import androidx.annotation.NonNull;
-
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
@@ -12,12 +11,11 @@ import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.modulestools.MapFactories;
 
 /**
- * Class that parses KML and returns a new MapElementLayer containing all the shapes outlined in
- * the GeoJSON.
+ * Class that parses KML and returns a new MapElementLayer containing all the shapes outlined in the
+ * GeoJSON.
  *
  * <p>Created by Elizabeth Bartusiak (t-elbart) on 07/21/2020
  */
-
 public class KMLParser {
 
   private MapElementLayer mLayer;
@@ -64,5 +62,4 @@ public class KMLParser {
   MapElementLayer internalParse(@NonNull String kml, @NonNull MapFactories factory) {
     return null;
   }
-
 }

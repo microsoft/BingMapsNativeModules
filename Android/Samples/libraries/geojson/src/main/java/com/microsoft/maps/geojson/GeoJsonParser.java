@@ -16,7 +16,6 @@ import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.modulestools.MapFactories;
-
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
