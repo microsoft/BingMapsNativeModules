@@ -1,16 +1,14 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-package com.microsoft.maps.geojson;
+package com.microsoft.maps.modulestools;
 
-import androidx.annotation.VisibleForTesting;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 
-@VisibleForTesting
-interface MapFactories {
+public interface MapFactories {
   MapElementLayer createMapElementLayer();
 
   MapIcon createMapIcon();

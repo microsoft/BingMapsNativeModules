@@ -1,3 +1,5 @@
 rootProject.name='MapsModules'
 include ':app'
 include ':libraries:geojson'
+include ':libraries:kml'
+include ':libraries:moduletools'
