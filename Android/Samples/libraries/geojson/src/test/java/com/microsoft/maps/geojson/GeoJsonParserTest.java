@@ -16,9 +16,8 @@ import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.MockBingMapsLoader;
 import com.microsoft.maps.MockMapElementCollection;
-import com.microsoft.maps.modulestools.MapFactories;
+import com.microsoft.maps.moduletools.MapFactories;
 import com.microsoft.maps.moduletoolstest.MockParserMapFactories;
-
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;

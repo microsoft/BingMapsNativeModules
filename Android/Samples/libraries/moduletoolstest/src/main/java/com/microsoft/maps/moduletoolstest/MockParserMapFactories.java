@@ -3,8 +3,6 @@
 
 package com.microsoft.maps.moduletoolstest;
 
-import static org.mockito.Mockito.doAnswer;
-
 import com.microsoft.maps.Geopath;
 import com.microsoft.maps.Geopoint;
 import com.microsoft.maps.MapElementLayer;
@@ -12,7 +10,7 @@ import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.MockMapElementCollection;
-import com.microsoft.maps.modulestools.MapFactories;
+import com.microsoft.maps.moduletools.MapFactories;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import org.mockito.Mockito;
