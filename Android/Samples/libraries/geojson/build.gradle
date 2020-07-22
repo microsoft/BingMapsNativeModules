@@ -54,7 +54,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'androidx.test:core:1.2.0'
-    testImplementation 'org.mockito:mockito-core:2.7.22'
+    testImplementation 'org.mockito:mockito-core:2.28.2'
     testImplementation 'org.json:json:20190722'
     testImplementation project(path: ':libraries:moduletoolstest')
 
