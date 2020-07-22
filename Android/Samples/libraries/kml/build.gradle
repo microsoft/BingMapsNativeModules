@@ -1,25 +1,12 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
 apply plugin: "com.github.sherter.google-java-format"
-
-group = 'com.microsoft.maps.geojson'
-version = '1.0'
-
-uploadArchives {
-    repositories {
-        mavenLocal()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-}
 
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -35,17 +22,6 @@ android {
         }
     }
 
-    testOptions {
-        unitTests {
-            includeAndroidResources = true
-            unitTests.returnDefaultValues = true
-        }
-    }
-    compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
-    }
-
 }
 
 dependencies {
@@ -57,10 +33,4 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.microsoft.maps:maps-sdk:1.1.4'
     implementation project(path: ':libraries:moduletools')
-    
-    testImplementation 'org.robolectric:robolectric:4.3'
-    testImplementation 'androidx.test:core:1.2.0'
-    testImplementation 'org.mockito:mockito-core:2.7.22'
-    testImplementation 'org.json:json:20190722'
-
 }
