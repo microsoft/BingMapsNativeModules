@@ -1,9 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-package com.microsoft.maps.geojson;
-
-import static org.mockito.Mockito.doAnswer;
+package com.microsoft.maps.moduletoolstest;
 
 import com.microsoft.maps.Geopath;
 import com.microsoft.maps.Geopoint;
@@ -12,12 +10,12 @@ import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.MockMapElementCollection;
-import com.microsoft.maps.modulestools.MapFactories;
+import com.microsoft.maps.moduletools.MapFactories;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import org.mockito.Mockito;
 
-class MockParserMapFactories implements MapFactories {
+public class MockParserMapFactories implements MapFactories {
 
   @Override
   public MapElementLayer createMapElementLayer() {
@@ -25,7 +23,7 @@ class MockParserMapFactories implements MapFactories {
 
     MockMapElementCollection mockElementCollection = new MockMapElementCollection(layer);
 
-    doAnswer(invocation -> mockElementCollection).when(layer).getElements();
+    Mockito.doAnswer(invocation -> mockElementCollection).when(layer).getElements();
 
     return layer;
   }
@@ -37,14 +35,14 @@ class MockParserMapFactories implements MapFactories {
     // location must be final for use within the 'doAnswer' clause
     // AtomicReference used as a wrapper class to capture changes to location
     final AtomicReference<Geopoint> location = new AtomicReference<>();
-    doAnswer(
+    Mockito.doAnswer(
             invocation -> {
               location.set(invocation.getArgument(0));
               return true;
             })
         .when(icon)
         .setLocation(Mockito.any(Geopoint.class));
-    doAnswer(invocation -> location.get()).when(icon).getLocation();
+    Mockito.doAnswer(invocation -> location.get()).when(icon).getLocation();
 
     return icon;
   }
@@ -56,14 +54,14 @@ class MockParserMapFactories implements MapFactories {
     // paths must be final for use within the 'doAnswer' clause
     // AtomicReference used as a wrapper class to capture changes to paths
     final AtomicReference<Geopath> paths = new AtomicReference();
-    doAnswer(
+    Mockito.doAnswer(
             invocation -> {
               paths.set(invocation.getArgument(0));
               return true;
             })
         .when(polyline)
         .setPath(Mockito.any(Geopath.class));
-    doAnswer(invocation -> paths.get()).when(polyline).getPath();
+    Mockito.doAnswer(invocation -> paths.get()).when(polyline).getPath();
 
     return polyline;
   }
@@ -75,7 +73,7 @@ class MockParserMapFactories implements MapFactories {
     // paths must be final for use within the 'doAnswer' clause
     // AtomicReference used as a wrapper class to capture changes to paths
     final AtomicReference<ArrayList<Geopath>> paths = new AtomicReference(new ArrayList<Geopath>());
-    doAnswer(
+    Mockito.doAnswer(
             invocation -> {
               paths.set(invocation.getArgument(0));
               return true;
@@ -83,7 +81,7 @@ class MockParserMapFactories implements MapFactories {
         .when(polygon)
         .setPaths(Mockito.anyList());
 
-    doAnswer(invocation -> paths.get()).when(polygon).getPaths();
+    Mockito.doAnswer(invocation -> paths.get()).when(polygon).getPaths();
 
     return polygon;
   }

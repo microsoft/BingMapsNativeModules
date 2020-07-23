@@ -15,7 +15,8 @@ import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
-import com.microsoft.maps.modulestools.MapFactories;
+import com.microsoft.maps.moduletools.DefaultMapFactories;
+import com.microsoft.maps.moduletools.MapFactories;
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,25 +35,10 @@ public class GeoJsonParser {
   private boolean mDidWarn;
 
   private static final MapFactories DEFAULT_MAP_FACTORIES =
-      new MapFactories() {
+      new DefaultMapFactories() {
         @Override
         public MapGeoJsonLayer createMapElementLayer() {
           return new MapGeoJsonLayer();
-        }
-
-        @Override
-        public MapIcon createMapIcon() {
-          return new MapIcon();
-        }
-
-        @Override
-        public MapPolyline createMapPolyline() {
-          return new MapPolyline();
-        }
-
-        @Override
-        public MapPolygon createMapPolygon() {
-          return new MapPolygon();
         }
       };
 

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-package com.microsoft.maps.modulestools;
+package com.microsoft.maps.moduletools;
 
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
