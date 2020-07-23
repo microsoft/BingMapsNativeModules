@@ -6,15 +6,19 @@ package com.microsoft.maps.kml;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import android.util.Xml;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.moduletools.DefaultMapFactories;
 import com.microsoft.maps.moduletools.MapFactories;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -26,14 +30,18 @@ import org.xmlpull.v1.XmlPullParserException;
  */
 public class KMLParser {
 
-  private MapElementLayer mLayer;
-  private MapFactories mFactory;
-  private XmlPullParser mParser = Xml.newPullParser();
+  private final MapElementLayer mLayer;
+  private final MapFactories mFactory;
   private String mNameSpace;
+  private final XmlPullParser mParser = Xml.newPullParser();
+
   private static final MapFactories DEFAULT_MAP_FACTORIES = new DefaultMapFactories();
 
   @VisibleForTesting
-  KMLParser() {}
+  KMLParser(@NonNull MapFactories factory) {
+    mFactory = factory;
+    mLayer = mFactory.createMapElementLayer();
+  }
 
   @NonNull
   public static MapElementLayer parse(@NonNull String kml) throws KMLParseException {
@@ -43,9 +51,9 @@ public class KMLParser {
     if (kml.equals("")) {
       throw new KMLParseException("Input String cannot be empty.");
     }
-    KMLParser instance = new KMLParser();
+    KMLParser instance = new KMLParser(DEFAULT_MAP_FACTORIES);
     try {
-      return instance.internalParse(kml, DEFAULT_MAP_FACTORIES);
+      return instance.internalParse(kml);
     } catch (Exception e) {
       throw new KMLParseException(e.getMessage());
     }
@@ -53,10 +61,8 @@ public class KMLParser {
 
   @VisibleForTesting
   @NonNull
-  MapElementLayer internalParse(@NonNull String kml, @NonNull MapFactories factory)
+  MapElementLayer internalParse(@NonNull String kml)
       throws XmlPullParserException, IOException, KMLParseException {
-    mFactory = factory;
-    mLayer = mFactory.createMapElementLayer();
     try (InputStream stream = new ByteArrayInputStream(kml.getBytes(UTF_8))) {
       mParser.setInput(stream, null);
       mParser.nextTag();
@@ -108,6 +114,8 @@ public class KMLParser {
     return result;
   }
 
+  /* This method expects to begin at a start tag. If it does not see a start tag to begin with, the
+   * XML is malformed and an exception is thrown.*/
   private void skip() throws XmlPullParserException, IOException, KMLParseException {
     if (mParser.getEventType() != XmlPullParser.START_TAG) {
       throw new KMLParseException("Expected start tag.");

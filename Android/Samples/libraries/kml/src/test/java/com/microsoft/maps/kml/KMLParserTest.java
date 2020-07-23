@@ -41,7 +41,7 @@ public class KMLParserTest {
             + "</Placemark>\n"
             + "</Document>"
             + "</kml>";
-    new KMLParser().internalParse(kml, MOCK_MAP_FACTORIES);
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
   }
 
   @Test
@@ -57,7 +57,7 @@ public class KMLParserTest {
             + "    </Point>\n"
             + "</Placemark>\n"
             + "</kml>";
-    new KMLParser().internalParse(kml, MOCK_MAP_FACTORIES);
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
   }
 
   @Test
@@ -72,7 +72,93 @@ public class KMLParserTest {
             + "    </Point>\n"
             + "</Placemark>\n"
             + "</kml>";
-    new KMLParser().internalParse(kml, MOCK_MAP_FACTORIES);
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test
+  public void testCommentFirstLine() throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<!--Cool comment-->"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,0\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test
+  public void testCommentLastLine() throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,0\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</kml>\n"
+            + "<!--Cool comment-->";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test
+  public void testCommentAfterXmlDeclaration()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<!--Cool comment-->"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,0\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test
+  public void testCommentAfterPlacemark()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Placemark>\n"
+            + "<!--Cool comment-->"
+            + "    <name>city</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,0\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test
+  public void testCommentNameText() throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Placemark>\n"
+            + "    <name><!--Cool comment--></name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,0\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
   }
 
   /**
@@ -93,13 +179,13 @@ public class KMLParserTest {
   public void testNotXMLThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml = "foo";
-    new KMLParser().internalParse(kml, MOCK_MAP_FACTORIES);
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
   }
 
   @Test(expected = XmlPullParserException.class)
   public void testUnexpectedEndTagThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml = "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n" + "</BadEnding>\n" + "</kml>";
-    new KMLParser().internalParse(kml, MOCK_MAP_FACTORIES);
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
   }
 }
