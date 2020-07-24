@@ -8,11 +8,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import android.util.Xml;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import com.microsoft.maps.AltitudeReferenceSystem;
 import com.microsoft.maps.Geopoint;
 import com.microsoft.maps.Geoposition;
 import com.microsoft.maps.MapElement;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
+import com.microsoft.maps.moduletools.AltitudeReferenceSystemWrapper;
 import com.microsoft.maps.moduletools.DefaultMapFactories;
 import com.microsoft.maps.moduletools.MapFactories;
 import java.io.ByteArrayInputStream;
@@ -109,7 +111,7 @@ public class KMLParser {
           element = parsePoint();
           break;
         default:
-          skip();
+          skipToEndOfTag();
       }
     }
     if (element != null) {
@@ -121,7 +123,7 @@ public class KMLParser {
   }
 
   @NonNull
-  private MapElement parsePoint() throws IOException, XmlPullParserException, KMLParseException {
+  private MapIcon parsePoint() throws IOException, XmlPullParserException, KMLParseException {
     mParser.require(XmlPullParser.START_TAG, mNameSpace, "Point");
     while (mParser.next() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
@@ -129,7 +131,11 @@ public class KMLParser {
       }
       String type = mParser.getName();
       if (type.equals("coordinates")) {
-        ArrayList<Geoposition> coordinates = parseCoordinates();
+        AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper =
+            new AltitudeReferenceSystemWrapper(AltitudeReferenceSystem.GEOID);
+        // parseCoordinates throws an error if coordinates given are not valid.
+        // Otherwise, the following coordinates ArrayList will contain at least one Geoposition.
+        ArrayList<Geoposition> coordinates = parseCoordinates(altitudeReferenceSystemWrapper);
         if (coordinates.size() > 1) {
           throw new KMLParseException(
               "coordinates for a Point can only contain one position. Instead saw: "
@@ -138,11 +144,13 @@ public class KMLParser {
                   + mParser.getPositionDescription());
         }
         MapIcon icon = mFactory.createMapIcon();
-        icon.setLocation(new Geopoint(coordinates.get(0)));
+        icon.setLocation(
+            new Geopoint(
+                coordinates.get(0), altitudeReferenceSystemWrapper.getAltitudeReferenceSystem()));
         mParser.require(XmlPullParser.END_TAG, mNameSpace, "Point");
         return icon;
       } else {
-        skip();
+        skipToEndOfTag();
       }
     }
     // No coordintes element seen; throw error
@@ -152,7 +160,8 @@ public class KMLParser {
   }
 
   @NonNull
-  private ArrayList<Geoposition> parseCoordinates()
+  private ArrayList<Geoposition> parseCoordinates(
+      @NonNull AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper)
       throws IOException, XmlPullParserException, KMLParseException {
     mParser.require(XmlPullParser.START_TAG, mNameSpace, "coordinates");
     String coordinates = parseText();
@@ -167,6 +176,10 @@ public class KMLParser {
                 + " coordinates must contain at least latitude and longitude, separated by only a comma.");
       }
       double longitude = Double.parseDouble(latLongAlt[0]);
+      if (Double.isNaN(longitude)) {
+        throw new KMLParseException(
+            "Error at: " + mParser.getPositionDescription() + " longitude cannot be NaN.");
+      }
       if (longitude < -180 || longitude > 180) {
         throw new KMLParseException(
             "Longitude must be in the range [-180, 180], instead saw: "
@@ -175,6 +188,10 @@ public class KMLParser {
                 + mParser.getPositionDescription());
       }
       double latitude = Double.parseDouble(latLongAlt[1]);
+      if (Double.isNaN(latitude)) {
+        throw new KMLParseException(
+            "Error at: " + mParser.getPositionDescription() + " latitude cannot be NaN.");
+      }
       if (latitude < -90 || latitude > 90) {
         throw new KMLParseException(
             "Latitude must be in the range [-90, 90], instead saw: "
@@ -185,6 +202,12 @@ public class KMLParser {
       double altitude = 0;
       if (latLongAlt.length > 2) {
         altitude = Double.parseDouble(latLongAlt[2]);
+        if (Double.isNaN(altitude)) {
+          throw new KMLParseException(
+              "Error at: " + mParser.getPositionDescription() + " altitude cannot be NaN.");
+        }
+      } else {
+        altitudeReferenceSystemWrapper.setAltitudeReferenceSystem(AltitudeReferenceSystem.SURFACE);
       }
       positions.add(new Geoposition(latitude, longitude, altitude));
     }
@@ -206,7 +229,7 @@ public class KMLParser {
 
   /* This method expects to begin at a start tag. If it does not see a start tag to begin with, the
    * XML is malformed and an exception is thrown.*/
-  private void skip() throws XmlPullParserException, IOException, KMLParseException {
+  private void skipToEndOfTag() throws XmlPullParserException, IOException, KMLParseException {
     if (mParser.getEventType() != XmlPullParser.START_TAG) {
       throw new KMLParseException(
           "Expected start tag at position: " + mParser.getPositionDescription());

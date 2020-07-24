@@ -8,10 +8,10 @@ import static org.junit.Assert.assertEquals;
 import androidx.annotation.NonNull;
 import com.microsoft.maps.Geoposition;
 
-public class CheckPosition {
+public class TestHelpers {
 
   /** Used for asserting correctness of coordinates of a Geoposition. */
-  public static void checkPosition(
+  public static void assertPositionEquals(
       @NonNull double[] expectedPoints, @NonNull Geoposition position) {
     assertEquals(expectedPoints[0], position.getLongitude(), 0);
     assertEquals(expectedPoints[1], position.getLatitude(), 0);

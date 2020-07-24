@@ -16,8 +16,8 @@ import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.MockBingMapsLoader;
 import com.microsoft.maps.MockMapElementCollection;
 import com.microsoft.maps.moduletools.MapFactories;
-import com.microsoft.maps.moduletoolstest.CheckPosition;
 import com.microsoft.maps.moduletoolstest.MockParserMapFactories;
+import com.microsoft.maps.moduletoolstest.TestHelpers;
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +54,7 @@ public class GeoJsonParserTest {
     double[][] expectedPoints = {{30, 10}, {40, 40}, {20, 40}, {10, 20}, {30, 10}};
     int index = 0;
     for (Geoposition position : polygon.getPaths().get(0)) {
-      CheckPosition.checkPosition(expectedPoints[index], position);
+      TestHelpers.assertPositionEquals(expectedPoints[index], position);
       index++;
     }
   }
@@ -86,7 +86,7 @@ public class GeoJsonParserTest {
       assertEquals(AltitudeReferenceSystem.SURFACE, path.getAltitudeReferenceSystem());
       int index = 0;
       for (Geoposition position : path) {
-        CheckPosition.checkPosition(expectedPoints[ring][index], position);
+        TestHelpers.assertPositionEquals(expectedPoints[ring][index], position);
         index++;
       }
     }
@@ -113,7 +113,7 @@ public class GeoJsonParserTest {
     double[][] expectedPoints = {{30, 10}, {10, 30}, {40, 40}};
     int index = 0;
     for (Geoposition position : polyline.getPath()) {
-      CheckPosition.checkPosition(expectedPoints[index], position);
+      TestHelpers.assertPositionEquals(expectedPoints[index], position);
       index++;
     }
   }
@@ -140,7 +140,7 @@ public class GeoJsonParserTest {
     double[][] expectedPoints = {{30, 10, 3}, {10, 30, 9}, {40, 40, 8}};
     int index = 0;
     for (Geoposition position : polyline.getPath()) {
-      CheckPosition.checkPosition(expectedPoints[index], position);
+      TestHelpers.assertPositionEquals(expectedPoints[index], position);
       index++;
     }
   }
@@ -158,7 +158,7 @@ public class GeoJsonParserTest {
     assertNotNull(icon);
     assertEquals(AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
     double[] expectedPoints = {30, 10, 0};
-    CheckPosition.checkPosition(expectedPoints, icon.getLocation().getPosition());
+    TestHelpers.assertPositionEquals(expectedPoints, icon.getLocation().getPosition());
   }
 
   @Test
@@ -192,7 +192,7 @@ public class GeoJsonParserTest {
           AltitudeReferenceSystem.SURFACE, polygon.getPaths().get(0).getAltitudeReferenceSystem());
 
       for (Geoposition position : polygon.getPaths().get(0)) {
-        CheckPosition.checkPosition(expectedPoints[index], position);
+        TestHelpers.assertPositionEquals(expectedPoints[index], position);
         index++;
       }
     }
@@ -223,7 +223,7 @@ public class GeoJsonParserTest {
           AltitudeReferenceSystem.SURFACE, polyline.getPath().getAltitudeReferenceSystem());
 
       for (Geoposition position : polyline.getPath()) {
-        CheckPosition.checkPosition(expectedPoints[index], position);
+        TestHelpers.assertPositionEquals(expectedPoints[index], position);
         index++;
       }
     }
@@ -256,7 +256,7 @@ public class GeoJsonParserTest {
           AltitudeReferenceSystem.ELLIPSOID, polyline.getPath().getAltitudeReferenceSystem());
 
       for (Geoposition position : polyline.getPath()) {
-        CheckPosition.checkPosition(expectedPoints[index], position);
+        TestHelpers.assertPositionEquals(expectedPoints[index], position);
         index++;
       }
     }
@@ -282,7 +282,7 @@ public class GeoJsonParserTest {
       assertNotNull(icon);
       assertEquals(
           AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
-      CheckPosition.checkPosition(expectedPoints[i], icon.getLocation().getPosition());
+      TestHelpers.assertPositionEquals(expectedPoints[i], icon.getLocation().getPosition());
     }
   }
 
@@ -306,7 +306,7 @@ public class GeoJsonParserTest {
       assertNotNull(icon);
       assertEquals(
           AltitudeReferenceSystem.ELLIPSOID, icon.getLocation().getAltitudeReferenceSystem());
-      CheckPosition.checkPosition(expectedPoints[i], icon.getLocation().getPosition());
+      TestHelpers.assertPositionEquals(expectedPoints[i], icon.getLocation().getPosition());
     }
   }
 
@@ -338,14 +338,14 @@ public class GeoJsonParserTest {
     assertNotNull(icon);
 
     double[] expectedPoints = {40, 10};
-    CheckPosition.checkPosition(expectedPoints, icon.getLocation().getPosition());
+    TestHelpers.assertPositionEquals(expectedPoints, icon.getLocation().getPosition());
 
     MapPolyline line = (MapPolyline) elementCollection.getElements().get(1);
     assertNotNull(line);
     double[][] expectedLinePoints = new double[][] {{10, 20}, {5, 50}};
     int index = 0;
     for (Geoposition position : line.getPath()) {
-      CheckPosition.checkPosition(expectedLinePoints[index], position);
+      TestHelpers.assertPositionEquals(expectedLinePoints[index], position);
       index++;
     }
   }
@@ -373,7 +373,7 @@ public class GeoJsonParserTest {
     assertNotNull(icon);
 
     double[] expectedPoints = {102, 0.5};
-    CheckPosition.checkPosition(expectedPoints, icon.getLocation().getPosition());
+    TestHelpers.assertPositionEquals(expectedPoints, icon.getLocation().getPosition());
   }
 
   @Test
@@ -414,7 +414,7 @@ public class GeoJsonParserTest {
     for (int i = 0; i < elementCollection.getElements().size(); i++) {
       MapIcon icon = (MapIcon) elementCollection.getElements().get(i);
       assertNotNull(icon);
-      CheckPosition.checkPosition(expectedPoints[i], icon.getLocation().getPosition());
+      TestHelpers.assertPositionEquals(expectedPoints[i], icon.getLocation().getPosition());
     }
   }
 
@@ -432,7 +432,7 @@ public class GeoJsonParserTest {
     assertEquals(
         AltitudeReferenceSystem.ELLIPSOID, icon.getLocation().getAltitudeReferenceSystem());
     double[] expectedPoints = {30, 45, 2};
-    CheckPosition.checkPosition(expectedPoints, icon.getLocation().getPosition());
+    TestHelpers.assertPositionEquals(expectedPoints, icon.getLocation().getPosition());
   }
 
   /**

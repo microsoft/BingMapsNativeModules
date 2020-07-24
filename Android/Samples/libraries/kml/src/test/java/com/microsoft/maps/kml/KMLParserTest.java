@@ -7,14 +7,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import com.microsoft.maps.AltitudeReferenceSystem;
 import com.microsoft.maps.MapElement;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MockBingMapsLoader;
 import com.microsoft.maps.MockMapElementCollection;
 import com.microsoft.maps.moduletools.MapFactories;
-import com.microsoft.maps.moduletoolstest.CheckPosition;
 import com.microsoft.maps.moduletoolstest.MockParserMapFactories;
+import com.microsoft.maps.moduletoolstest.TestHelpers;
 import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
@@ -146,7 +147,7 @@ public class KMLParserTest {
             + "    <name><!--Cool comment-->city</name>\n"
             + "    <Point>\n"
             + "        <coordinates>\n"
-            + "            -107.55,43,0\n"
+            + "            -107.55,43,9\n"
             + "        </coordinates>\n"
             + "    </Point>\n"
             + "</Placemark>\n"
@@ -157,8 +158,9 @@ public class KMLParserTest {
     assertEquals(1, elementCollection.getElements().size());
     MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
     assertNotNull(icon);
-    double[] expectedPoints = {-107.55, 43};
-    CheckPosition.checkPosition(expectedPoints, icon.getLocation().getPosition());
+    double[] expectedPoints = {-107.55, 43, 9};
+    TestHelpers.assertPositionEquals(expectedPoints, icon.getLocation().getPosition());
+    assertEquals(AltitudeReferenceSystem.GEOID, icon.getLocation().getAltitudeReferenceSystem());
     assertEquals("city", icon.getTitle());
   }
 
@@ -184,7 +186,8 @@ public class KMLParserTest {
     MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
     assertNotNull(icon);
     double[] expectedPoints = {-107.55, 43};
-    CheckPosition.checkPosition(expectedPoints, icon.getLocation().getPosition());
+    TestHelpers.assertPositionEquals(expectedPoints, icon.getLocation().getPosition());
+    assertEquals(AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
     assertEquals("city", icon.getTitle());
   }
 
@@ -222,7 +225,9 @@ public class KMLParserTest {
     int index = 0;
     for (MapElement element : elementCollection) {
       MapIcon icon = (MapIcon) element;
-      CheckPosition.checkPosition(expectedPoints[index], icon.getLocation().getPosition());
+      TestHelpers.assertPositionEquals(expectedPoints[index], icon.getLocation().getPosition());
+      assertEquals(
+          AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
       assertEquals(expectedTitles[index], icon.getTitle());
     }
   }
@@ -235,7 +240,7 @@ public class KMLParserTest {
             + "    <Point>\n"
             + "        <TagToSkip>skipping</TagToSkip>\n"
             + "        <coordinates>\n"
-            + "            -107.55,43,0\n"
+            + "            -107.55,43,8\n"
             + "        </coordinates>\n"
             + "    </Point>\n"
             + "</Placemark>\n"
@@ -246,8 +251,9 @@ public class KMLParserTest {
     assertEquals(1, elementCollection.getElements().size());
     MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
     assertNotNull(icon);
-    double[] expectedPoints = {-107.55, 43};
-    CheckPosition.checkPosition(expectedPoints, icon.getLocation().getPosition());
+    double[] expectedPoints = {-107.55, 43, 8};
+    TestHelpers.assertPositionEquals(expectedPoints, icon.getLocation().getPosition());
+    assertEquals(AltitudeReferenceSystem.GEOID, icon.getLocation().getAltitudeReferenceSystem());
     assertNull(icon.getTitle());
   }
 
@@ -469,6 +475,70 @@ public class KMLParserTest {
             + "    <Point>\n"
             + "        <coordinates>\n"
             + "            -107.55,43,0 98,7,0\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testLongitudeNaNThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Placemark>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            NaN,43,0\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testLatitudeNaNThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Placemark>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            78,NaN,0\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testAltitudeNaNThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Placemark>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            98,43,NaN\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testEmptyStringCoordinatesThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Placemark>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            \n"
             + "        </coordinates>\n"
             + "    </Point>\n"
             + "</Placemark>\n"
