@@ -44,6 +44,16 @@ public class MockParserMapFactories implements MapFactories {
         .setLocation(Mockito.any(Geopoint.class));
     Mockito.doAnswer(invocation -> location.get()).when(icon).getLocation();
 
+    final AtomicReference<String> title = new AtomicReference<>();
+    Mockito.doAnswer(
+            invocation -> {
+              title.set(invocation.getArgument(0));
+              return true;
+            })
+        .when(icon)
+        .setTitle(Mockito.any(String.class));
+    Mockito.doAnswer(invocation -> title.get()).when(icon).getTitle();
+
     return icon;
   }
 

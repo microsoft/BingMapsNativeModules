@@ -34,4 +34,6 @@ dependencies {
     implementation 'com.microsoft.maps:maps-sdk:1.1.4'
     implementation 'org.mockito:mockito-core:2.28.2'
     implementation project(path: ':libraries:moduletools')
+    implementation 'junit:junit:4.12'
+    implementation 'androidx.annotation:annotation:1.1.0'
 }

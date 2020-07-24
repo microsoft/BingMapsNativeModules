@@ -6,19 +6,19 @@ package com.microsoft.maps.kml;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import android.util.Xml;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-
+import com.microsoft.maps.Geopoint;
+import com.microsoft.maps.Geoposition;
+import com.microsoft.maps.MapElement;
 import com.microsoft.maps.MapElementLayer;
+import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.moduletools.DefaultMapFactories;
 import com.microsoft.maps.moduletools.MapFactories;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.util.ArrayList;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -43,6 +43,13 @@ public class KMLParser {
     mLayer = mFactory.createMapElementLayer();
   }
 
+  /**
+   * Method to parse given kml and return MapElementLayer containing the shapes outlined in the kml.
+   *
+   * @param kml input String
+   * @return MapElementLayer
+   * @throws KMLParseException
+   */
   @NonNull
   public static MapElementLayer parse(@NonNull String kml) throws KMLParseException {
     if (kml == null) {
@@ -79,46 +86,130 @@ public class KMLParser {
       }
       String type = mParser.getName();
       if (type.equals("Placemark")) {
-        // used for MapIcon Title
-        String name = parseName();
+        parseNameAndShape();
       }
     }
   }
 
-  @Nullable
-  private String parseName() throws IOException, XmlPullParserException, KMLParseException {
+  private void parseNameAndShape() throws IOException, XmlPullParserException, KMLParseException {
+    String title = null;
+    MapElement element = null;
     while (mParser.next() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
       String type = mParser.getName();
-      if (type.equals("name")) {
-        mParser.require(XmlPullParser.START_TAG, mNameSpace, "name");
-        String title = parseText();
-        mParser.require(XmlPullParser.END_TAG, mNameSpace, "name");
-        return title;
+      switch (type) {
+        case "name":
+          mParser.require(XmlPullParser.START_TAG, mNameSpace, "name");
+          title = parseText();
+          mParser.require(XmlPullParser.END_TAG, mNameSpace, "name");
+          break;
+        case "Point":
+          element = parsePoint();
+          break;
+        default:
+          skip();
+      }
+    }
+    if (element != null) {
+      if (title != null && element instanceof MapIcon) {
+        ((MapIcon) element).setTitle(title);
+      }
+      mLayer.getElements().add(element);
+    }
+  }
+
+  @NonNull
+  private MapElement parsePoint() throws IOException, XmlPullParserException, KMLParseException {
+    mParser.require(XmlPullParser.START_TAG, mNameSpace, "Point");
+    while (mParser.next() != XmlPullParser.END_TAG) {
+      if (mParser.getEventType() != XmlPullParser.START_TAG) {
+        continue;
+      }
+      String type = mParser.getName();
+      if (type.equals("coordinates")) {
+        ArrayList<Geoposition> coordinates = parseCoordinates();
+        if (coordinates.size() > 1) {
+          throw new KMLParseException(
+              "coordinates for a Point can only contain one position. Instead saw: "
+                  + coordinates.size()
+                  + " at position: "
+                  + mParser.getPositionDescription());
+        }
+        MapIcon icon = mFactory.createMapIcon();
+        icon.setLocation(new Geopoint(coordinates.get(0)));
+        mParser.require(XmlPullParser.END_TAG, mNameSpace, "Point");
+        return icon;
       } else {
         skip();
       }
     }
-    return null;
+    // No coordintes element seen; throw error
+    throw new KMLParseException(
+        "<Point> must contain <coordinates> around XML position "
+            + mParser.getPositionDescription());
   }
 
-  @Nullable
-  private String parseText() throws IOException, XmlPullParserException {
-    String result = null;
-    if (mParser.next() == XmlPullParser.TEXT) {
-      result = mParser.getText();
-      mParser.nextTag();
+  @NonNull
+  private ArrayList<Geoposition> parseCoordinates()
+      throws IOException, XmlPullParserException, KMLParseException {
+    mParser.require(XmlPullParser.START_TAG, mNameSpace, "coordinates");
+    String coordinates = parseText();
+    String[] allCoordinates = coordinates.split("\\s+");
+    ArrayList<Geoposition> positions = new ArrayList<>(allCoordinates.length);
+    for (String str : allCoordinates) {
+      String[] latLongAlt = str.split(",");
+      if (latLongAlt.length < 2) {
+        throw new KMLParseException(
+            "Error at: "
+                + mParser.getPositionDescription()
+                + " coordinates must contain at least latitude and longitude, separated by only a comma.");
+      }
+      double longitude = Double.parseDouble(latLongAlt[0]);
+      if (longitude < -180 || longitude > 180) {
+        throw new KMLParseException(
+            "Longitude must be in the range [-180, 180], instead saw: "
+                + longitude
+                + " at position: "
+                + mParser.getPositionDescription());
+      }
+      double latitude = Double.parseDouble(latLongAlt[1]);
+      if (latitude < -90 || latitude > 90) {
+        throw new KMLParseException(
+            "Latitude must be in the range [-90, 90], instead saw: "
+                + latitude
+                + " at position: "
+                + mParser.getPositionDescription());
+      }
+      double altitude = 0;
+      if (latLongAlt.length > 2) {
+        altitude = Double.parseDouble(latLongAlt[2]);
+      }
+      positions.add(new Geoposition(latitude, longitude, altitude));
     }
-    return result;
+    mParser.require(XmlPullParser.END_TAG, mNameSpace, "coordinates");
+    mParser.nextTag();
+    return positions;
+  }
+
+  @NonNull
+  private String parseText() throws IOException, XmlPullParserException, KMLParseException {
+    if (mParser.next() != XmlPullParser.TEXT) {
+      throw new KMLParseException("Expected TEXT at position: " + mParser.getPositionDescription());
+    } else {
+      String result = mParser.getText().trim();
+      mParser.nextTag();
+      return result;
+    }
   }
 
   /* This method expects to begin at a start tag. If it does not see a start tag to begin with, the
    * XML is malformed and an exception is thrown.*/
   private void skip() throws XmlPullParserException, IOException, KMLParseException {
     if (mParser.getEventType() != XmlPullParser.START_TAG) {
-      throw new KMLParseException("Expected start tag.");
+      throw new KMLParseException(
+          "Expected start tag at position: " + mParser.getPositionDescription());
     }
     int depth = 1;
     while (depth != 0) {
