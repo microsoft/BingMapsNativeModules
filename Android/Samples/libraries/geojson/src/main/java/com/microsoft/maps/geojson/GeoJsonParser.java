@@ -3,7 +3,6 @@
 
 package com.microsoft.maps.geojson;
 
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -18,6 +17,7 @@ import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.moduletools.AltitudeReferenceSystemWrapper;
 import com.microsoft.maps.moduletools.DefaultMapFactories;
 import com.microsoft.maps.moduletools.MapFactories;
+import com.microsoft.maps.moduletools.ParsingHelpers;
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -189,7 +189,7 @@ public class GeoJsonParser {
     ArrayList<ArrayList<Geoposition>> rings =
         parsePolygonRings(jsonRings, altitudeReferenceSystemWrapper);
     for (ArrayList<Geoposition> ring : rings) {
-      setAltitudesToZeroIfAtSurface(
+      ParsingHelpers.setAltitudesToZeroIfAtSurface(
           ring, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem());
     }
     createPolygonAndAddToLayer(rings, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem());
@@ -221,7 +221,7 @@ public class GeoJsonParser {
     }
     for (ArrayList<ArrayList> polygonRings : polygons) {
       for (ArrayList<Geoposition> ring : polygonRings) {
-        setAltitudesToZeroIfAtSurface(
+        ParsingHelpers.setAltitudesToZeroIfAtSurface(
             ring, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem());
       }
     }
@@ -276,7 +276,7 @@ public class GeoJsonParser {
         new AltitudeReferenceSystemWrapper(AltitudeReferenceSystem.ELLIPSOID);
     ArrayList<Geoposition> positions =
         parsePositionArray(coordinates, altitudeReferenceSystemWrapper);
-    setAltitudesToZeroIfAtSurface(
+    ParsingHelpers.setAltitudesToZeroIfAtSurface(
         positions, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem());
     for (Geoposition position : positions) {
       createIconAndAddToLayer(
@@ -301,7 +301,7 @@ public class GeoJsonParser {
     AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper =
         new AltitudeReferenceSystemWrapper(AltitudeReferenceSystem.ELLIPSOID);
     ArrayList<Geoposition> positions = parseLineArray(pathArray, altitudeReferenceSystemWrapper);
-    setAltitudesToZeroIfAtSurface(
+    ParsingHelpers.setAltitudesToZeroIfAtSurface(
         positions, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem());
     createPolylineAndAddToLayer(
         positions, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem());
@@ -317,7 +317,7 @@ public class GeoJsonParser {
       lines.add(parsePositionArray(pathArray, altitudeReferenceSystemWrapper));
     }
     for (ArrayList<Geoposition> line : lines) {
-      setAltitudesToZeroIfAtSurface(
+      ParsingHelpers.setAltitudesToZeroIfAtSurface(
           line, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem());
       createPolylineAndAddToLayer(
           line, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem());
@@ -374,23 +374,12 @@ public class GeoJsonParser {
       if (latLong.length() < 3) {
         altitudeReferenceSystemWrapper.setAltitudeReferenceSystem(AltitudeReferenceSystem.SURFACE);
         if (!mDidWarn) {
-          Log.w(
-              "Altitude",
-              "Unless all positions in a Geometry Object contain an altitude coordinate, all altitudes will be set to 0 at surface level for that Geometry Object.");
+          ParsingHelpers.logAltitudeWarning();
           mDidWarn = true;
         }
       }
       path.add(position);
     }
     return path;
-  }
-
-  private void setAltitudesToZeroIfAtSurface(
-      @NonNull ArrayList<Geoposition> positions, AltitudeReferenceSystem altitudeReferenceSystem) {
-    if (altitudeReferenceSystem == AltitudeReferenceSystem.SURFACE) {
-      for (Geoposition position : positions) {
-        position.setAltitude(0);
-      }
-    }
   }
 }
