@@ -262,6 +262,49 @@ public class KMLParserTest {
   }
 
   @Test
+  public void testCoordinatesNotLastTag()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <LineString>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,45,98 67,78\n"
+            + "        </coordinates>\n"
+            + "        <extrude>1</extrude>\n"
+            + "    </LineString>\n"
+            + "</Placemark>\n"
+            + "<Placemark>\n"
+            + "    <name>city2</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -67,-78\n"
+            + "        </coordinates>\n"
+            + "        <extrude>1</extrude>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(2, elementCollection.getElements().size());
+    double[][] expectedPoints = {{-107.55, 45}, {67, 78}, {-67, -78}};
+    int index = 0;
+    MapPolyline line = (MapPolyline) elementCollection.getElements().get(0);
+    assertEquals(AltitudeReferenceSystem.SURFACE, line.getPath().getAltitudeReferenceSystem());
+    for (Geoposition position : line.getPath()) {
+      TestHelpers.assertPositionEquals(expectedPoints[index], position);
+      index++;
+    }
+    MapIcon icon = (MapIcon) elementCollection.getElements().get(1);
+    assertEquals(AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
+    TestHelpers.assertPositionEquals(expectedPoints[index], icon.getLocation().getPosition());
+  }
+
+  @Test
   public void testParseLineStringWithAltitudes()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
@@ -627,46 +670,6 @@ public class KMLParserTest {
             + "            -107.55,45,98\n"
             + "        </coordinates>\n"
             + "    </LineString>\n"
-            + "</Placemark>\n"
-            + "</Document>"
-            + "</kml>";
-    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
-  }
-
-  @Test(expected = XmlPullParserException.class)
-  public void testParseLineStringNotLastTag()
-      throws XmlPullParserException, IOException, KMLParseException {
-    String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
-            + "<Document>"
-            + "<Placemark>\n"
-            + "    <name>city</name>\n"
-            + "    <LineString>\n"
-            + "        <coordinates>\n"
-            + "            -107.55,45,98 67,78\n"
-            + "        </coordinates>\n"
-            + "        <extrude>1</extrude>\n"
-            + "    </LineString>\n"
-            + "</Placemark>\n"
-            + "</Document>"
-            + "</kml>";
-    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
-  }
-
-  @Test(expected = XmlPullParserException.class)
-  public void testCoordinatesNotLastInPoint()
-      throws XmlPullParserException, IOException, KMLParseException {
-    String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
-            + "<Document>"
-            + "<Placemark>\n"
-            + "    <name>city</name>\n"
-            + "    <Point>\n"
-            + "        <coordinates>\n"
-            + "            -107.55,43,0\n"
-            + "        </coordinates>\n"
-            + "        <extrude>1</extrude>"
-            + "    </Point>\n"
             + "</Placemark>\n"
             + "</Document>"
             + "</kml>";
