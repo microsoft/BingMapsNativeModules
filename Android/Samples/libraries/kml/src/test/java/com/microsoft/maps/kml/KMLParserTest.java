@@ -658,7 +658,7 @@ public class KMLParserTest {
   }
 
   @Test(expected = KMLParseException.class)
-  public void testParseLineStringOnePosition()
+  public void testParseLineStringOnePositionThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
         "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
@@ -670,6 +670,28 @@ public class KMLParserTest {
             + "            -107.55,45,98\n"
             + "        </coordinates>\n"
             + "    </LineString>\n"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testMultipleCoordinatesTagThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,7,98,6\n"
+            + "        </coordinates>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,7,98,6\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
             + "</Placemark>\n"
             + "</Document>"
             + "</kml>";
