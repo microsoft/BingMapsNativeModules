@@ -193,6 +193,33 @@ public class KMLParserTest {
   }
 
   @Test
+  public void testExtraCoordinates() throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,7,98,6\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
+    assertNotNull(icon);
+    double[] expectedPoints = {-107.55, 43, 7};
+    TestHelpers.assertPositionEquals(expectedPoints, icon.getLocation().getPosition());
+    assertEquals(AltitudeReferenceSystem.GEOID, icon.getLocation().getAltitudeReferenceSystem());
+    assertEquals("city", icon.getTitle());
+  }
+
+  @Test
   public void testParseMultiplePlacemarksPoint()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
