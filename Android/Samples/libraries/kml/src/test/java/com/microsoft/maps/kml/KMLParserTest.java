@@ -632,4 +632,44 @@ public class KMLParserTest {
             + "</kml>";
     new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
   }
+
+  @Test(expected = XmlPullParserException.class)
+  public void testParseLineStringNotLastTag()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <LineString>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,45,98 67,78\n"
+            + "        </coordinates>\n"
+            + "        <extrude>1</extrude>\n"
+            + "    </LineString>\n"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = XmlPullParserException.class)
+  public void testCoordinatesNotLastInPoint()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,0\n"
+            + "        </coordinates>\n"
+            + "        <extrude>1</extrude>"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
 }

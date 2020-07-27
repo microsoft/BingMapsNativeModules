@@ -158,7 +158,7 @@ public class KMLParser {
         skipToEndOfTag();
       }
     }
-    // No coordintes element seen; throw error
+    // No coordinates element seen; throw error
     throw new KMLParseException(
         "<Point> must contain <coordinates> around XML position "
             + mParser.getPositionDescription());
@@ -168,6 +168,7 @@ public class KMLParser {
   private MapPolyline parseLineString()
       throws IOException, XmlPullParserException, KMLParseException {
     mParser.require(XmlPullParser.START_TAG, mNameSpace, "LineString");
+    MapPolyline line = mFactory.createMapPolyline();
     while (mParser.next() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
@@ -186,7 +187,6 @@ public class KMLParser {
         }
         ParsingHelpers.setAltitudesToZeroIfAtSurface(
             positions, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem());
-        MapPolyline line = mFactory.createMapPolyline();
         line.setPath(
             new Geopath(positions, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem()));
         mParser.require(XmlPullParser.END_TAG, mNameSpace, "LineString");
@@ -195,7 +195,7 @@ public class KMLParser {
         skipToEndOfTag();
       }
     }
-    // No coordintes element seen; throw error
+    // No coordinates element seen; throw error
     throw new KMLParseException(
         "<LineString> must contain <coordinates> around XML position "
             + mParser.getPositionDescription());

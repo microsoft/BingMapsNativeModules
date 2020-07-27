@@ -12,7 +12,8 @@ import java.util.ArrayList;
 public class ParsingHelpers {
 
   public static void setAltitudesToZeroIfAtSurface(
-      @NonNull ArrayList<Geoposition> positions, AltitudeReferenceSystem altitudeReferenceSystem) {
+      @NonNull ArrayList<Geoposition> positions,
+      @NonNull AltitudeReferenceSystem altitudeReferenceSystem) {
     if (altitudeReferenceSystem == AltitudeReferenceSystem.SURFACE) {
       for (Geoposition position : positions) {
         position.setAltitude(0);
