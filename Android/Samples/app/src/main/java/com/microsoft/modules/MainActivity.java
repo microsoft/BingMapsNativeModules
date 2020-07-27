@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.microsoft.maps.Geopoint;
 import com.microsoft.maps.MapAnimationKind;
+import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapRenderMode;
 import com.microsoft.maps.MapScene;
 import com.microsoft.maps.MapStyleSheets;
@@ -18,6 +19,8 @@ import com.microsoft.maps.MapView;
 import com.microsoft.maps.geojson.GeoJsonParseException;
 import com.microsoft.maps.geojson.GeoJsonParser;
 import com.microsoft.maps.geojson.MapGeoJsonLayer;
+import com.microsoft.maps.kml.KMLParseException;
+import com.microsoft.maps.kml.KMLParser;
 import java.io.InputStream;
 import java.util.Scanner;
 
@@ -84,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
 
   private class Parser extends AsyncTask {
 
-    private MapGeoJsonLayer mParsedLayer;
+    private MapGeoJsonLayer mGeoJsonLayer;
+    private MapElementLayer mKmlLayer;
 
     Parser() {}
 
@@ -98,27 +102,62 @@ public class MainActivity extends AppCompatActivity {
     protected void onPostExecute(Object o) {
       super.onPostExecute(o);
 
-      if (mParsedLayer != null) {
-        mParsedLayer.setStrokeWidth(4);
-        mParsedLayer.setStrokeColor(Color.YELLOW);
-        mMapView.getLayers().add(mParsedLayer);
+      if (mGeoJsonLayer != null) {
+        mGeoJsonLayer.setStrokeWidth(4);
+        mGeoJsonLayer.setStrokeColor(Color.YELLOW);
+        mMapView.getLayers().add(mGeoJsonLayer);
       } else {
         Toast.makeText(
-                getApplicationContext(), "An error occurred loading data.", Toast.LENGTH_LONG)
+                getApplicationContext(),
+                "An error occurred loading GeoJSON data.",
+                Toast.LENGTH_LONG)
+            .show();
+      }
+      if (mKmlLayer != null) {
+        mMapView.getLayers().add(mKmlLayer);
+      } else {
+        Toast.makeText(
+                getApplicationContext(), "An error occurred loading KML data.", Toast.LENGTH_LONG)
             .show();
       }
     }
 
     @Override
     protected Void doInBackground(Object[] objects) {
+      parseGeoJson();
+      parseKML();
+      return null;
+    }
+
+    private void parseKML() {
+      String kml =
+          "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+              + "<Document>"
+              + "<Placemark>\n"
+              + "    <name>city</name>\n"
+              + "    <LineString>\n"
+              + "        <coordinates>\n"
+              + "             67,78,89, -107.55,45,98\n"
+              + "        </coordinates>\n"
+              + "    </LineString>\n"
+              + "</Placemark>\n"
+              + "</Document>"
+              + "</kml>";
+      try {
+        mKmlLayer = KMLParser.parse(kml);
+      } catch (KMLParseException e) {
+        e.printStackTrace();
+      }
+    }
+
+    private void parseGeoJson() {
       InputStream is = getResources().openRawResource(R.raw.geojson);
       String geojson = new Scanner(is).useDelimiter("\\A").next();
       try {
-        mParsedLayer = GeoJsonParser.parse(geojson);
+        mGeoJsonLayer = GeoJsonParser.parse(geojson);
       } catch (GeoJsonParseException e) {
         e.printStackTrace();
       }
-      return null;
     }
   }
 }

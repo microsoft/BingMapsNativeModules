@@ -9,14 +9,17 @@ import android.util.Xml;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import com.microsoft.maps.AltitudeReferenceSystem;
+import com.microsoft.maps.Geopath;
 import com.microsoft.maps.Geopoint;
 import com.microsoft.maps.Geoposition;
 import com.microsoft.maps.MapElement;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
+import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.moduletools.AltitudeReferenceSystemWrapper;
 import com.microsoft.maps.moduletools.DefaultMapFactories;
 import com.microsoft.maps.moduletools.MapFactories;
+import com.microsoft.maps.moduletools.ParsingHelpers;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +37,7 @@ public class KMLParser {
 
   private final MapElementLayer mLayer;
   private final MapFactories mFactory;
+  private boolean mDidWarn;
   private String mNameSpace;
   private final XmlPullParser mParser = Xml.newPullParser();
 
@@ -110,6 +114,9 @@ public class KMLParser {
         case "Point":
           element = parsePoint();
           break;
+        case "LineString":
+          element = parseLineString();
+          break;
         default:
           skipToEndOfTag();
       }
@@ -125,16 +132,17 @@ public class KMLParser {
   @NonNull
   private MapIcon parsePoint() throws IOException, XmlPullParserException, KMLParseException {
     mParser.require(XmlPullParser.START_TAG, mNameSpace, "Point");
+    MapIcon icon = mFactory.createMapIcon();
+    boolean hasParsedCoordinates = false;
     while (mParser.next() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
       String type = mParser.getName();
       if (type.equals("coordinates")) {
+        verifyCoordinatesNotParsed(hasParsedCoordinates);
         AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper =
             new AltitudeReferenceSystemWrapper(AltitudeReferenceSystem.GEOID);
-        // parseCoordinates throws an error if coordinates given are not valid.
-        // Otherwise, the following coordinates ArrayList will contain at least one Geoposition.
         ArrayList<Geoposition> coordinates = parseCoordinates(altitudeReferenceSystemWrapper);
         if (coordinates.size() > 1) {
           throw new KMLParseException(
@@ -143,22 +151,56 @@ public class KMLParser {
                   + " at position: "
                   + mParser.getPositionDescription());
         }
-        MapIcon icon = mFactory.createMapIcon();
         icon.setLocation(
             new Geopoint(
                 coordinates.get(0), altitudeReferenceSystemWrapper.getAltitudeReferenceSystem()));
-        mParser.require(XmlPullParser.END_TAG, mNameSpace, "Point");
-        return icon;
+        hasParsedCoordinates = true;
       } else {
         skipToEndOfTag();
       }
     }
-    // No coordintes element seen; throw error
-    throw new KMLParseException(
-        "<Point> must contain <coordinates> around XML position "
-            + mParser.getPositionDescription());
+    verifyCoordinatesParsed(hasParsedCoordinates);
+    return icon;
   }
 
+  @NonNull
+  private MapPolyline parseLineString()
+      throws IOException, XmlPullParserException, KMLParseException {
+    mParser.require(XmlPullParser.START_TAG, mNameSpace, "LineString");
+    MapPolyline line = mFactory.createMapPolyline();
+    boolean hasParsedCoordinates = false;
+    while (mParser.next() != XmlPullParser.END_TAG) {
+      if (mParser.getEventType() != XmlPullParser.START_TAG) {
+        continue;
+      }
+      String type = mParser.getName();
+      if (type.equals("coordinates")) {
+        verifyCoordinatesNotParsed(hasParsedCoordinates);
+        AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper =
+            new AltitudeReferenceSystemWrapper(AltitudeReferenceSystem.GEOID);
+        ArrayList<Geoposition> positions = parseCoordinates(altitudeReferenceSystemWrapper);
+        if (positions.size() < 2) {
+          throw new KMLParseException(
+              "coordinates for a LineString must contain at least two positions. Instead saw: "
+                  + positions.size()
+                  + " at position: "
+                  + mParser.getPositionDescription());
+        }
+        ParsingHelpers.setAltitudesToZeroIfAtSurface(
+            positions, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem());
+        line.setPath(
+            new Geopath(positions, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem()));
+        hasParsedCoordinates = true;
+      } else {
+        skipToEndOfTag();
+      }
+    }
+    verifyCoordinatesParsed(hasParsedCoordinates);
+    return line;
+  }
+
+  /* parseCoordinates throws an error if coordinates given are not valid.
+   * Otherwise, the returned ArrayList will contain at least one Geoposition. */
   @NonNull
   private ArrayList<Geoposition> parseCoordinates(
       @NonNull AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper)
@@ -208,11 +250,14 @@ public class KMLParser {
         }
       } else {
         altitudeReferenceSystemWrapper.setAltitudeReferenceSystem(AltitudeReferenceSystem.SURFACE);
+        if (!mDidWarn) {
+          ParsingHelpers.logAltitudeWarning();
+          mDidWarn = true;
+        }
       }
       positions.add(new Geoposition(latitude, longitude, altitude));
     }
     mParser.require(XmlPullParser.END_TAG, mNameSpace, "coordinates");
-    mParser.nextTag();
     return positions;
   }
 
@@ -246,6 +291,23 @@ public class KMLParser {
         default:
           break;
       }
+    }
+  }
+
+  private void verifyCoordinatesNotParsed(boolean hasParsedCoordinates) throws KMLParseException {
+    if (hasParsedCoordinates) {
+      throw new KMLParseException(
+          "Error at: + "
+              + mParser.getPositionDescription()
+              + " Geometry Object can only contain one <coordinates> tag.");
+    }
+  }
+
+  private void verifyCoordinatesParsed(boolean hasParsedCoordinates) throws KMLParseException {
+    if (!hasParsedCoordinates) {
+      throw new KMLParseException(
+          "Geometry Object must contain <coordinates> around XML position "
+              + mParser.getPositionDescription());
     }
   }
 }

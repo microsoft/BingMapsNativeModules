@@ -5,12 +5,13 @@ package com.microsoft.maps.kml;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import com.microsoft.maps.AltitudeReferenceSystem;
+import com.microsoft.maps.Geoposition;
 import com.microsoft.maps.MapElement;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
+import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.MockBingMapsLoader;
 import com.microsoft.maps.MockMapElementCollection;
 import com.microsoft.maps.moduletools.MapFactories;
@@ -192,6 +193,33 @@ public class KMLParserTest {
   }
 
   @Test
+  public void testExtraCoordinates() throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,7,98,6\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
+    assertNotNull(icon);
+    double[] expectedPoints = {-107.55, 43, 7};
+    TestHelpers.assertPositionEquals(expectedPoints, icon.getLocation().getPosition());
+    assertEquals(AltitudeReferenceSystem.GEOID, icon.getLocation().getAltitudeReferenceSystem());
+    assertEquals("city", icon.getTitle());
+  }
+
+  @Test
   public void testParseMultiplePlacemarksPoint()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
@@ -223,38 +251,121 @@ public class KMLParserTest {
     double[][] expectedPoints = {{-107.55, 45}, {-109.55, 43}};
     String[] expectedTitles = {"city", "city2"};
     int index = 0;
-    for (MapElement element : elementCollection) {
+    for (MapElement element : elementCollection.getElements()) {
       MapIcon icon = (MapIcon) element;
       TestHelpers.assertPositionEquals(expectedPoints[index], icon.getLocation().getPosition());
       assertEquals(
           AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
       assertEquals(expectedTitles[index], icon.getTitle());
+      index++;
     }
   }
 
   @Test
-  public void testPointSkips() throws XmlPullParserException, IOException, KMLParseException {
+  public void testCoordinatesNotLastTag()
+      throws XmlPullParserException, IOException, KMLParseException {
     String kml =
         "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
             + "<Placemark>\n"
-            + "    <Point>\n"
-            + "        <TagToSkip>skipping</TagToSkip>\n"
+            + "    <name>city</name>\n"
+            + "    <LineString>\n"
             + "        <coordinates>\n"
-            + "            -107.55,43,8\n"
+            + "            -107.55,45,98 67,78\n"
             + "        </coordinates>\n"
+            + "        <extrude>1</extrude>\n"
+            + "    </LineString>\n"
+            + "</Placemark>\n"
+            + "<Placemark>\n"
+            + "    <name>city2</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -67,-78\n"
+            + "        </coordinates>\n"
+            + "        <extrude>1</extrude>\n"
             + "    </Point>\n"
             + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(2, elementCollection.getElements().size());
+    double[][] expectedPoints = {{-107.55, 45}, {67, 78}, {-67, -78}};
+    int index = 0;
+    MapPolyline line = (MapPolyline) elementCollection.getElements().get(0);
+    assertEquals(AltitudeReferenceSystem.SURFACE, line.getPath().getAltitudeReferenceSystem());
+    for (Geoposition position : line.getPath()) {
+      TestHelpers.assertPositionEquals(expectedPoints[index], position);
+      index++;
+    }
+    MapIcon icon = (MapIcon) elementCollection.getElements().get(1);
+    assertEquals(AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
+    TestHelpers.assertPositionEquals(expectedPoints[index], icon.getLocation().getPosition());
+  }
+
+  @Test
+  public void testParseLineStringWithAltitudes()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <LineString>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,45,98 67,78,89\n"
+            + "        </coordinates>\n"
+            + "    </LineString>\n"
+            + "</Placemark>\n"
+            + "</Document>"
             + "</kml>";
     MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
     MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
     assertNotNull(elementCollection);
     assertEquals(1, elementCollection.getElements().size());
-    MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
-    assertNotNull(icon);
-    double[] expectedPoints = {-107.55, 43, 8};
-    TestHelpers.assertPositionEquals(expectedPoints, icon.getLocation().getPosition());
-    assertEquals(AltitudeReferenceSystem.GEOID, icon.getLocation().getAltitudeReferenceSystem());
-    assertNull(icon.getTitle());
+    double[][] expectedPoints = {{-107.55, 45, 98}, {67, 78, 89}};
+    int index = 0;
+    for (MapElement element : elementCollection.getElements()) {
+      MapPolyline line = (MapPolyline) element;
+      assertEquals(AltitudeReferenceSystem.GEOID, line.getPath().getAltitudeReferenceSystem());
+      for (Geoposition position : line.getPath()) {
+        TestHelpers.assertPositionEquals(expectedPoints[index], position);
+        index++;
+      }
+    }
+  }
+
+  @Test
+  public void testParseLineStringNotAllAltitudes()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <LineString>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,45,98 67,78\n"
+            + "        </coordinates>\n"
+            + "    </LineString>\n"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    double[][] expectedPoints = {{-107.55, 45}, {67, 78}};
+    int index = 0;
+    for (MapElement element : elementCollection.getElements()) {
+      MapPolyline line = (MapPolyline) element;
+      assertEquals(AltitudeReferenceSystem.SURFACE, line.getPath().getAltitudeReferenceSystem());
+      for (Geoposition position : line.getPath()) {
+        TestHelpers.assertPositionEquals(expectedPoints[index], position);
+        index++;
+      }
+    }
   }
 
   /**
@@ -542,6 +653,47 @@ public class KMLParserTest {
             + "        </coordinates>\n"
             + "    </Point>\n"
             + "</Placemark>\n"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testParseLineStringOnePositionThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <LineString>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,45,98\n"
+            + "        </coordinates>\n"
+            + "    </LineString>\n"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testMultipleCoordinatesTagThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,7,98,6\n"
+            + "        </coordinates>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,7,98,6\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</Document>"
             + "</kml>";
     new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
   }

@@ -10,7 +10,6 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
     }
 
@@ -25,4 +24,5 @@ android {
 
 dependencies {
     implementation 'com.microsoft.maps:maps-sdk:1.1.4'
+    implementation 'androidx.annotation:annotation:1.1.0'
 }
