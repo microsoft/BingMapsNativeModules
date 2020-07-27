@@ -251,12 +251,13 @@ public class KMLParserTest {
     double[][] expectedPoints = {{-107.55, 45}, {-109.55, 43}};
     String[] expectedTitles = {"city", "city2"};
     int index = 0;
-    for (MapElement element : elementCollection) {
+    for (MapElement element : elementCollection.getElements()) {
       MapIcon icon = (MapIcon) element;
       TestHelpers.assertPositionEquals(expectedPoints[index], icon.getLocation().getPosition());
       assertEquals(
           AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
       assertEquals(expectedTitles[index], icon.getTitle());
+      index++;
     }
   }
 
@@ -282,11 +283,12 @@ public class KMLParserTest {
     assertEquals(1, elementCollection.getElements().size());
     double[][] expectedPoints = {{-107.55, 45, 98}, {67, 78, 89}};
     int index = 0;
-    for (MapElement element : elementCollection) {
+    for (MapElement element : elementCollection.getElements()) {
       MapPolyline line = (MapPolyline) element;
       assertEquals(AltitudeReferenceSystem.GEOID, line.getPath().getAltitudeReferenceSystem());
       for (Geoposition position : line.getPath()) {
         TestHelpers.assertPositionEquals(expectedPoints[index], position);
+        index++;
       }
     }
   }
@@ -311,13 +313,14 @@ public class KMLParserTest {
     MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
     assertNotNull(elementCollection);
     assertEquals(1, elementCollection.getElements().size());
-    double[][] expectedPoints = {{-107.55}, {67, 78}};
+    double[][] expectedPoints = {{-107.55, 45}, {67, 78}};
     int index = 0;
-    for (MapElement element : elementCollection) {
+    for (MapElement element : elementCollection.getElements()) {
       MapPolyline line = (MapPolyline) element;
       assertEquals(AltitudeReferenceSystem.SURFACE, line.getPath().getAltitudeReferenceSystem());
       for (Geoposition position : line.getPath()) {
         TestHelpers.assertPositionEquals(expectedPoints[index], position);
+        index++;
       }
     }
   }
