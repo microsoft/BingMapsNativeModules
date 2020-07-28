@@ -204,7 +204,10 @@ public class GeoJsonParser {
     for (int i = 0; i < jsonRings.length(); i++) {
       JSONArray pathArray = jsonRings.getJSONArray(i);
       ArrayList<Geoposition> path = parsePositionArray(pathArray, altitudeReferenceSystemWrapper);
-      verifyPolygonRing(path);
+      String exceptionMessage = ParsingHelpers.getErrorMessageForPolygonRing(path);
+      if (exceptionMessage != null) {
+        throw new GeoJsonParseException(exceptionMessage);
+      }
       rings.add(path);
     }
     return rings;
@@ -228,34 +231,6 @@ public class GeoJsonParser {
     for (ArrayList<ArrayList<Geoposition>> polygon : polygons) {
       createPolygonAndAddToLayer(
           polygon, altitudeReferenceSystemWrapper.getAltitudeReferenceSystem());
-    }
-  }
-
-  private static void verifyPolygonRing(@NonNull ArrayList<Geoposition> positions)
-      throws GeoJsonParseException {
-    if (positions.size() < 4) {
-      StringBuilder positionsStringBuilder = new StringBuilder();
-      for (Geoposition position : positions) {
-        positionsStringBuilder.append(position).append(", ");
-      }
-      positionsStringBuilder.append(positions.get(positions.size() - 1));
-      throw new GeoJsonParseException(
-          "Polygon ring must have at least 4 positions, "
-              + "and the first and last position must be the same. Instead saw Geopositions: ["
-              + positionsStringBuilder
-              + "].");
-    }
-
-    Geoposition firstPosition = positions.get(0);
-    Geoposition lastPosition = positions.get(positions.size() - 1);
-    if (firstPosition.getLongitude() != lastPosition.getLongitude()
-        || firstPosition.getLatitude() != lastPosition.getLatitude()
-        || firstPosition.getAltitude() != lastPosition.getAltitude()) {
-      throw new GeoJsonParseException(
-          "First and last coordinate pair of each polygon ring must be the same. Instead saw Geopositions: first: "
-              + firstPosition
-              + " last: "
-              + lastPosition);
     }
   }
 
