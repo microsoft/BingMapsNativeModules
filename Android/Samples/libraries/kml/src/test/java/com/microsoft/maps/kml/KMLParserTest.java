@@ -7,10 +7,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.microsoft.maps.AltitudeReferenceSystem;
+import com.microsoft.maps.Geopath;
 import com.microsoft.maps.Geoposition;
 import com.microsoft.maps.MapElement;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
+import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.MockBingMapsLoader;
 import com.microsoft.maps.MockMapElementCollection;
@@ -34,25 +36,6 @@ public class KMLParserTest {
   @Before
   public void setup() {
     MockBingMapsLoader.mockInitialize();
-  }
-
-  @Test
-  public void testSkip() throws XmlPullParserException, IOException, KMLParseException {
-    String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
-            + "<Document>"
-            + "<Placemark>\n"
-            + "    <TagToSkip></TagToSkip>"
-            + "    <name>city</name>\n"
-            + "    <Point>\n"
-            + "        <coordinates>\n"
-            + "            -107.55,43,0\n"
-            + "        </coordinates>\n"
-            + "    </Point>\n"
-            + "</Placemark>\n"
-            + "</Document>"
-            + "</kml>";
-    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
   }
 
   @Test
@@ -364,6 +347,128 @@ public class KMLParserTest {
       for (Geoposition position : line.getPath()) {
         TestHelpers.assertPositionEquals(expectedPoints[index], position);
         index++;
+      }
+    }
+  }
+
+  @Test
+  public void testParsePolygonNotAllAltitudes()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>hollow box</name>\n"
+            + "    <Polygon>\n"
+            + "      <extrude>1</extrude>\n"
+            + "      <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            50,60,56\n"
+            + "            60,70,78\n"
+            + "            10,20,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </outerBoundaryIs>\n"
+            + "      <innerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,24\n"
+            + "            11,24\n"
+            + "            13,25\n"
+            + "            10,24\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </innerBoundaryIs>\n"
+            + "    </Polygon>"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    double[][] expectedPoints = {
+      {10, 20}, {30, 40}, {50, 60}, {60, 70}, {10, 20}, {10, 24}, {11, 24}, {13, 25}, {10, 24}
+    };
+    int index = 0;
+    for (MapElement element : elementCollection.getElements()) {
+      MapPolygon polygon = (MapPolygon) element;
+      assertEquals(2, polygon.getPaths().size());
+      for (Geopath path : polygon.getPaths()) {
+        assertEquals(AltitudeReferenceSystem.SURFACE, path.getAltitudeReferenceSystem());
+        for (Geoposition position : path) {
+          TestHelpers.assertPositionEquals(expectedPoints[index], position);
+          index++;
+        }
+      }
+    }
+  }
+
+  @Test
+  public void testParsePolygonAllAltitudes()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>hollow box</name>\n"
+            + "    <Polygon>\n"
+            + "      <extrude>1</extrude>\n"
+            + "      <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            50,60,56\n"
+            + "            60,70,78\n"
+            + "            10,20,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </outerBoundaryIs>\n"
+            + "      <innerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            100,24,9\n"
+            + "            11,24,7\n"
+            + "            13,25,8\n"
+            + "            100,24,9\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </innerBoundaryIs>\n"
+            + "    </Polygon>"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    double[][] expectedPoints = {
+      {10, 20, 20},
+      {30, 40, 34},
+      {50, 60, 56},
+      {60, 70, 78},
+      {10, 20, 20},
+      {100, 24, 9},
+      {11, 24, 7},
+      {13, 25, 8},
+      {100, 24, 9}
+    };
+    int index = 0;
+    for (MapElement element : elementCollection.getElements()) {
+      MapPolygon polygon = (MapPolygon) element;
+      assertEquals(2, polygon.getPaths().size());
+      for (Geopath path : polygon.getPaths()) {
+        assertEquals(AltitudeReferenceSystem.GEOID, path.getAltitudeReferenceSystem());
+        for (Geoposition position : path) {
+          TestHelpers.assertPositionEquals(expectedPoints[index], position);
+          index++;
+        }
       }
     }
   }
@@ -692,6 +797,324 @@ public class KMLParserTest {
             + "            -107.55,43,7,98,6\n"
             + "        </coordinates>\n"
             + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</Document>\n"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  public void testPolygonOuterRingFirstLastUnequalLongitudeThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>hollow box</name>\n"
+            + "    <Polygon>\n"
+            + "      <extrude>1</extrude>\n"
+            + "      <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            50,60,56\n"
+            + "            60,70,78\n"
+            + "            30,20,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </outerBoundaryIs>\n"
+            + "      <innerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,24,9\n"
+            + "            11,24,7\n"
+            + "            13,25,8\n"
+            + "            10,24,9\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </innerBoundaryIs>\n"
+            + "    </Polygon>"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testPolygonOuterRingFirstLastUnequalLatitudeThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>hollow box</name>\n"
+            + "    <Polygon>\n"
+            + "      <extrude>1</extrude>\n"
+            + "      <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            50,60,56\n"
+            + "            60,70,78\n"
+            + "            10,30,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </outerBoundaryIs>\n"
+            + "      <innerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,24,9\n"
+            + "            11,24,7\n"
+            + "            13,25,8\n"
+            + "            10,24,9\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </innerBoundaryIs>\n"
+            + "    </Polygon>"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testPolygonOuterRingFirstLastUnequalAltitudeThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>hollow box</name>\n"
+            + "    <Polygon>\n"
+            + "      <extrude>1</extrude>\n"
+            + "      <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            50,60,56\n"
+            + "            60,70,78\n"
+            + "            10,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </outerBoundaryIs>\n"
+            + "      <innerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,24,9\n"
+            + "            11,24,7\n"
+            + "            13,25,8\n"
+            + "            10,24,9\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </innerBoundaryIs>\n"
+            + "    </Polygon>"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testPolygonInnerRingFirstLastUnequalLongitudeThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>hollow box</name>\n"
+            + "    <Polygon>\n"
+            + "      <extrude>1</extrude>\n"
+            + "      <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            50,60,56\n"
+            + "            60,70,78\n"
+            + "            10,20,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </outerBoundaryIs>\n"
+            + "      <innerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,24,9\n"
+            + "            11,24,7\n"
+            + "            13,25,8\n"
+            + "            30,24,9\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </innerBoundaryIs>\n"
+            + "    </Polygon>"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testPolygonInnerRingFirstLastUnequalLatitudeThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>hollow box</name>\n"
+            + "    <Polygon>\n"
+            + "      <extrude>1</extrude>\n"
+            + "      <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            50,60,56\n"
+            + "            60,70,78\n"
+            + "            10,20,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </outerBoundaryIs>\n"
+            + "      <innerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,24,9\n"
+            + "            11,24,7\n"
+            + "            13,25,8\n"
+            + "            10,34,9\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </innerBoundaryIs>\n"
+            + "    </Polygon>"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testPolygonInnerRingFirstLastUnequalAltitudeThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>hollow box</name>\n"
+            + "    <Polygon>\n"
+            + "      <extrude>1</extrude>\n"
+            + "      <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            50,60,56\n"
+            + "            60,70,78\n"
+            + "            10,20,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </outerBoundaryIs>\n"
+            + "      <innerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,24,9\n"
+            + "            11,24,7\n"
+            + "            13,25,8\n"
+            + "            10,24,30\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </innerBoundaryIs>\n"
+            + "    </Polygon>"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testPolygonNotEnoughPositionsThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>hollow box</name>\n"
+            + "    <Polygon>\n"
+            + "      <extrude>1</extrude>\n"
+            + "      <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            10,20,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </outerBoundaryIs>\n"
+            + "    </Polygon>"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testPolygonNoOuterBoundaryThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>hollow box</name>\n"
+            + "    <Polygon>\n"
+            + "      <extrude>1</extrude>\n"
+            + "      <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "      <InnerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            30,42,35\n"
+            + "            10,20,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </InnerBoundaryIs>\n"
+            + "    </Polygon>"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = XmlPullParserException.class)
+  public void testOuterBoundaryExtraTagThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>hollow box</name>\n"
+            + "    <Polygon>\n"
+            + "      <extrude>1</extrude>\n"
+            + "      <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <ExtraTag>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            30,42,35\n"
+            + "            10,20,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "        </ExtraTag>\n"
+            + "      </outerBoundaryIs>\n"
+            + "    </Polygon>"
             + "</Placemark>\n"
             + "</Document>"
             + "</kml>";
