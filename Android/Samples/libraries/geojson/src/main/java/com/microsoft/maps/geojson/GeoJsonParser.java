@@ -204,7 +204,7 @@ public class GeoJsonParser {
     for (int i = 0; i < jsonRings.length(); i++) {
       JSONArray pathArray = jsonRings.getJSONArray(i);
       ArrayList<Geoposition> path = parsePositionArray(pathArray, altitudeReferenceSystemWrapper);
-      String exceptionMessage = ParsingHelpers.verifyPolygonRing(path);
+      String exceptionMessage = ParsingHelpers.getErrorMessageForPolygonRing(path);
       if (exceptionMessage != null) {
         throw new GeoJsonParseException(exceptionMessage);
       }

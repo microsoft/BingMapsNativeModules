@@ -29,7 +29,7 @@ public class ParsingHelpers {
   }
 
   @Nullable
-  public static String verifyPolygonRing(@NonNull ArrayList<Geoposition> positions) {
+  public static String getErrorMessageForPolygonRing(@NonNull ArrayList<Geoposition> positions) {
     if (positions.size() < 4) {
       StringBuilder positionsStringBuilder = new StringBuilder();
       for (int i = 0; i < positions.size() - 1; i++) {

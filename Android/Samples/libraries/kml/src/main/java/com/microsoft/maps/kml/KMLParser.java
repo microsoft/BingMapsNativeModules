@@ -203,6 +203,9 @@ public class KMLParser {
     return line;
   }
 
+  /* A Polygon MUST have only one outer boundary, and a Polygon may have 0 or more
+   * inner boundaries.
+   */
   @NonNull
   private MapPolygon parsePolygon() throws IOException, XmlPullParserException, KMLParseException {
     mParser.require(XmlPullParser.START_TAG, mNameSpace, "Polygon");
@@ -221,8 +224,7 @@ public class KMLParser {
           verifyElementNotSeen("outerBoundaryIs", hasOuterBoundary);
           hasOuterBoundary = true;
         }
-        ArrayList<Geoposition> positions = parsePolygonRing(type, altitudeReferenceSystemWrapper);
-        rings.add(positions);
+        rings.add(parsePolygonRing(type, altitudeReferenceSystemWrapper));
       } else {
         skipToEndOfTag();
       }
@@ -257,7 +259,7 @@ public class KMLParser {
       if (type.equals("coordinates")) {
         verifyElementNotSeen(type, hasParsedCoordinates);
         positions = parseCoordinates(altitudeReferenceSystemWrapper);
-        String exceptionMessage = ParsingHelpers.verifyPolygonRing(positions);
+        String exceptionMessage = ParsingHelpers.getErrorMessageForPolygonRing(positions);
         if (exceptionMessage != null) {
           throw new KMLParseException(
               "Error at: " + mParser.getPositionDescription() + " " + exceptionMessage);
