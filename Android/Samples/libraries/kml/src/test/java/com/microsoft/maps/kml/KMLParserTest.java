@@ -41,7 +41,8 @@ public class KMLParserTest {
   @Test
   public void testNoNameText() throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <Point>\n"
             + "        <coordinates>\n"
@@ -56,7 +57,8 @@ public class KMLParserTest {
   @Test
   public void testCommentFirstLine() throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<!--Cool comment-->"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<!--Cool comment-->"
             + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
@@ -73,7 +75,8 @@ public class KMLParserTest {
   @Test
   public void testCommentLastLine() throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
             + "    <Point>\n"
@@ -91,7 +94,8 @@ public class KMLParserTest {
   public void testCommentAfterXmlDeclaration()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<!--Cool comment-->"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
@@ -109,7 +113,8 @@ public class KMLParserTest {
   public void testCommentAfterPlacemark()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "<!--Cool comment-->"
             + "    <name>city</name>\n"
@@ -126,7 +131,8 @@ public class KMLParserTest {
   @Test
   public void testCommentNameText() throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <name><!--Cool comment-->city</name>\n"
             + "    <Point>\n"
@@ -151,7 +157,8 @@ public class KMLParserTest {
   @Test
   public void testParsePoint() throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
@@ -178,7 +185,8 @@ public class KMLParserTest {
   @Test
   public void testExtraCoordinates() throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
@@ -206,7 +214,8 @@ public class KMLParserTest {
   public void testParseMultiplePlacemarksPoint()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <TagToSkip></TagToSkip>"
@@ -248,7 +257,8 @@ public class KMLParserTest {
   public void testCoordinatesNotLastTag()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
@@ -291,7 +301,8 @@ public class KMLParserTest {
   public void testParseLineStringWithAltitudes()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
@@ -323,7 +334,8 @@ public class KMLParserTest {
   public void testParseLineStringNotAllAltitudes()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
@@ -355,7 +367,8 @@ public class KMLParserTest {
   public void testParsePolygonNotAllAltitudes()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>hollow box</name>\n"
@@ -412,7 +425,8 @@ public class KMLParserTest {
   public void testParsePolygonAllAltitudes()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>hollow box</name>\n"
@@ -473,6 +487,88 @@ public class KMLParserTest {
     }
   }
 
+  @Test
+  public void testNestedLevels() throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\\\">\n"
+            + "    <Document>\n"
+            + "        <NetworkLink>\n"
+            + "            <name>NE US Radar</name>\n"
+            + "            <refreshVisibility>1</refreshVisibility>\n"
+            + "            <flyToView>1</flyToView>\n"
+            + "            <Link>...</Link>\n"
+            + "        </NetworkLink>\n"
+            + "        <Folder>\n"
+            + "        <Placemark>\n"
+            + "            <name>city</name>\n"
+            + "            <LineString>\n"
+            + "                <coordinates>\n"
+            + "                    67,78 -107,45\n"
+            + "                </coordinates>\n"
+            + "            </LineString>\n"
+            + "        </Placemark>\n"
+            + "        <Placemark>\n"
+            + "            <Polygon>\n"
+            + "                <extrude>1</extrude>\n"
+            + "                <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "                <outerBoundaryIs>\n"
+            + "                    <LinearRing>\n"
+            + "                        <coordinates>\n"
+            + "                            35,10 45,45 15,40 10,20 35,10\n"
+            + "                        </coordinates>\n"
+            + "                    </LinearRing>\n"
+            + "                </outerBoundaryIs>\n"
+            + "                <innerBoundaryIs>\n"
+            + "                    <LinearRing>\n"
+            + "                        <coordinates>\n"
+            + "                            20,30 35,35 30,20 20,30\n"
+            + "                        </coordinates>\n"
+            + "                    </LinearRing>\n"
+            + "                </innerBoundaryIs>\n"
+            + "            </Polygon>\n"
+            + "        </Placemark>\n"
+            + "        </Folder>\n"
+            + "    </Document>\n"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(2, elementCollection.getElements().size());
+    double[][] expectedPoints = {
+      {67, 78},
+      {-107, 45},
+      {35, 10},
+      {45, 45},
+      {15, 40},
+      {10, 20},
+      {35, 10},
+      {20, 30},
+      {35, 35},
+      {30, 20},
+      {20, 30}
+    };
+    int index = 0;
+    assertNotNull(elementCollection.getElements().get(0));
+    MapPolyline line = (MapPolyline) elementCollection.getElements().get(0);
+    assertEquals(AltitudeReferenceSystem.SURFACE, line.getPath().getAltitudeReferenceSystem());
+    for (Geoposition position : line.getPath()) {
+      TestHelpers.assertPositionEquals(expectedPoints[index], position);
+      index++;
+    }
+    assertNotNull(elementCollection.getElements().get(1));
+    MapPolygon polygon = (MapPolygon) elementCollection.getElements().get(1);
+    assertEquals(AltitudeReferenceSystem.SURFACE, line.getPath().getAltitudeReferenceSystem());
+    assertEquals(2, polygon.getPaths().size());
+    for (Geopath path : polygon.getPaths()) {
+      assertEquals(AltitudeReferenceSystem.SURFACE, path.getAltitudeReferenceSystem());
+      for (Geoposition position : path) {
+        TestHelpers.assertPositionEquals(expectedPoints[index], position);
+        index++;
+      }
+    }
+  }
+
   /**
    * Tests the public method to catch null. Note: parse(null) will not call internalParse with null.
    */
@@ -497,7 +593,11 @@ public class KMLParserTest {
   @Test(expected = XmlPullParserException.class)
   public void testUnexpectedEndTagThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
-    String kml = "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n" + "</BadEnding>\n" + "</kml>";
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "</BadEnding>\n"
+            + "</kml>";
     new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
   }
 
@@ -505,7 +605,8 @@ public class KMLParserTest {
   public void testNoCoordinatesTextThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
             + "    <Point>\n"
@@ -520,7 +621,8 @@ public class KMLParserTest {
   public void testNoCoordinatesElementThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
             + "    <Point>\n"
@@ -534,7 +636,8 @@ public class KMLParserTest {
   public void testLongitudeTooHighThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
             + "    <Point>\n"
@@ -551,7 +654,8 @@ public class KMLParserTest {
   public void testLongitudeTooLowThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
             + "    <Point>\n"
@@ -568,7 +672,8 @@ public class KMLParserTest {
   public void testLatitudeTooHighThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
             + "    <Point>\n"
@@ -585,7 +690,8 @@ public class KMLParserTest {
   public void testLatitudeTooLowThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
             + "    <Point>\n"
@@ -602,7 +708,8 @@ public class KMLParserTest {
   public void testCoordinatesNotDoublesThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
             + "    <Point>\n"
@@ -619,7 +726,8 @@ public class KMLParserTest {
   public void testNotEnoughCoordinatesThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
             + "    <Point>\n"
@@ -636,7 +744,8 @@ public class KMLParserTest {
   public void testCoordinatesEmptyWhitespaceThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
             + "    <Point>\n"
@@ -653,7 +762,8 @@ public class KMLParserTest {
   public void testEmptyNameTextThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <name></name>\n"
             + "    <Point>\n"
@@ -670,7 +780,8 @@ public class KMLParserTest {
   public void testMalformedEndTagThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <MalformedEnd>\n"
             + "        <coordinates>\n"
@@ -686,7 +797,8 @@ public class KMLParserTest {
   public void testPointHasMultipleCoordinatesThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <Point>\n"
             + "        <coordinates>\n"
@@ -702,7 +814,8 @@ public class KMLParserTest {
   public void testLongitudeNaNThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <Point>\n"
             + "        <coordinates>\n"
@@ -718,7 +831,8 @@ public class KMLParserTest {
   public void testLatitudeNaNThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <Point>\n"
             + "        <coordinates>\n"
@@ -734,7 +848,8 @@ public class KMLParserTest {
   public void testAltitudeNaNThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <Point>\n"
             + "        <coordinates>\n"
@@ -750,7 +865,8 @@ public class KMLParserTest {
   public void testEmptyStringCoordinatesThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Placemark>\n"
             + "    <Point>\n"
             + "        <coordinates>\n"
@@ -766,7 +882,8 @@ public class KMLParserTest {
   public void testParseLineStringOnePositionThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
@@ -785,7 +902,8 @@ public class KMLParserTest {
   public void testMultipleCoordinatesTagThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>city</name>\n"
@@ -806,7 +924,8 @@ public class KMLParserTest {
   public void testPolygonOuterRingFirstLastUnequalLongitudeThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>hollow box</name>\n"
@@ -845,7 +964,8 @@ public class KMLParserTest {
   public void testPolygonOuterRingFirstLastUnequalLatitudeThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>hollow box</name>\n"
@@ -884,7 +1004,8 @@ public class KMLParserTest {
   public void testPolygonOuterRingFirstLastUnequalAltitudeThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>hollow box</name>\n"
@@ -923,7 +1044,8 @@ public class KMLParserTest {
   public void testPolygonInnerRingFirstLastUnequalLongitudeThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>hollow box</name>\n"
@@ -962,7 +1084,8 @@ public class KMLParserTest {
   public void testPolygonInnerRingFirstLastUnequalLatitudeThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>hollow box</name>\n"
@@ -1001,7 +1124,8 @@ public class KMLParserTest {
   public void testPolygonInnerRingFirstLastUnequalAltitudeThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>hollow box</name>\n"
@@ -1040,7 +1164,8 @@ public class KMLParserTest {
   public void testPolygonNotEnoughPositionsThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>hollow box</name>\n"
@@ -1067,7 +1192,8 @@ public class KMLParserTest {
   public void testPolygonNoOuterBoundaryThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>hollow box</name>\n"
@@ -1095,7 +1221,8 @@ public class KMLParserTest {
   public void testOuterBoundaryExtraTagThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
             + "<Document>"
             + "<Placemark>\n"
             + "    <name>hollow box</name>\n"
@@ -1118,6 +1245,198 @@ public class KMLParserTest {
             + "</Placemark>\n"
             + "</Document>"
             + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = XmlPullParserException.class)
+  public void testMultipleOuterBoundarysThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>hollow box</name>\n"
+            + "    <Polygon>\n"
+            + "      <extrude>1</extrude>\n"
+            + "      <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            30,42,35\n"
+            + "            10,20,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "        </ExtraTag>\n"
+            + "      </outerBoundaryIs>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            30,42,35\n"
+            + "            10,20,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "        </ExtraTag>\n"
+            + "      </outerBoundaryIs>\n"
+            + "    </Polygon>"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testPolygonNoCoordinatesValues()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>hollow box</name>\n"
+            + "    <Polygon>\n"
+            + "      <extrude>1</extrude>\n"
+            + "      <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </outerBoundaryIs>\n"
+            + "      <innerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </innerBoundaryIs>\n"
+            + "    </Polygon>"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testUnexpectedDocumentEndAtPointThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,0\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testUnexpectedDocumentEndAtPlacemarkThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,0\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testUnexpectedDocumentEndAtOpeningThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = XmlPullParserException.class)
+  public void testUnexpectedDocumentEndAfterNameTextThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Placemark>\n"
+            + "    <name>city";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testUnexpectedDocumentEndInTagToSkipThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <TagToSkip>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = XmlPullParserException.class)
+  public void testUnexpectedDocumentEndAtCoordinatesTextThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,0\n";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testUnexpectedDocumentEndAtCoordinatesEndThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43,0\n"
+            + "        </coordinates>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testUnexpectedDocumentEndAtLineStringStartThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <LineString>\n";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testUnexpectedDocumentEndAtPolygonStartThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <Polygon>\n";
     new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
   }
 }

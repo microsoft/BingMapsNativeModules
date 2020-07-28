@@ -130,39 +130,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void parseKML() {
-      String kml =
-          "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
-              + "<Document>"
-              + "<Placemark>\n"
-              + "    <name>city</name>\n"
-              + "    <LineString>\n"
-              + "        <coordinates>\n"
-              + "             67,78,89, -107.55,45,98\n"
-              + "        </coordinates>\n"
-              + "    </LineString>\n"
-              + "</Placemark>\n"
-              + "<Placemark>\n"
-              + "<Polygon>\n"
-              + "      <extrude>1</extrude>\n"
-              + "      <altitudeMode>relativeToGround</altitudeMode>\n"
-              + "      <outerBoundaryIs>\n"
-              + "        <LinearRing>\n"
-              + "          <coordinates>\n"
-              + "            35,10 45,45 15,40 10,20 35,10\n"
-              + "          </coordinates>\n"
-              + "        </LinearRing>\n"
-              + "      </outerBoundaryIs>\n"
-              + "      <innerBoundaryIs>\n"
-              + "        <LinearRing>\n"
-              + "          <coordinates>\n"
-              + "            20,30 35,35 30,20 20,30\n"
-              + "          </coordinates>\n"
-              + "        </LinearRing>\n"
-              + "      </innerBoundaryIs>\n"
-              + "    </Polygon>\n"
-              + "  </Placemark>"
-              + "</Document>"
-              + "</kml>";
+      InputStream is = getResources().openRawResource(R.raw.geoxml);
+      String kml = new Scanner(is).useDelimiter("\\A").next();
       try {
         mKmlLayer = KMLParser.parse(kml);
       } catch (KMLParseException e) {
