@@ -88,12 +88,15 @@ public class KMLParser {
 
   private void parsePlacemark() throws IOException, XmlPullParserException, KMLParseException {
     while (mParser.next() != XmlPullParser.END_TAG) {
+      verifyNotEndOfDocument();
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
       String type = mParser.getName();
       if (type.equals("Placemark")) {
         parseNameAndShape();
+      } else if (!type.equals("Document") && !type.equals("Folder")) {
+        skipToEndOfTag();
       }
     }
   }
@@ -102,6 +105,7 @@ public class KMLParser {
     String title = null;
     MapElement element = null;
     while (mParser.next() != XmlPullParser.END_TAG) {
+      verifyNotEndOfDocument();
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
@@ -139,6 +143,7 @@ public class KMLParser {
     MapIcon icon = mFactory.createMapIcon();
     boolean hasParsedCoordinates = false;
     while (mParser.next() != XmlPullParser.END_TAG) {
+      verifyNotEndOfDocument();
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
@@ -174,6 +179,7 @@ public class KMLParser {
     MapPolyline line = mFactory.createMapPolyline();
     boolean hasParsedCoordinates = false;
     while (mParser.next() != XmlPullParser.END_TAG) {
+      verifyNotEndOfDocument();
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
@@ -215,6 +221,7 @@ public class KMLParser {
     AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper =
         new AltitudeReferenceSystemWrapper(AltitudeReferenceSystem.GEOID);
     while (mParser.next() != XmlPullParser.END_TAG) {
+      verifyNotEndOfDocument();
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
@@ -252,6 +259,7 @@ public class KMLParser {
     ArrayList<Geoposition> positions = null;
     boolean hasParsedCoordinates = false;
     while (mParser.next() != XmlPullParser.END_TAG) {
+      verifyNotEndOfDocument();
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
@@ -364,6 +372,7 @@ public class KMLParser {
           depth++;
           break;
         default:
+          verifyNotEndOfDocument();
           break;
       }
     }
@@ -388,6 +397,13 @@ public class KMLParser {
               + tag
               + " element around XML position "
               + mParser.getPositionDescription());
+    }
+  }
+
+  private void verifyNotEndOfDocument() throws XmlPullParserException, KMLParseException {
+    if (mParser.getEventType() == XmlPullParser.END_DOCUMENT) {
+      throw new KMLParseException(
+          "Unexpected end of document around position " + mParser.getPositionDescription());
     }
   }
 }

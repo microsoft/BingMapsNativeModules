@@ -32,20 +32,22 @@ public class ParsingHelpers {
   public static String getErrorMessageForPolygonRing(@NonNull ArrayList<Geoposition> positions) {
     if (positions.size() < 4) {
       StringBuilder positionsStringBuilder = new StringBuilder();
-      for (int i = 0; i < positions.size() - 1; i++) {
-        Geoposition position = positions.get(i);
-        positionsStringBuilder
-            .append(
-                "["
-                    + position.getLatitude()
-                    + ", "
-                    + position.getLongitude()
-                    + ", "
-                    + position.getAltitude()
-                    + "]")
-            .append(", ");
+      if (positions.size() > 0) {
+        for (int i = 0; i < positions.size() - 1; i++) {
+          Geoposition position = positions.get(i);
+          positionsStringBuilder
+              .append(
+                  "["
+                      + position.getLatitude()
+                      + ", "
+                      + position.getLongitude()
+                      + ", "
+                      + position.getAltitude()
+                      + "]")
+              .append(", ");
+        }
+        positionsStringBuilder.append(positions.get(positions.size() - 1));
       }
-      positionsStringBuilder.append(positions.get(positions.size() - 1));
       return "Polygon ring must have at least 4 positions, and the first and last position must "
           + "be the same. Instead saw Geopositions: ["
           + positionsStringBuilder

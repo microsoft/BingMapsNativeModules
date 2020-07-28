@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2\">
+    <Document>
+        <NetworkLink>
+            <name>NE US Radar</name>
+            <refreshVisibility>1</refreshVisibility>
+            <flyToView>1</flyToView>
+            <Link>...</Link>
+        </NetworkLink>
+        <Folder>
+        <Placemark>
+            <name>city</name>
+            <LineString>
+                <coordinates>
+                    67,78,89, -107.55,45,98
+                </coordinates>
+            </LineString>
+        </Placemark>
+        <Placemark>
+            <Polygon>
+                <extrude>1</extrude>
+                <altitudeMode>relativeToGround</altitudeMode>
+                <outerBoundaryIs>
+                    <LinearRing>
+                        <coordinates>
+                            35,10 45,45 15,40 10,20 35,10
+                        </coordinates>
+                    </LinearRing>
+                </outerBoundaryIs>
+                <innerBoundaryIs>
+                    <LinearRing>
+                        <coordinates>
+                            20,30 35,35 30,20 20,30
+                        </coordinates>
+                    </LinearRing>
+                </innerBoundaryIs>
+            </Polygon>
+        </Placemark>
+        </Folder>
+    </Document>
+</kml>
