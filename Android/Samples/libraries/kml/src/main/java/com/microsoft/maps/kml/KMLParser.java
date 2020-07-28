@@ -87,8 +87,7 @@ public class KMLParser {
   }
 
   private void parsePlacemark() throws IOException, XmlPullParserException, KMLParseException {
-    while (mParser.next() != XmlPullParser.END_TAG) {
-      verifyNotEndOfDocument();
+    while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
@@ -104,8 +103,7 @@ public class KMLParser {
   private void parseNameAndShape() throws IOException, XmlPullParserException, KMLParseException {
     String title = null;
     MapElement element = null;
-    while (mParser.next() != XmlPullParser.END_TAG) {
-      verifyNotEndOfDocument();
+    while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
@@ -142,8 +140,7 @@ public class KMLParser {
     mParser.require(XmlPullParser.START_TAG, mNameSpace, "Point");
     MapIcon icon = mFactory.createMapIcon();
     boolean hasParsedCoordinates = false;
-    while (mParser.next() != XmlPullParser.END_TAG) {
-      verifyNotEndOfDocument();
+    while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
@@ -178,8 +175,7 @@ public class KMLParser {
     mParser.require(XmlPullParser.START_TAG, mNameSpace, "LineString");
     MapPolyline line = mFactory.createMapPolyline();
     boolean hasParsedCoordinates = false;
-    while (mParser.next() != XmlPullParser.END_TAG) {
-      verifyNotEndOfDocument();
+    while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
@@ -220,8 +216,7 @@ public class KMLParser {
     boolean hasOuterBoundary = false;
     AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper =
         new AltitudeReferenceSystemWrapper(AltitudeReferenceSystem.GEOID);
-    while (mParser.next() != XmlPullParser.END_TAG) {
-      verifyNotEndOfDocument();
+    while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
@@ -258,8 +253,7 @@ public class KMLParser {
     mParser.require(XmlPullParser.START_TAG, mNameSpace, "LinearRing");
     ArrayList<Geoposition> positions = null;
     boolean hasParsedCoordinates = false;
-    while (mParser.next() != XmlPullParser.END_TAG) {
-      verifyNotEndOfDocument();
+    while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
@@ -398,6 +392,12 @@ public class KMLParser {
               + " element around XML position "
               + mParser.getPositionDescription());
     }
+  }
+
+  private int moveToNext() throws IOException, XmlPullParserException, KMLParseException {
+    int eventType = mParser.next();
+    verifyNotEndOfDocument();
+    return eventType;
   }
 
   private void verifyNotEndOfDocument() throws XmlPullParserException, KMLParseException {

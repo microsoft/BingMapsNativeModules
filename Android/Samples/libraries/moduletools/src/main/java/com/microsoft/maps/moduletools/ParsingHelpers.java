@@ -32,7 +32,7 @@ public class ParsingHelpers {
   public static String getErrorMessageForPolygonRing(@NonNull ArrayList<Geoposition> positions) {
     if (positions.size() < 4) {
       StringBuilder positionsStringBuilder = new StringBuilder();
-      if (positions.size() > 0) {
+      if (!positions.isEmpty()) {
         for (int i = 0; i < positions.size() - 1; i++) {
           Geoposition position = positions.get(i);
           positionsStringBuilder
