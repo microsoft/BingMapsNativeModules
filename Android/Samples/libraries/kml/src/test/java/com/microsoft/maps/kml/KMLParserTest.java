@@ -1248,6 +1248,47 @@ public class KMLParserTest {
     new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
   }
 
+  @Test(expected = XmlPullParserException.class)
+  public void testMultipleOuterBoundarysThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>hollow box</name>\n"
+            + "    <Polygon>\n"
+            + "      <extrude>1</extrude>\n"
+            + "      <altitudeMode>relativeToGround</altitudeMode>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            30,42,35\n"
+            + "            10,20,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "        </ExtraTag>\n"
+            + "      </outerBoundaryIs>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            10,20,20\n"
+            + "            30,40,34\n"
+            + "            30,42,35\n"
+            + "            10,20,20\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "        </ExtraTag>\n"
+            + "      </outerBoundaryIs>\n"
+            + "    </Polygon>"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
   @Test(expected = KMLParseException.class)
   public void testPolygonNoCoordinatesValues()
       throws XmlPullParserException, IOException, KMLParseException {
