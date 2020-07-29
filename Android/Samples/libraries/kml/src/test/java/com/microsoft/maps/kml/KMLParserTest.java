@@ -488,6 +488,103 @@ public class KMLParserTest {
   }
 
   @Test
+  public void testParseMultiGeometry()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "  <name>SF Marina Harbor Master</name>\n"
+            + "  <visibility>0</visibility>\n"
+            + "  <MultiGeometry>\n"
+            + "    <LineString>\n"
+            + "      <coordinates>\n"
+            + "        -122,37\n"
+            + "        -122,38\n"
+            + "      </coordinates>\n"
+            + "    </LineString>\n"
+            + "    <Point>\n"
+            + "      <coordinates>\n"
+            + "         -123,47\n"
+            + "      </coordinates>\n"
+            + "    </Point>"
+            + "    <Polygon>\n"
+            + "      <outerBoundaryIs>\n"
+            + "        <LinearRing>\n"
+            + "          <coordinates>\n"
+            + "            -104,41\n"
+            + "            -104,45\n"
+            + "            -111,45\n"
+            + "            -111,40\n"
+            + "            -104,41\n"
+            + "          </coordinates>\n"
+            + "        </LinearRing>\n"
+            + "      </outerBoundaryIs>\n"
+            + "    </Polygon>"
+            + "  </MultiGeometry>\n"
+            + "</Placemark>"
+            + "</Document>"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(3, elementCollection.getElements().size());
+    double[][] expectedPoints = {
+      {-122, 37}, {-122, 38}, {-123, 47}, {-104, 41}, {-104, 45}, {-111, 45}, {-111, 40}, {-104, 41}
+    };
+    int index = 0;
+    MapElement element = elementCollection.getElements().get(0);
+    assertNotNull(element);
+    MapPolyline line = (MapPolyline) element;
+    assertEquals(AltitudeReferenceSystem.SURFACE, line.getPath().getAltitudeReferenceSystem());
+    for (Geoposition position : line.getPath()) {
+      TestHelpers.assertPositionEquals(expectedPoints[index], position);
+      index++;
+    }
+
+    element = elementCollection.getElements().get(1);
+    assertNotNull(element);
+    MapIcon icon = (MapIcon) element;
+    assertEquals(AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
+    TestHelpers.assertPositionEquals(expectedPoints[index], icon.getLocation().getPosition());
+    index++;
+
+    element = elementCollection.getElements().get(2);
+    assertNotNull(element);
+    MapPolygon polygon = (MapPolygon) element;
+    assertEquals(1, polygon.getPaths().size());
+    for (Geopath path : polygon.getPaths()) {
+      assertEquals(AltitudeReferenceSystem.SURFACE, path.getAltitudeReferenceSystem());
+      for (Geoposition position : path) {
+        TestHelpers.assertPositionEquals(expectedPoints[index], position);
+        index++;
+      }
+    }
+  }
+
+  @Test
+  public void testParseMultiGeometryNoGeometries()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "  <name>SF Marina Harbor Master</name>\n"
+            + "  <visibility>0</visibility>\n"
+            + "  <MultiGeometry>\n"
+            + "  </MultiGeometry>\n"
+            + "</Placemark>"
+            + "</Document>"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(0, elementCollection.getElements().size());
+  }
+
+  @Test
   public void testNestedLevels() throws XmlPullParserException, IOException, KMLParseException {
     String kml =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -558,7 +655,6 @@ public class KMLParserTest {
     }
     assertNotNull(elementCollection.getElements().get(1));
     MapPolygon polygon = (MapPolygon) elementCollection.getElements().get(1);
-    assertEquals(AltitudeReferenceSystem.SURFACE, line.getPath().getAltitudeReferenceSystem());
     assertEquals(2, polygon.getPaths().size());
     for (Geopath path : polygon.getPaths()) {
       assertEquals(AltitudeReferenceSystem.SURFACE, path.getAltitudeReferenceSystem());

@@ -7,6 +7,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import android.util.Xml;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import com.microsoft.maps.AltitudeReferenceSystem;
 import com.microsoft.maps.Geopath;
@@ -107,24 +108,18 @@ public class KMLParser {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
-      String type = mParser.getName();
-      switch (type) {
+      switch (mParser.getName()) {
         case "name":
           mParser.require(XmlPullParser.START_TAG, mNameSpace, "name");
           title = parseText();
           mParser.require(XmlPullParser.END_TAG, mNameSpace, "name");
           break;
-        case "Point":
-          element = parsePoint();
-          break;
-        case "LineString":
-          element = parseLineString();
-          break;
-        case "Polygon":
-          element = parsePolygon();
+        case "MultiGeometry":
+          parseMultiGeometry();
           break;
         default:
-          skipToEndOfTag();
+          element = parseGeometryIfApplicable();
+          break;
       }
     }
     if (element != null) {
@@ -132,6 +127,34 @@ public class KMLParser {
         ((MapIcon) element).setTitle(title);
       }
       mLayer.getElements().add(element);
+    }
+  }
+
+  private void parseMultiGeometry() throws XmlPullParserException, IOException, KMLParseException {
+    while (moveToNext() != XmlPullParser.END_TAG) {
+      if (mParser.getEventType() != XmlPullParser.START_TAG) {
+        continue;
+      }
+      MapElement element = parseGeometryIfApplicable();
+      if (element != null) {
+        mLayer.getElements().add(element);
+      }
+    }
+  }
+
+  @Nullable
+  private MapElement parseGeometryIfApplicable()
+      throws XmlPullParserException, IOException, KMLParseException {
+    switch (mParser.getName()) {
+      case "Point":
+        return parsePoint();
+      case "LineString":
+        return parseLineString();
+      case "Polygon":
+        return parsePolygon();
+      default:
+        skipToEndOfTag();
+        return null;
     }
   }
 
@@ -358,7 +381,7 @@ public class KMLParser {
     }
     int depth = 1;
     while (depth != 0) {
-      switch (mParser.next()) {
+      switch (moveToNext()) {
         case XmlPullParser.END_TAG:
           depth--;
           break;
@@ -366,7 +389,6 @@ public class KMLParser {
           depth++;
           break;
         default:
-          verifyNotEndOfDocument();
           break;
       }
     }
@@ -396,14 +418,10 @@ public class KMLParser {
 
   private int moveToNext() throws IOException, XmlPullParserException, KMLParseException {
     int eventType = mParser.next();
-    verifyNotEndOfDocument();
-    return eventType;
-  }
-
-  private void verifyNotEndOfDocument() throws XmlPullParserException, KMLParseException {
-    if (mParser.getEventType() == XmlPullParser.END_DOCUMENT) {
+    if (eventType == XmlPullParser.END_DOCUMENT) {
       throw new KMLParseException(
           "Unexpected end of document around position " + mParser.getPositionDescription());
     }
+    return eventType;
   }
 }
