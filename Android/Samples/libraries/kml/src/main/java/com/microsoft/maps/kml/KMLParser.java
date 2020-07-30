@@ -82,12 +82,12 @@ public class KMLParser {
       mParser.setInput(stream, null);
       mParser.nextTag();
       mNameSpace = mParser.getNamespace();
-      parsePlacemark();
+      parseOuterLayers();
     }
     return mLayer;
   }
 
-  private void parsePlacemark() throws IOException, XmlPullParserException, KMLParseException {
+  private void parseOuterLayers() throws IOException, XmlPullParserException, KMLParseException {
     while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
@@ -95,7 +95,9 @@ public class KMLParser {
       String type = mParser.getName();
       if (type.equals("Placemark")) {
         parseNameAndShape();
-      } else if (!type.equals("Document") && !type.equals("Folder")) {
+      } else if (type.equals("Document") || type.equals("Folder")) {
+        parseOuterLayers();
+      } else {
         skipToEndOfTag();
       }
     }

@@ -665,6 +665,78 @@ public class KMLParserTest {
     }
   }
 
+  @Test
+  public void testSubFolders() throws XmlPullParserException, IOException, KMLParseException {
+    String kml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\" xmlns:gx=\"http://www.google.com/kml/ext/2.2\" xmlns:kml=\"http://www.opengis.net/kml/2.2\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n" +
+        "    <Document>\n" +
+        "        <name>Folders</name>\n" +
+        "        <Folder><name>Folder one</name><open>1</open>\n" +
+        "            <Folder><name>subfolder</name><open>1</open>\n" +
+        "                <Placemark>\n" +
+        "                    <name>Path in subfolder</name>\n" +
+        "                    <styleUrl>#orange-5px</styleUrl>\n" +
+        "                    <LineString>\n" +
+        "                        <tessellate>1</tessellate>\n" +
+        "                        <coordinates>\n" +
+        "                            8,47 9,47\n" +
+        "                        </coordinates>\n" +
+        "                    </LineString>\n" +
+        "                </Placemark>\n" +
+        "            </Folder>\n" +
+        "            <Placemark>\n" +
+        "                <name>Path in folder one</name>\n" +
+        "                <styleUrl>#orange-5px</styleUrl>\n" +
+        "                <LineString>\n" +
+        "                    <tessellate>1</tessellate>\n" +
+        "                    <coordinates>\n" +
+        "                        9,47 10,47\n" +
+        "                    </coordinates>\n" +
+        "                </LineString>\n" +
+        "            </Placemark>\n" +
+        "        </Folder>\n" +
+        "        <Folder><name>Folder two</name><open>1</open>\n" +
+        "            <Placemark><name>Polygon in 2nd folder</name>\n" +
+        "                <styleUrl>#orange-5px</styleUrl>\n" +
+        "                <LineString>\n" +
+        "                    <tessellate>1</tessellate>\n" +
+        "                    <coordinates>\n" +
+        "                        10,47 11,47\n" +
+        "                    </coordinates>\n" +
+        "                </LineString>\n" +
+        "            </Placemark>\n" +
+        "        </Folder>\n" +
+        "        <Style id=\"orange-5px\">\n" +
+        "            <LineStyle>\n" +
+        "                <color>ff00aaff</color>\n" +
+        "                <width>5</width>\n" +
+        "            </LineStyle>\n" +
+        "        </Style>\n" +
+        "    </Document>\n" +
+        "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(3, elementCollection.getElements().size());
+    double[][] expectedPoints = {
+        {8, 47},
+        {9, 47},
+        {9, 47},
+        {10, 47},
+        {10, 47},
+        {11, 47}
+    };
+    int index = 0;
+    for (MapElement element : elementCollection.getElements()) {
+      MapPolyline line = (MapPolyline) element;
+      assertEquals(AltitudeReferenceSystem.SURFACE, line.getPath().getAltitudeReferenceSystem());
+      for (Geoposition position : line.getPath()) {
+        TestHelpers.assertPositionEquals(expectedPoints[index], position);
+        index++;
+      }
+    }
+  }
+
   /**
    * Tests the public method to catch null. Note: parse(null) will not call internalParse with null.
    */
