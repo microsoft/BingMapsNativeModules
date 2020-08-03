@@ -30,7 +30,7 @@
                     <LineString>
                         <tessellate>1</tessellate>
                         <coordinates>
-                            8.541785133887323,47.36677970505284,0 8.544153942262056,47.36714394255758,0
+                            -122.265185,47.609466 -123,48
                         </coordinates>
                     </LineString>
                 </Placemark>
@@ -59,8 +59,8 @@
         </Folder>
         <Style id="orange-5px">
             <LineStyle>
-                <color>ff00aaff</color>
-                <width>5</width>
+                <color>ff3FE8A7</color>
+                <width>10</width>
             </LineStyle>
         </Style>
     </Document>
