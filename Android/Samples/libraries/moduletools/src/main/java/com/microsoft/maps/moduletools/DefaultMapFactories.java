@@ -4,7 +4,6 @@
 package com.microsoft.maps.moduletools;
 
 import androidx.annotation.NonNull;
-
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapImage;

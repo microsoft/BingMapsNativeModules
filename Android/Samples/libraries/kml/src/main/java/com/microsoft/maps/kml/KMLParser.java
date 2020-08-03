@@ -135,6 +135,8 @@ public class KMLParser {
       String type = mParser.getName();
       if (type.equals("IconStyle")) {
         parseIconStyle(stylesHolder);
+      } else if (type.equals("LineStyle")) {
+        parseLineStyle(stylesHolder);
       } else {
         skipToEndOfTag();
       }
@@ -168,6 +170,37 @@ public class KMLParser {
         String url = parseText();
         InputStream inputStream = new URL(url).openConnection().getInputStream();
         stylesHolder.getIconStyle().setImage(mFactory.createMapImage(inputStream));
+      }
+    }
+  }
+
+  private void parseLineStyle(@NonNull StylesHolder stylesHolder)
+      throws XmlPullParserException, IOException, KMLParseException {
+    while (moveToNext() != XmlPullParser.END_TAG) {
+      if (mParser.getEventType() != XmlPullParser.START_TAG) {
+        continue;
+      }
+      String type = mParser.getName();
+      if (type.equals("width")) {
+        double parsedWidth = Double.parseDouble(parseText());
+        if (Double.isNaN(parsedWidth)) {
+          throw new KMLParseException(
+              "Error at: " + mParser.getPositionDescription() + " width cannot be NaN.");
+        }
+        int width = (int) parsedWidth;
+        if (width <= 0) {
+          throw new KMLParseException(
+              "Error at: "
+                  + mParser.getPositionDescription()
+                  + " width must be greater than 0."
+                  + "Instead saw int value: "
+                  + width);
+        }
+        stylesHolder.getLineStyle().setWidth(width);
+      } else if (type.equals("color")) {
+        stylesHolder.getLineStyle().setStrokeColor(parseColor());
+      } else {
+        skipToEndOfTag();
       }
     }
   }
@@ -456,6 +489,18 @@ public class KMLParser {
     }
   }
 
+  private int parseColor() throws XmlPullParserException, IOException, KMLParseException {
+    long alphaBlueGreenRed = Long.parseLong(parseText(), 16);
+    return formatColorForMapControl((int) alphaBlueGreenRed);
+  }
+
+  private static int formatColorForMapControl(int oldColor) {
+    int newColor = oldColor;
+    newColor = newColor & 0xFF00FF00;
+    newColor = ((oldColor & 0xFF) << 16) | newColor;
+    return ((oldColor & 0x00FF0000) >> 16) | newColor;
+  }
+
   /* This method expects to begin at a start tag. If it does not see a start tag to begin with, the
    * XML is malformed and an exception is thrown.*/
   private void skipToEndOfTag() throws XmlPullParserException, IOException, KMLParseException {
@@ -509,6 +554,10 @@ public class KMLParser {
       for (MapElement element : mMapElementStyles.get(id)) {
         if (element instanceof MapIcon) {
           ((MapIcon) element).setImage(stylesHolder.getIconStyle().getImage());
+        } else if (element instanceof MapPolyline) {
+          MapPolyline line = (MapPolyline) element;
+          line.setStrokeWidth(stylesHolder.getLineStyle().getWidth());
+          line.setStrokeColor(stylesHolder.getLineStyle().getStrokeColor());
         }
       }
     }

@@ -3,11 +3,12 @@
 
 package com.microsoft.maps.moduletoolstest;
 
+import static org.mockito.Mockito.doAnswer;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
+import android.graphics.Color;
 import androidx.annotation.NonNull;
-
 import com.microsoft.maps.Geopath;
 import com.microsoft.maps.Geopoint;
 import com.microsoft.maps.MapElementLayer;
@@ -89,6 +90,30 @@ public class MockParserMapFactories implements MapFactories {
         .when(polyline)
         .setPath(Mockito.any(Geopath.class));
     Mockito.doAnswer(invocation -> paths.get()).when(polyline).getPath();
+
+    final AtomicReference<Integer> strokeWidth = new AtomicReference();
+    strokeWidth.set(1);
+    Mockito.doAnswer(
+            invocation -> {
+              strokeWidth.set(invocation.getArgument(0));
+              return true;
+            })
+        .when(polyline)
+        .setStrokeWidth(Mockito.anyInt());
+    Mockito.doAnswer(invocation -> strokeWidth.get()).when(polyline).getStrokeWidth();
+
+    final AtomicReference<Integer> strokeColor = new AtomicReference();
+    // set the default value
+    strokeColor.set(Color.BLUE);
+    doAnswer(
+            invocation -> {
+              strokeColor.set(invocation.getArgument(0));
+              return true;
+            })
+        .when(polyline)
+        .setStrokeColor(Mockito.anyInt());
+
+    doAnswer(invocation -> strokeColor.get()).when(polyline).getStrokeColor();
 
     return polyline;
   }
