@@ -18,6 +18,7 @@ import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
+import com.microsoft.maps.kml.styles.StylesHolder;
 import com.microsoft.maps.moduletools.AltitudeReferenceSystemWrapper;
 import com.microsoft.maps.moduletools.DefaultMapFactories;
 import com.microsoft.maps.moduletools.MapFactories;
@@ -25,7 +26,10 @@ import com.microsoft.maps.moduletools.ParsingHelpers;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -42,6 +46,8 @@ public class KMLParser {
   private boolean mDidWarn;
   private String mNameSpace;
   private final XmlPullParser mParser = Xml.newPullParser();
+  private final Map<String, StylesHolder> mMapStylesHolders = new HashMap<>();
+  private final Map<String, ArrayList<MapElement>> mMapElementStyles = new HashMap<>();
 
   private static final MapFactories DEFAULT_MAP_FACTORIES = new DefaultMapFactories();
 
@@ -82,23 +88,84 @@ public class KMLParser {
       mParser.setInput(stream, null);
       mParser.nextTag();
       mNameSpace = mParser.getNamespace();
-      parseOuterLayers();
+      parseOuterLayer();
+      applyStyles();
     }
     return mLayer;
   }
 
-  private void parseOuterLayers() throws IOException, XmlPullParserException, KMLParseException {
+  private void parseOuterLayer() throws IOException, XmlPullParserException, KMLParseException {
     while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
       String type = mParser.getName();
-      if (type.equals("Placemark")) {
-        parseNameAndShape();
-      } else if (type.equals("Document") || type.equals("Folder")) {
-        parseOuterLayers();
+      switch (type) {
+        case "Placemark":
+          parseNameAndShape();
+          break;
+        case "Style":
+          parseStyleAddToMapStylesHolders();
+          break;
+        case "Document":
+        case "Folder":
+          parseOuterLayer();
+          break;
+        default:
+          skipToEndOfTag();
+          break;
+      }
+    }
+  }
+
+  private void parseStyleAddToMapStylesHolders()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String id = mParser.getAttributeValue(null, "id");
+    if (mMapStylesHolders.containsKey(id)) {
+      throw new KMLParseException(
+          "Error at: " + mParser.getPositionDescription() + " ID " + id + " already seen.");
+    }
+    StylesHolder stylesHolder = new StylesHolder();
+    while (moveToNext() != XmlPullParser.END_TAG) {
+      if (mParser.getEventType() != XmlPullParser.START_TAG) {
+        continue;
+      }
+      String type = mParser.getName();
+      if (type.equals("IconStyle")) {
+        parseIconStyle(stylesHolder);
       } else {
         skipToEndOfTag();
+      }
+    }
+    mMapStylesHolders.put(id, stylesHolder);
+  }
+
+  private void parseIconStyle(@NonNull StylesHolder stylesHolder)
+      throws XmlPullParserException, IOException, KMLParseException {
+    while (moveToNext() != XmlPullParser.END_TAG) {
+      if (mParser.getEventType() != XmlPullParser.START_TAG) {
+        continue;
+      }
+      String type = mParser.getName();
+      if (type.equals("Icon")) {
+        parseIcon(stylesHolder);
+      } else {
+        skipToEndOfTag();
+      }
+    }
+  }
+
+  private void parseIcon(@NonNull StylesHolder stylesHolder)
+      throws XmlPullParserException, IOException, KMLParseException {
+    while (moveToNext() != XmlPullParser.END_TAG) {
+      if (mParser.getEventType() != XmlPullParser.START_TAG) {
+        continue;
+      }
+      String type = mParser.getName();
+      if (type.equals("href")) {
+        String url = parseText();
+        InputStream inputStream = new URL(url).openConnection().getInputStream();
+        stylesHolder.getIconStyle().setImage(mFactory.createMapImage(inputStream));
       }
     }
   }
@@ -106,6 +173,7 @@ public class KMLParser {
   private void parseNameAndShape() throws IOException, XmlPullParserException, KMLParseException {
     String title = null;
     MapElement element = null;
+    String styleId = null;
     while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
@@ -115,6 +183,12 @@ public class KMLParser {
           mParser.require(XmlPullParser.START_TAG, mNameSpace, "name");
           title = parseText();
           mParser.require(XmlPullParser.END_TAG, mNameSpace, "name");
+          break;
+        case "styleUrl":
+          String url = parseText();
+          if (url.indexOf('#') == 0) {
+            styleId = url.substring(1);
+          }
           break;
         case "MultiGeometry":
           parseMultiGeometry();
@@ -127,6 +201,12 @@ public class KMLParser {
     if (element != null) {
       if (title != null && element instanceof MapIcon) {
         ((MapIcon) element).setTitle(title);
+      }
+      if (styleId != null) {
+        if (!mMapElementStyles.containsKey(styleId)) {
+          mMapElementStyles.put(styleId, new ArrayList<MapElement>());
+        }
+        mMapElementStyles.get(styleId).add(element);
       }
       mLayer.getElements().add(element);
     }
@@ -415,6 +495,20 @@ public class KMLParser {
               + tag
               + " element around XML position "
               + mParser.getPositionDescription());
+    }
+  }
+
+  private void applyStyles() throws KMLParseException {
+    for (String id : mMapElementStyles.keySet()) {
+      StylesHolder stylesHolder = mMapStylesHolders.get(id);
+      if (stylesHolder == null) {
+        throw new KMLParseException("Style id " + id + " not found.");
+      }
+      for (MapElement element : mMapElementStyles.get(id)) {
+        if (element instanceof MapIcon) {
+          ((MapIcon) element).setImage(stylesHolder.getIconStyle().getImage());
+        }
+      }
     }
   }
 

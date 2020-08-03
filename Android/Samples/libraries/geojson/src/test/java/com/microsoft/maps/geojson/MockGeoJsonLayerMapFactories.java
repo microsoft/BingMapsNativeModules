@@ -11,10 +11,12 @@ import com.microsoft.maps.MapElement;
 import com.microsoft.maps.MapElementCollection;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
+import com.microsoft.maps.MapImage;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.MockMapElementCollection;
 import com.microsoft.maps.moduletools.MapFactories;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import org.mockito.Mockito;
@@ -355,6 +357,12 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
     doAnswer(invocation -> isVisible.get()).when(polygon).isVisible();
 
     return polygon;
+  }
+
+  @Override
+  public MapImage createMapImage(InputStream inputStream) {
+    // Not used; implemented for inheritance.
+    return null;
   }
 
   private void removeAll(

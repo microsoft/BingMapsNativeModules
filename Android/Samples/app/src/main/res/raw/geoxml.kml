@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
     <Document>
+        <Style id="normalState">
+        <IconStyle>
+            <scale>1.0</scale>
+            <Icon>
+                <href>https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-128.png</href>
+            </Icon>
+        </IconStyle>
+        <LabelStyle>
+            <scale>1.0</scale>
+        </LabelStyle>
+        </Style>
+        <Placemark>
+            <name>city</name>
+            <styleUrl>#normalState</styleUrl>
+            <Point>
+                <coordinates>
+                    -122.265185,47.609466
+                </coordinates>
+            </Point>
+        </Placemark>
         <name>Folders</name>
         <Folder><name>Folder one</name><open>1</open>
             <Folder><name>subfolder</name><open>1</open>
