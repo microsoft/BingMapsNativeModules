@@ -3,6 +3,8 @@
 
 package com.microsoft.maps.moduletools;
 
+import androidx.annotation.NonNull;
+
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapImage;
@@ -20,5 +22,5 @@ public interface MapFactories {
 
   MapPolygon createMapPolygon();
 
-  MapImage createMapImage(InputStream inputStream) throws IOException;
+  MapImage createMapImage(@NonNull InputStream inputStream) throws IOException;
 }

@@ -3,6 +3,8 @@
 
 package com.microsoft.maps.moduletools;
 
+import androidx.annotation.NonNull;
+
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapImage;
@@ -34,7 +36,7 @@ public class DefaultMapFactories implements MapFactories {
   }
 
   @Override
-  public MapImage createMapImage(InputStream inputStream) throws IOException {
+  public MapImage createMapImage(@NonNull InputStream inputStream) throws IOException {
     return new MapImage(inputStream);
   }
 }

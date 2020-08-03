@@ -14,10 +14,6 @@ public class StylesHolder {
 
   public StylesHolder() {}
 
-  public void setIconStyle(IconStyle iconStyle) {
-    mIconStyle = iconStyle;
-  }
-
   @NonNull
   public IconStyle getIconStyle() {
     return mIconStyle;

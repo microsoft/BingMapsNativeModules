@@ -360,7 +360,7 @@ class MockGeoJsonLayerMapFactories implements MapFactories {
   }
 
   @Override
-  public MapImage createMapImage(InputStream inputStream) {
+  public MapImage createMapImage(@NonNull InputStream inputStream) {
     // Not used; implemented for inheritance.
     return null;
   }

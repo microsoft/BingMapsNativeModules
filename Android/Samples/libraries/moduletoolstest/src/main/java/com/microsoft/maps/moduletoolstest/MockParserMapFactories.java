@@ -5,6 +5,9 @@ package com.microsoft.maps.moduletoolstest;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import androidx.annotation.NonNull;
+
 import com.microsoft.maps.Geopath;
 import com.microsoft.maps.Geopoint;
 import com.microsoft.maps.MapElementLayer;
@@ -110,7 +113,7 @@ public class MockParserMapFactories implements MapFactories {
     return polygon;
   }
 
-  public MapImage createMapImage(InputStream inputStream) {
+  public MapImage createMapImage(@NonNull InputStream inputStream) {
     MapImage mapImage = Mockito.mock(MapImage.class);
 
     // image must be final for use within the 'doAnswer' clause

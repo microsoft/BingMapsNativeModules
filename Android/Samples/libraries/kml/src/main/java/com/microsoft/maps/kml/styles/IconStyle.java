@@ -11,12 +11,6 @@ public class IconStyle {
 
   private MapImage mImage;
 
-  public IconStyle() {}
-
-  public IconStyle(MapImage image) {
-    mImage = image;
-  }
-
   @Nullable
   public MapImage getImage() {
     return mImage;
