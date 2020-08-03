@@ -59,6 +59,8 @@ public class KMLParser {
 
   /**
    * Method to parse given kml and return MapElementLayer containing the shapes outlined in the kml.
+   * Note: If the KML may contain references to external resources, parse should not be called on
+   * the UI thread. The external resources will be downloaded synchronously.
    *
    * @param kml input String
    * @return MapElementLayer
