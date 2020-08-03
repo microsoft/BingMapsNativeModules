@@ -5,13 +5,17 @@ package com.microsoft.maps.kml;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import com.microsoft.maps.AltitudeReferenceSystem;
 import com.microsoft.maps.Geopath;
 import com.microsoft.maps.Geoposition;
 import com.microsoft.maps.MapElement;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
+import com.microsoft.maps.MapImage;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.MockBingMapsLoader;
@@ -20,6 +24,8 @@ import com.microsoft.maps.moduletools.MapFactories;
 import com.microsoft.maps.moduletoolstest.MockParserMapFactories;
 import com.microsoft.maps.moduletoolstest.TestHelpers;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -667,64 +673,65 @@ public class KMLParserTest {
 
   @Test
   public void testSubFolders() throws XmlPullParserException, IOException, KMLParseException {
-    String kml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-        "<kml xmlns=\"http://www.opengis.net/kml/2.2\" xmlns:gx=\"http://www.google.com/kml/ext/2.2\" xmlns:kml=\"http://www.opengis.net/kml/2.2\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n" +
-        "    <Document>\n" +
-        "        <name>Folders</name>\n" +
-        "        <Folder><name>Folder one</name><open>1</open>\n" +
-        "            <Folder><name>subfolder</name><open>1</open>\n" +
-        "                <Placemark>\n" +
-        "                    <name>Path in subfolder</name>\n" +
-        "                    <styleUrl>#orange-5px</styleUrl>\n" +
-        "                    <LineString>\n" +
-        "                        <tessellate>1</tessellate>\n" +
-        "                        <coordinates>\n" +
-        "                            8,47 9,47\n" +
-        "                        </coordinates>\n" +
-        "                    </LineString>\n" +
-        "                </Placemark>\n" +
-        "            </Folder>\n" +
-        "            <Placemark>\n" +
-        "                <name>Path in folder one</name>\n" +
-        "                <styleUrl>#orange-5px</styleUrl>\n" +
-        "                <LineString>\n" +
-        "                    <tessellate>1</tessellate>\n" +
-        "                    <coordinates>\n" +
-        "                        9,47 10,47\n" +
-        "                    </coordinates>\n" +
-        "                </LineString>\n" +
-        "            </Placemark>\n" +
-        "        </Folder>\n" +
-        "        <Folder><name>Folder two</name><open>1</open>\n" +
-        "            <Placemark><name>Polygon in 2nd folder</name>\n" +
-        "                <styleUrl>#orange-5px</styleUrl>\n" +
-        "                <LineString>\n" +
-        "                    <tessellate>1</tessellate>\n" +
-        "                    <coordinates>\n" +
-        "                        10,47 11,47\n" +
-        "                    </coordinates>\n" +
-        "                </LineString>\n" +
-        "            </Placemark>\n" +
-        "        </Folder>\n" +
-        "        <Style id=\"orange-5px\">\n" +
-        "            <LineStyle>\n" +
-        "                <color>ff00aaff</color>\n" +
-        "                <width>5</width>\n" +
-        "            </LineStyle>\n" +
-        "        </Style>\n" +
-        "    </Document>\n" +
-        "</kml>";
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\" xmlns:gx=\"http://www.google.com/kml/ext/2.2\" xmlns:kml=\"http://www.opengis.net/kml/2.2\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n"
+            + "    <Document>\n"
+            + "        <name>Folders</name>\n"
+            + "        <Folder><name>Folder one</name><open>1</open>\n"
+            + "            <Folder><name>subfolder</name><open>1</open>\n"
+            + "                <Placemark>\n"
+            + "                    <name>Path in subfolder</name>\n"
+            + "                    <styleUrl>#orange-5px</styleUrl>\n"
+            + "                    <LineString>\n"
+            + "                        <tessellate>1</tessellate>\n"
+            + "                        <coordinates>\n"
+            + "                            8,47 9,47\n"
+            + "                        </coordinates>\n"
+            + "                    </LineString>\n"
+            + "                </Placemark>\n"
+            + "            </Folder>\n"
+            + "            <Placemark>\n"
+            + "                <name>Path in folder one</name>\n"
+            + "                <styleUrl>#orange-5px</styleUrl>\n"
+            + "                <LineString>\n"
+            + "                    <tessellate>1</tessellate>\n"
+            + "                    <coordinates>\n"
+            + "                        9,47 10,47\n"
+            + "                    </coordinates>\n"
+            + "                </LineString>\n"
+            + "            </Placemark>\n"
+            + "        </Folder>\n"
+            + "        <Folder><name>Folder two</name><open>1</open>\n"
+            + "            <Placemark><name>Polygon in 2nd folder</name>\n"
+            + "                <styleUrl>#orange-5px</styleUrl>\n"
+            + "                <LineString>\n"
+            + "                    <tessellate>1</tessellate>\n"
+            + "                    <coordinates>\n"
+            + "                        10,47 11,47\n"
+            + "                    </coordinates>\n"
+            + "                </LineString>\n"
+            + "            </Placemark>\n"
+            + "        </Folder>\n"
+            + "        <Style id=\"orange-5px\">\n"
+            + "            <LineStyle>\n"
+            + "                <color>ff00aaff</color>\n"
+            + "                <width>5</width>\n"
+            + "            </LineStyle>\n"
+            + "        </Style>\n"
+            + "    </Document>\n"
+            + "</kml>";
     MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
     MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
     assertNotNull(elementCollection);
     assertEquals(3, elementCollection.getElements().size());
     double[][] expectedPoints = {
-        {8, 47},
-        {9, 47},
-        {9, 47},
-        {10, 47},
-        {10, 47},
-        {11, 47}
+      {8, 47},
+      {9, 47},
+      {9, 47},
+      {10, 47},
+      {10, 47},
+      {11, 47}
     };
     int index = 0;
     for (MapElement element : elementCollection.getElements()) {
@@ -735,6 +742,91 @@ public class KMLParserTest {
         index++;
       }
     }
+  }
+
+  @Test
+  public void testIconStyleForPoint()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Style id=\"normalState\">\n"
+            + "    <IconStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "      <Icon>\n"
+            + "        <href>https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-128.png</href>\n"
+            + "      </Icon>\n"
+            + "    </IconStyle>\n"
+            + "    <LabelStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "    </LabelStyle>\n"
+            + "  </Style>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <styleUrl>#normalState</styleUrl>"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
+    assertNotNull(icon);
+    double[] expectedPoints = {-107.55, 43};
+    TestHelpers.assertPositionEquals(expectedPoints, icon.getLocation().getPosition());
+    assertEquals(AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
+    assertEquals("city", icon.getTitle());
+    String url = "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-128.png";
+    InputStream inputStream = new URL(url).openConnection().getInputStream();
+    assertNotNull(inputStream);
+    Bitmap expected = BitmapFactory.decodeStream(inputStream);
+    assertNotNull(expected);
+    MapImage image = icon.getImage();
+    assertNotNull(image);
+    Bitmap actual = image.getBitmap();
+    assertNotNull(actual);
+    assertTrue(expected.sameAs(actual));
+  }
+
+  @Test
+  public void testNoIconStyle() throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Style id=\"normalState\">\n"
+            + "    <LabelStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "    </LabelStyle>\n"
+            + "  </Style>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <styleUrl>#normalState</styleUrl>"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
+    assertNotNull(icon);
+    double[] expectedPoints = {-107.55, 43};
+    TestHelpers.assertPositionEquals(expectedPoints, icon.getLocation().getPosition());
+    assertEquals(AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
+    assertEquals("city", icon.getTitle());
   }
 
   /**
@@ -1605,6 +1697,68 @@ public class KMLParserTest {
             + "<Placemark>\n"
             + "    <name>city</name>\n"
             + "    <Polygon>\n";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testStyleIdsNotUnique()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Style id=\"normalState\">\n"
+            + "    <IconStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "      <Icon>\n"
+            + "        <href>http://maps.google.com/mapfiles/kml/pal3/icon55.png</href>\n"
+            + "      </Icon>\n"
+            + "    </IconStyle>\n"
+            + "    <LabelStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "    </LabelStyle>\n"
+            + "  </Style>"
+            + "<Style id=\"normalState\">\n"
+            + "    <IconStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "      <Icon>\n"
+            + "        <href>http://maps.google.com/mapfiles/kml/pal3/icon55.png</href>\n"
+            + "      </Icon>\n"
+            + "    </IconStyle>\n"
+            + "    <LabelStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "    </LabelStyle>\n"
+            + "  </Style>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testStyleIdsNotFound() throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <name>city</name>\n"
+            + "    <styleUrl>#styleNotFound</styleUrl>"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
     new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
   }
 }

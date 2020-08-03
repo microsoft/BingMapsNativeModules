@@ -3,14 +3,21 @@
 
 package com.microsoft.maps.moduletoolstest;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import androidx.annotation.NonNull;
+
 import com.microsoft.maps.Geopath;
 import com.microsoft.maps.Geopoint;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
+import com.microsoft.maps.MapImage;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
 import com.microsoft.maps.MockMapElementCollection;
 import com.microsoft.maps.moduletools.MapFactories;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import org.mockito.Mockito;
@@ -54,6 +61,16 @@ public class MockParserMapFactories implements MapFactories {
         .setTitle(Mockito.any(String.class));
     Mockito.doAnswer(invocation -> title.get()).when(icon).getTitle();
 
+    final AtomicReference<MapImage> image = new AtomicReference<MapImage>();
+    Mockito.doAnswer(
+            invocation -> {
+              image.set(invocation.getArgument(0));
+              return true;
+            })
+        .when(icon)
+        .setImage(Mockito.any(MapImage.class));
+    Mockito.doAnswer(invocation -> image.get()).when(icon).getImage();
+
     return icon;
   }
 
@@ -94,5 +111,17 @@ public class MockParserMapFactories implements MapFactories {
     Mockito.doAnswer(invocation -> paths.get()).when(polygon).getPaths();
 
     return polygon;
+  }
+
+  public MapImage createMapImage(@NonNull InputStream inputStream) {
+    MapImage mapImage = Mockito.mock(MapImage.class);
+
+    // image must be final for use within the 'doAnswer' clause
+    // AtomicReference used as a wrapper class to capture changes to inputStream
+    final AtomicReference<Bitmap> image = new AtomicReference<>();
+    image.set(BitmapFactory.decodeStream(inputStream));
+    Mockito.doAnswer(invocation -> image.get()).when(mapImage).getBitmap();
+
+    return mapImage;
   }
 }
