@@ -490,11 +490,11 @@ public class KMLParser {
   }
 
   private int parseColor() throws XmlPullParserException, IOException, KMLParseException {
-    long aabbggrr = Long.parseLong(parseText(), 16);
-    return formatColorForMapControl((int) aabbggrr);
+    long alphaBlueGreenRed = Long.parseLong(parseText(), 16);
+    return formatColorForMapControl((int) alphaBlueGreenRed);
   }
 
-  private int formatColorForMapControl(int oldColor) {
+  private static int formatColorForMapControl(int oldColor) {
     int newColor = oldColor;
     newColor = newColor & 0xFF00FF00;
     newColor = ((oldColor & 0xFF) << 16) | newColor;
