@@ -160,8 +160,7 @@ public class KMLParser {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
-      String type = mParser.getName();
-      if (type.equals("Icon")) {
+      if (mParser.getName().equals("Icon")) {
         parseIcon(iconStyle);
       } else {
         skipToEndOfTag();
@@ -175,8 +174,7 @@ public class KMLParser {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
-      String type = mParser.getName();
-      if (type.equals("href")) {
+      if (mParser.getName().equals("href")) {
         String url = parseText();
         InputStream inputStream = new URL(url).openConnection().getInputStream();
         iconStyle.setImage(mFactory.createMapImage(inputStream));
@@ -221,13 +219,12 @@ public class KMLParser {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
       }
-      String type = mParser.getName();
-      switch (type) {
+      switch (mParser.getName()) {
         case "fill":
           String shouldFill = parseText();
-          if (shouldFill.equals("1") || shouldFill.equals("true")) {
+          if (shouldFill.equals("1") || shouldFill.equalsIgnoreCase("true")) {
             polyStyle.setShouldFill(true);
-          } else if (shouldFill.equals("0") || shouldFill.equals("false")) {
+          } else if (shouldFill.equals("0") || shouldFill.equalsIgnoreCase("false")) {
             polyStyle.setShouldFill(false);
           } else {
             throw new KMLParseException(
@@ -239,9 +236,9 @@ public class KMLParser {
           break;
         case "outline":
           String shouldOutline = parseText();
-          if (shouldOutline.equals("1") || shouldOutline.equals("true")) {
+          if (shouldOutline.equals("1") || shouldOutline.equalsIgnoreCase("true")) {
             polyStyle.setShouldOutline(true);
-          } else if (shouldOutline.equals("0") || shouldOutline.equals("false")) {
+          } else if (shouldOutline.equals("0") || shouldOutline.equalsIgnoreCase("false")) {
             polyStyle.setShouldOutline(false);
           } else {
             throw new KMLParseException(

@@ -2203,7 +2203,7 @@ public class KMLParserTest {
             + "            <width>5</width>\n"
             + "        </LineStyle>\n"
             + "        <PolyStyle>\n"
-            + "            <outline>FALSE</outline>\n"
+            + "            <outline>foo</outline>\n"
             + "            <fill>true</fill>\n"
             + "            <color>ff00b9ff</color>\n"
             + "        </PolyStyle>\n"
