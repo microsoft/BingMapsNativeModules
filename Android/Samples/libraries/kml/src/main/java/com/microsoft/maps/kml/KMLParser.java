@@ -221,10 +221,10 @@ public class KMLParser {
       }
       switch (mParser.getName()) {
         case "fill":
-          polyStyle.setShouldFill(parseBooleanIsTrue());
+          polyStyle.setShouldFill(parseBoolean());
           break;
         case "outline":
-          polyStyle.setShouldOutline(parseBooleanIsTrue());
+          polyStyle.setShouldOutline(parseBoolean());
           break;
         case "color":
           polyStyle.setFillColor(parseColor());
@@ -520,8 +520,7 @@ public class KMLParser {
     }
   }
 
-  private boolean parseBooleanIsTrue()
-      throws XmlPullParserException, IOException, KMLParseException {
+  private boolean parseBoolean() throws XmlPullParserException, IOException, KMLParseException {
     String text = parseText();
     if (text.equals("1") || text.equalsIgnoreCase("true")) {
       return true;
