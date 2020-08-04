@@ -8,6 +8,14 @@
                 <href>https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-128.png</href>
             </Icon>
         </IconStyle>
+        <LineStyle>
+            <color>ff0000cc</color>
+            <width>5</width>
+        </LineStyle>
+        <PolyStyle>
+            <outline>false</outline>
+            <fill>true</fill>
+        </PolyStyle>
         <LabelStyle>
             <scale>1.0</scale>
         </LabelStyle>
@@ -20,6 +28,23 @@
                     -122.265185,47.609466
                 </coordinates>
             </Point>
+        </Placemark>
+        <Placemark>
+            <name>city</name>
+            <styleUrl>#normalState</styleUrl>
+            <Polygon>
+                <outerBoundaryIs>
+                    <LinearRing>
+                        <coordinates>
+                            -122.3662784465226,47.609466
+                            -122.3652480684771,48
+                            -121.365640222455,48
+                            -121.36666937925,47.609466
+                            -122.3662784465226,47.609466
+                        </coordinates>
+                    </LinearRing>
+                </outerBoundaryIs>
+            </Polygon>
         </Placemark>
         <name>Folders</name>
         <Folder><name>Folder one</name><open>1</open>
@@ -60,7 +85,7 @@
         <Style id="orange-5px">
             <LineStyle>
                 <color>ff3FE8A7</color>
-                <width>10</width>
+                <width>5</width>
             </LineStyle>
         </Style>
     </Document>

@@ -135,6 +135,32 @@ public class MockParserMapFactories implements MapFactories {
 
     Mockito.doAnswer(invocation -> paths.get()).when(polygon).getPaths();
 
+    final AtomicReference<Integer> fillColor = new AtomicReference();
+    // set the default value
+    fillColor.set(Color.BLUE);
+    doAnswer(
+            invocation -> {
+              fillColor.set(invocation.getArgument(0));
+              return true;
+            })
+        .when(polygon)
+        .setFillColor(Mockito.anyInt());
+
+    doAnswer(invocation -> fillColor.get()).when(polygon).getFillColor();
+
+    final AtomicReference<Integer> strokeColor = new AtomicReference();
+    // set the default value
+    strokeColor.set(Color.BLUE);
+    doAnswer(
+            invocation -> {
+              strokeColor.set(invocation.getArgument(0));
+              return true;
+            })
+        .when(polygon)
+        .setStrokeColor(Mockito.anyInt());
+
+    doAnswer(invocation -> strokeColor.get()).when(polygon).getStrokeColor();
+
     return polygon;
   }
 
