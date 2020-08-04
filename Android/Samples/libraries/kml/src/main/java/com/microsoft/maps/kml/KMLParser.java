@@ -18,6 +18,9 @@ import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapPolygon;
 import com.microsoft.maps.MapPolyline;
+import com.microsoft.maps.kml.styles.IconStyle;
+import com.microsoft.maps.kml.styles.LineStyle;
+import com.microsoft.maps.kml.styles.PolyStyle;
 import com.microsoft.maps.kml.styles.StylesHolder;
 import com.microsoft.maps.moduletools.AltitudeReferenceSystemWrapper;
 import com.microsoft.maps.moduletools.DefaultMapFactories;
@@ -133,18 +136,25 @@ public class KMLParser {
         continue;
       }
       String type = mParser.getName();
-      if (type.equals("IconStyle")) {
-        parseIconStyle(stylesHolder);
-      } else if (type.equals("LineStyle")) {
-        parseLineStyle(stylesHolder);
-      } else {
-        skipToEndOfTag();
+      switch (type) {
+        case "IconStyle":
+          parseIconStyle(stylesHolder.getIconStyle());
+          break;
+        case "LineStyle":
+          parseLineStyle(stylesHolder.getLineStyle());
+          break;
+        case "PolyStyle":
+          parsePolyStyle(stylesHolder.getPolyStyle());
+          break;
+        default:
+          skipToEndOfTag();
+          break;
       }
     }
     mMapStylesHolders.put(id, stylesHolder);
   }
 
-  private void parseIconStyle(@NonNull StylesHolder stylesHolder)
+  private void parseIconStyle(@NonNull IconStyle iconStyle)
       throws XmlPullParserException, IOException, KMLParseException {
     while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
@@ -152,14 +162,14 @@ public class KMLParser {
       }
       String type = mParser.getName();
       if (type.equals("Icon")) {
-        parseIcon(stylesHolder);
+        parseIcon(iconStyle);
       } else {
         skipToEndOfTag();
       }
     }
   }
 
-  private void parseIcon(@NonNull StylesHolder stylesHolder)
+  private void parseIcon(@NonNull IconStyle iconStyle)
       throws XmlPullParserException, IOException, KMLParseException {
     while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
@@ -169,12 +179,12 @@ public class KMLParser {
       if (type.equals("href")) {
         String url = parseText();
         InputStream inputStream = new URL(url).openConnection().getInputStream();
-        stylesHolder.getIconStyle().setImage(mFactory.createMapImage(inputStream));
+        iconStyle.setImage(mFactory.createMapImage(inputStream));
       }
     }
   }
 
-  private void parseLineStyle(@NonNull StylesHolder stylesHolder)
+  private void parseLineStyle(@NonNull LineStyle lineStyle)
       throws XmlPullParserException, IOException, KMLParseException {
     while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
@@ -196,11 +206,59 @@ public class KMLParser {
                   + "Instead saw int value: "
                   + width);
         }
-        stylesHolder.getLineStyle().setWidth(width);
+        lineStyle.setWidth(width);
       } else if (type.equals("color")) {
-        stylesHolder.getLineStyle().setStrokeColor(parseColor());
+        lineStyle.setStrokeColor(parseColor());
       } else {
         skipToEndOfTag();
+      }
+    }
+  }
+
+  private void parsePolyStyle(@NonNull PolyStyle polyStyle)
+      throws XmlPullParserException, IOException, KMLParseException {
+    while (moveToNext() != XmlPullParser.END_TAG) {
+      if (mParser.getEventType() != XmlPullParser.START_TAG) {
+        continue;
+      }
+      String type = mParser.getName();
+      switch (type) {
+        case "fill":
+          String shouldFill = parseText();
+          if (shouldFill.equals("1") || shouldFill.equals("true")) {
+            polyStyle.setShouldFill(true);
+          } else if (shouldFill.equals("0") || shouldFill.equals("false")) {
+            polyStyle.setShouldFill(false);
+          } else {
+            throw new KMLParseException(
+                "Invalid value ("
+                    + shouldFill
+                    + ") for <fill> at position "
+                    + mParser.getPositionDescription());
+          }
+          break;
+        case "outline":
+          String shouldOutline = parseText();
+          if (shouldOutline.equals("1") || shouldOutline.equals("true")) {
+            polyStyle.setShouldOutline(true);
+          } else if (shouldOutline.equals("0") || shouldOutline.equals("false")) {
+            polyStyle.setShouldOutline(false);
+          } else {
+            throw new KMLParseException(
+                "Invalid value ("
+                    + shouldOutline
+                    + ") for <outline> at position "
+                    + mParser.getPositionDescription());
+          }
+          break;
+        case "color":
+          if (polyStyle.shouldFill()) {
+            polyStyle.setFillColor(parseColor());
+          }
+          break;
+        default:
+          skipToEndOfTag();
+          break;
       }
     }
   }
@@ -558,6 +616,21 @@ public class KMLParser {
           MapPolyline line = (MapPolyline) element;
           line.setStrokeWidth(stylesHolder.getLineStyle().getWidth());
           line.setStrokeColor(stylesHolder.getLineStyle().getStrokeColor());
+        } else if (element instanceof MapPolygon) {
+          MapPolygon polygon = (MapPolygon) element;
+          LineStyle lineStyle = stylesHolder.getLineStyle();
+          PolyStyle polyStyle = stylesHolder.getPolyStyle();
+          if (polyStyle.shouldOutline()) {
+            polygon.setStrokeColor(lineStyle.getStrokeColor());
+          } else {
+            polygon.setStrokeColor(polyStyle.getTransparent());
+            polygon.setStrokeWidth(lineStyle.getWidth());
+          }
+          if (polyStyle.shouldFill()) {
+            polygon.setFillColor(polyStyle.getFillColor());
+          } else {
+            polygon.setFillColor(polyStyle.getTransparent());
+          }
         }
       }
     }
