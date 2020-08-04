@@ -9,6 +9,8 @@ public class PolyStyle {
   private boolean mShouldOutline = true;
   private int mFillColor = 0xffffffff;
 
+  private static final int TRANSPARENT = 0x00ffffff;
+
   public PolyStyle() {}
 
   public void setShouldFill(boolean shouldFill) {
@@ -36,6 +38,6 @@ public class PolyStyle {
   }
 
   public int getTransparent() {
-    return 0x00ffffff;
+    return TRANSPARENT;
   }
 }

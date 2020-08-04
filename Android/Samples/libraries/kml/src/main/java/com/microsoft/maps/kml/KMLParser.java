@@ -221,37 +221,13 @@ public class KMLParser {
       }
       switch (mParser.getName()) {
         case "fill":
-          String shouldFill = parseText();
-          if (shouldFill.equals("1") || shouldFill.equalsIgnoreCase("true")) {
-            polyStyle.setShouldFill(true);
-          } else if (shouldFill.equals("0") || shouldFill.equalsIgnoreCase("false")) {
-            polyStyle.setShouldFill(false);
-          } else {
-            throw new KMLParseException(
-                "Invalid value ("
-                    + shouldFill
-                    + ") for <fill> at position "
-                    + mParser.getPositionDescription());
-          }
+          polyStyle.setShouldFill(parseBooleanIsTrue());
           break;
         case "outline":
-          String shouldOutline = parseText();
-          if (shouldOutline.equals("1") || shouldOutline.equalsIgnoreCase("true")) {
-            polyStyle.setShouldOutline(true);
-          } else if (shouldOutline.equals("0") || shouldOutline.equalsIgnoreCase("false")) {
-            polyStyle.setShouldOutline(false);
-          } else {
-            throw new KMLParseException(
-                "Invalid value ("
-                    + shouldOutline
-                    + ") for <outline> at position "
-                    + mParser.getPositionDescription());
-          }
+          polyStyle.setShouldOutline(parseBooleanIsTrue());
           break;
         case "color":
-          if (polyStyle.shouldFill()) {
-            polyStyle.setFillColor(parseColor());
-          }
+          polyStyle.setFillColor(parseColor());
           break;
         default:
           skipToEndOfTag();
@@ -544,6 +520,19 @@ public class KMLParser {
     }
   }
 
+  private boolean parseBooleanIsTrue()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String text = parseText();
+    if (text.equals("1") || text.equalsIgnoreCase("true")) {
+      return true;
+    }
+    if (text.equals("0") || text.equalsIgnoreCase("false")) {
+      return false;
+    }
+    throw new KMLParseException(
+        "Invalid value (" + text + ") at position " + mParser.getPositionDescription());
+  }
+
   private int parseColor() throws XmlPullParserException, IOException, KMLParseException {
     long alphaBlueGreenRed = Long.parseLong(parseText(), 16);
     return formatColorForMapControl((int) alphaBlueGreenRed);
@@ -620,8 +609,7 @@ public class KMLParser {
           if (polyStyle.shouldOutline()) {
             polygon.setStrokeColor(lineStyle.getStrokeColor());
           } else {
-            polygon.setStrokeColor(polyStyle.getTransparent());
-            polygon.setStrokeWidth(lineStyle.getWidth());
+            polygon.setStrokeWidth(0);
           }
           if (polyStyle.shouldFill()) {
             polygon.setFillColor(polyStyle.getFillColor());

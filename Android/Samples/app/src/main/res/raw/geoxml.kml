@@ -85,7 +85,7 @@
         <Style id="orange-5px">
             <LineStyle>
                 <color>ff3FE8A7</color>
-                <width>10</width>
+                <width>5</width>
             </LineStyle>
         </Style>
     </Document>
