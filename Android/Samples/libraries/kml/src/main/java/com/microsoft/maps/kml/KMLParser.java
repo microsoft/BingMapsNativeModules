@@ -51,6 +51,9 @@ public class KMLParser {
   private final XmlPullParser mParser = Xml.newPullParser();
   private final Map<String, StylesHolder> mMapStylesHolders = new HashMap<>();
   private final Map<String, ArrayList<MapElement>> mMapElementStyles = new HashMap<>();
+  private final Map<String, String> mKmlStyleMap = new HashMap<>();
+  private final Map<MapElement, StylesHolder> mInlineStyles = new HashMap<>();
+  private final Map<StylesHolder, String> mMergeStyles = new HashMap<>();
 
   private static final MapFactories DEFAULT_MAP_FACTORIES = new DefaultMapFactories();
 
@@ -94,6 +97,7 @@ public class KMLParser {
       mParser.nextTag();
       mNameSpace = mParser.getNamespace();
       parseOuterLayer();
+      mergeStyles();
       applyStyles();
     }
     return mLayer;
@@ -107,10 +111,13 @@ public class KMLParser {
       String type = mParser.getName();
       switch (type) {
         case "Placemark":
-          parseNameAndShape();
+          parsePlacemark();
           break;
         case "Style":
           parseStyleAddToMapStylesHolders();
+          break;
+        case "StyleMap":
+          parseStyleMap();
           break;
         case "Document":
         case "Folder":
@@ -126,10 +133,12 @@ public class KMLParser {
   private void parseStyleAddToMapStylesHolders()
       throws XmlPullParserException, IOException, KMLParseException {
     String id = mParser.getAttributeValue(null, "id");
-    if (mMapStylesHolders.containsKey(id)) {
-      throw new KMLParseException(
-          "Error at: " + mParser.getPositionDescription() + " ID " + id + " already seen.");
-    }
+    verifyIdNotInMap(mMapStylesHolders, id);
+    mMapStylesHolders.put(id, parseStyle());
+  }
+
+  @NonNull
+  private StylesHolder parseStyle() throws XmlPullParserException, IOException, KMLParseException {
     StylesHolder stylesHolder = new StylesHolder();
     while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
@@ -151,7 +160,7 @@ public class KMLParser {
           break;
       }
     }
-    mMapStylesHolders.put(id, stylesHolder);
+    return stylesHolder;
   }
 
   private void parseIconStyle(@NonNull IconStyle iconStyle)
@@ -205,7 +214,9 @@ public class KMLParser {
                   + width);
         }
         lineStyle.setWidth(width);
+        lineStyle.setUseWidth(true);
       } else if (type.equals("color")) {
+        lineStyle.setUseStrokeColor(true);
         lineStyle.setStrokeColor(parseColor());
       } else {
         skipToEndOfTag();
@@ -222,9 +233,11 @@ public class KMLParser {
       switch (mParser.getName()) {
         case "fill":
           polyStyle.setShouldFill(parseBoolean());
+          polyStyle.setUseFillTag(true);
           break;
         case "outline":
           polyStyle.setShouldOutline(parseBoolean());
+          polyStyle.setUseOutlineTag(true);
           break;
         case "color":
           polyStyle.setFillColor(parseColor());
@@ -236,10 +249,79 @@ public class KMLParser {
     }
   }
 
-  private void parseNameAndShape() throws IOException, XmlPullParserException, KMLParseException {
+  private void parseStyleMap() throws XmlPullParserException, IOException, KMLParseException {
+    String id = mParser.getAttributeValue(null, "id");
+    int numPair = 0;
+    verifyIdNotInMap(mMapStylesHolders, id);
+    while (moveToNext() != XmlPullParser.END_TAG) {
+      if (mParser.getEventType() != XmlPullParser.START_TAG) {
+        continue;
+      }
+      if (mParser.getName().equals("Pair")) {
+        parsePair(id);
+        numPair++;
+      } else {
+        skipToEndOfTag();
+      }
+    }
+    if (numPair < 2) {
+      throw new KMLParseException(
+          "Error around: "
+              + mParser.getPositionDescription()
+              + " A StyleMap element should have two Pair elements. Instead saw: "
+              + numPair
+              + ".");
+    }
+  }
+
+  private void parsePair(@NonNull String styleMapId)
+      throws XmlPullParserException, IOException, KMLParseException {
+    String key = null, styleUrl = null;
+    StylesHolder stylesHolder = null;
+    while (moveToNext() != XmlPullParser.END_TAG) {
+      if (mParser.getEventType() != XmlPullParser.START_TAG) {
+        continue;
+      }
+      String type = mParser.getName();
+      switch (type) {
+        case "key":
+          String text = parseText();
+          if (!text.equals("normal") && !text.equals("highlight")) {
+            throw new KMLParseException(
+                "Error around: "
+                    + mParser.getPositionDescription()
+                    + " A key element must have a value of either \"normal\" or \"highlight\" "
+                    + "Instead saw: "
+                    + text);
+          }
+          key = text;
+          break;
+        case "styleUrl":
+          styleUrl = parseStyleUrl();
+          break;
+        case "Style":
+          stylesHolder = parseStyle();
+          break;
+        default:
+          skipToEndOfTag();
+          break;
+      }
+    }
+    if (key != null && key.equals("normal")) {
+      if (styleUrl != null) {
+        mKmlStyleMap.put(styleMapId, styleUrl);
+      } else if (stylesHolder != null) {
+        verifyIdNotInMap(mMapStylesHolders, key);
+        mMapStylesHolders.put(styleMapId, stylesHolder);
+      }
+    }
+  }
+
+  private void parsePlacemark() throws IOException, XmlPullParserException, KMLParseException {
     String title = null;
     MapElement element = null;
     String styleId = null;
+    StylesHolder stylesHolder = null;
     while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
@@ -251,10 +333,10 @@ public class KMLParser {
           mParser.require(XmlPullParser.END_TAG, mNameSpace, "name");
           break;
         case "styleUrl":
-          String url = parseText();
-          if (url.indexOf('#') == 0) {
-            styleId = url.substring(1);
-          }
+          styleId = parseStyleUrl();
+          break;
+        case "Style":
+          stylesHolder = parseStyle();
           break;
         case "MultiGeometry":
           parseMultiGeometry();
@@ -268,14 +350,30 @@ public class KMLParser {
       if (title != null && element instanceof MapIcon) {
         ((MapIcon) element).setTitle(title);
       }
-      if (styleId != null) {
-        if (!mMapElementStyles.containsKey(styleId)) {
-          mMapElementStyles.put(styleId, new ArrayList<MapElement>());
+      if (stylesHolder != null) {
+        mInlineStyles.put(element, stylesHolder);
+        if (styleId != null) {
+          mMergeStyles.put(stylesHolder, styleId);
         }
-        mMapElementStyles.get(styleId).add(element);
+      } else {
+        if (styleId != null) {
+          if (!mMapElementStyles.containsKey(styleId)) {
+            mMapElementStyles.put(styleId, new ArrayList<MapElement>());
+          }
+          mMapElementStyles.get(styleId).add(element);
+        }
       }
       mLayer.getElements().add(element);
     }
+  }
+
+  @Nullable
+  private String parseStyleUrl() throws XmlPullParserException, IOException, KMLParseException {
+    String url = parseText();
+    if (url.indexOf('#') == 0) {
+      return url.substring(1);
+    }
+    return null;
   }
 
   private void parseMultiGeometry() throws XmlPullParserException, IOException, KMLParseException {
@@ -345,6 +443,8 @@ public class KMLParser {
       throws IOException, XmlPullParserException, KMLParseException {
     mParser.require(XmlPullParser.START_TAG, mNameSpace, "LineString");
     MapPolyline line = mFactory.createMapPolyline();
+    // set default kml strokeColor
+    line.setStrokeColor(0xffffffff);
     boolean hasParsedCoordinates = false;
     while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
@@ -383,6 +483,9 @@ public class KMLParser {
   private MapPolygon parsePolygon() throws IOException, XmlPullParserException, KMLParseException {
     mParser.require(XmlPullParser.START_TAG, mNameSpace, "Polygon");
     MapPolygon polygon = mFactory.createMapPolygon();
+    // set default kml colors
+    polygon.setStrokeColor(0xffffffff);
+    polygon.setFillColor(0xffffffff);
     ArrayList<ArrayList<Geoposition>> rings = new ArrayList<>();
     boolean hasOuterBoundary = false;
     AltitudeReferenceSystemWrapper altitudeReferenceSystemWrapper =
@@ -534,6 +637,7 @@ public class KMLParser {
 
   private int parseColor() throws XmlPullParserException, IOException, KMLParseException {
     long alphaBlueGreenRed = Long.parseLong(parseText(), 16);
+    moveToNext();
     return formatColorForMapControl((int) alphaBlueGreenRed);
   }
 
@@ -588,34 +692,91 @@ public class KMLParser {
     }
   }
 
+  private void verifyIdNotInMap(Map map, String id) throws KMLParseException {
+    if (map.containsKey(id)) {
+      throw new KMLParseException(
+          "Error at: " + mParser.getPositionDescription() + " ID " + id + " already seen.");
+    }
+  }
+
+  private void mergeStyles() {
+    for (StylesHolder inlineStyle : mMergeStyles.keySet()) {
+      StylesHolder sharedStyle = mMapStylesHolders.get(mMergeStyles.get(inlineStyle));
+      if (sharedStyle.getIconStyle().getImage() != null) {
+        inlineStyle.getIconStyle().setImage(sharedStyle.getIconStyle().getImage());
+      }
+      LineStyle sharedLineStyle = sharedStyle.getLineStyle();
+      LineStyle inlineLineStyle = inlineStyle.getLineStyle();
+      if (!inlineLineStyle.useWidth() && sharedLineStyle.useWidth()) {
+        inlineLineStyle.setWidth(sharedLineStyle.getWidth());
+        inlineLineStyle.setUseWidth(true);
+      }
+      if (!inlineLineStyle.useStrokeColor() && sharedLineStyle.useStrokeColor()) {
+        inlineLineStyle.setStrokeColor(sharedLineStyle.getStrokeColor());
+        inlineLineStyle.setUseStrokeColor(true);
+      }
+      PolyStyle sharedPolyStyle = sharedStyle.getPolyStyle();
+      PolyStyle inlinePolyStyle = inlineStyle.getPolyStyle();
+      if (!inlinePolyStyle.useFillTag() && sharedPolyStyle.useFillTag()) {
+        inlinePolyStyle.setShouldFill(sharedPolyStyle.shouldFill());
+        inlinePolyStyle.setUseFillTag(true);
+      }
+      if (!inlinePolyStyle.useOutlineTag() && sharedPolyStyle.useOutlineTag()) {
+        inlinePolyStyle.setShouldOutline(sharedPolyStyle.shouldOutline());
+        inlinePolyStyle.setUseOutlineTag(true);
+      }
+    }
+  }
+
   private void applyStyles() throws KMLParseException {
     for (String id : mMapElementStyles.keySet()) {
-      StylesHolder stylesHolder = mMapStylesHolders.get(id);
+      StylesHolder stylesHolder =
+          mMapStylesHolders.containsKey(id)
+              ? mMapStylesHolders.get(id)
+              : mMapStylesHolders.get(mKmlStyleMap.get(id));
       if (stylesHolder == null) {
         throw new KMLParseException("Style id " + id + " not found.");
       }
       for (MapElement element : mMapElementStyles.get(id)) {
-        if (element instanceof MapIcon) {
-          ((MapIcon) element).setImage(stylesHolder.getIconStyle().getImage());
-        } else if (element instanceof MapPolyline) {
-          MapPolyline line = (MapPolyline) element;
-          line.setStrokeWidth(stylesHolder.getLineStyle().getWidth());
-          line.setStrokeColor(stylesHolder.getLineStyle().getStrokeColor());
-        } else if (element instanceof MapPolygon) {
-          MapPolygon polygon = (MapPolygon) element;
-          LineStyle lineStyle = stylesHolder.getLineStyle();
-          PolyStyle polyStyle = stylesHolder.getPolyStyle();
-          if (polyStyle.shouldOutline()) {
-            polygon.setStrokeColor(lineStyle.getStrokeColor());
-          } else {
-            polygon.setStrokeWidth(0);
-          }
-          if (polyStyle.shouldFill()) {
-            polygon.setFillColor(polyStyle.getFillColor());
-          } else {
-            polygon.setFillColor(polyStyle.getTransparent());
-          }
+        applyStyles(element, stylesHolder);
+      }
+    }
+    for (MapElement element : mInlineStyles.keySet()) {
+      applyStyles(element, mInlineStyles.get(element));
+    }
+  }
+
+  private void applyStyles(@NonNull MapElement element, @NonNull StylesHolder stylesHolder)
+      throws KMLParseException {
+    if (element instanceof MapIcon) {
+      ((MapIcon) element).setImage(stylesHolder.getIconStyle().getImage());
+    } else if (element instanceof MapPolyline) {
+      MapPolyline line = (MapPolyline) element;
+      LineStyle lineStyle = stylesHolder.getLineStyle();
+      if (lineStyle.useWidth()) {
+        line.setStrokeWidth(lineStyle.getWidth());
+      }
+      if (lineStyle.useStrokeColor()) {
+        line.setStrokeColor(lineStyle.getStrokeColor());
+      }
+    } else if (element instanceof MapPolygon) {
+      MapPolygon polygon = (MapPolygon) element;
+      LineStyle lineStyle = stylesHolder.getLineStyle();
+      PolyStyle polyStyle = stylesHolder.getPolyStyle();
+      if (polyStyle.shouldOutline()) {
+        if (lineStyle.useStrokeColor()) {
+          polygon.setStrokeColor(lineStyle.getStrokeColor());
         }
+        if (lineStyle.useWidth()) {
+          polygon.setStrokeWidth(lineStyle.getWidth());
+        }
+      } else {
+        polygon.setStrokeWidth(0);
+      }
+      if (polyStyle.shouldFill()) {
+        polygon.setFillColor(polyStyle.getFillColor());
+      } else {
+        polygon.setFillColor(polyStyle.getTransparent());
       }
     }
   }

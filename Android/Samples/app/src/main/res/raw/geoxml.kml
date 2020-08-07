@@ -2,33 +2,16 @@
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
     <Document>
         <Style id="normalState">
-        <IconStyle>
-            <scale>1.0</scale>
-            <Icon>
-                <href>https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-128.png</href>
-            </Icon>
-        </IconStyle>
-        <LineStyle>
-            <color>ff0000cc</color>
-            <width>5</width>
-        </LineStyle>
-        <PolyStyle>
-            <outline>false</outline>
-            <fill>true</fill>
-        </PolyStyle>
-        <LabelStyle>
-            <scale>1.0</scale>
-        </LabelStyle>
+            <LineStyle>
+                <color>ff0000cc</color>
+                <width>5</width>
+            </LineStyle>
+            <PolyStyle>
+                <fill>false</fill>
+                <outline>false</outline>
+                <color>ffaa00aa</color>
+            </PolyStyle>
         </Style>
-        <Placemark>
-            <name>city</name>
-            <styleUrl>#normalState</styleUrl>
-            <Point>
-                <coordinates>
-                    -122.265185,47.609466
-                </coordinates>
-            </Point>
-        </Placemark>
         <Placemark>
             <name>city</name>
             <styleUrl>#normalState</styleUrl>
@@ -36,57 +19,17 @@
                 <outerBoundaryIs>
                     <LinearRing>
                         <coordinates>
-                            -122.3662784465226,47.609466
-                            -122.3652480684771,48
-                            -121.365640222455,48
-                            -121.36666937925,47.609466
-                            -122.3662784465226,47.609466
+                            -122,47 -121,48 -128,46 -122,47
                         </coordinates>
                     </LinearRing>
                 </outerBoundaryIs>
             </Polygon>
+            <Style>
+                <PolyStyle>
+                    <fill>true</fill>
+                    <color>ffaaaaaa</color>
+                </PolyStyle>
+            </Style>
         </Placemark>
-        <name>Folders</name>
-        <Folder><name>Folder one</name><open>1</open>
-            <Folder><name>subfolder</name><open>1</open>
-                <Placemark>
-                    <name>Path in subfolder</name>
-                    <styleUrl>#orange-5px</styleUrl>
-                    <LineString>
-                        <tessellate>1</tessellate>
-                        <coordinates>
-                            -122.265185,47.609466 -123,48
-                        </coordinates>
-                    </LineString>
-                </Placemark>
-            </Folder>
-            <Placemark>
-                <name>Path in folder one</name>
-                <styleUrl>#orange-5px</styleUrl>
-                <LineString>
-                    <tessellate>1</tessellate>
-                    <coordinates>
-                        8.54184232399809,47.36647498852937,0 8.544170241436506,47.36685501672338,0
-                    </coordinates>
-                </LineString>
-            </Placemark>
-        </Folder>
-        <Folder><name>Folder two</name><open>1</open>
-            <Placemark><name>Polygon in 2nd folder</name>
-                <styleUrl>#orange-5px</styleUrl>
-                <LineString>
-                    <tessellate>1</tessellate>
-                    <coordinates>
-                        8.541967280275596,47.36615976289033,0 8.544304513152113,47.36655716364855,0
-                    </coordinates>
-                </LineString>
-            </Placemark>
-        </Folder>
-        <Style id="orange-5px">
-            <LineStyle>
-                <color>ff3FE8A7</color>
-                <width>5</width>
-            </LineStyle>
-        </Style>
     </Document>
 </kml>

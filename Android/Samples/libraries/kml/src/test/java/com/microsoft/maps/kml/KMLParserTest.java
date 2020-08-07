@@ -913,9 +913,9 @@ public class KMLParserTest {
       assertEquals(AltitudeReferenceSystem.SURFACE, line.getPath().getAltitudeReferenceSystem());
       assertEquals(1, line.getStrokeWidth());
       if (i == 0) {
-        assertEquals(-5816344, line.getStrokeColor());
+        assertEquals(0xFFA73FE8, line.getStrokeColor());
       } else {
-        assertEquals(-16776961, line.getStrokeColor());
+        assertEquals(0xFFFFFFFF, line.getStrokeColor());
       }
       for (Geoposition position : line.getPath()) {
         TestHelpers.assertPositionEquals(expectedPoints[index], position);
@@ -1201,6 +1201,526 @@ public class KMLParserTest {
       MapPolygon polygon = (MapPolygon) element;
       assertEquals(0xFFFFB900, polygon.getFillColor());
       assertEquals(0, polygon.getStrokeWidth());
+      assertEquals(1, polygon.getPaths().size());
+      for (Geopath path : polygon.getPaths()) {
+        assertEquals(AltitudeReferenceSystem.SURFACE, path.getAltitudeReferenceSystem());
+        for (Geoposition position : path) {
+          TestHelpers.assertPositionEquals(expectedPoints[index], position);
+          index++;
+        }
+      }
+    }
+  }
+
+  @Test
+  public void testStyleMapForPoint() throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "  <Style id=\"normalState\">\n"
+            + "    <IconStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "      <Icon>\n"
+            + "        <href>https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-128.png</href>\n"
+            + "      </Icon>\n"
+            + "    </IconStyle>\n"
+            + "    <LabelStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "    </LabelStyle>\n"
+            + "  </Style>\n"
+            + "  <Style id=\"highlightState\">\n"
+            + "    <IconStyle>\n"
+            + "      <Icon>\n"
+            + "        <href>http://maps.google.com/mapfiles/kml/pal3/icon60.png</href>\n"
+            + "      </Icon>\n"
+            + "      <scale>1.1</scale>\n"
+            + "    </IconStyle>\n"
+            + "    <LabelStyle>\n"
+            + "      <scale>1.1</scale>\n"
+            + "      <color>ff0000c0</color>\n"
+            + "    </LabelStyle>\n"
+            + "  </Style>\n"
+            + "  <StyleMap id=\"styleMapExample\">\n"
+            + "    <Pair>\n"
+            + "      <key>normal</key>\n"
+            + "      <styleUrl>#normalState</styleUrl>\n"
+            + "    </Pair>\n"
+            + "    <Pair>\n"
+            + "      <key>highlight</key>\n"
+            + "      <styleUrl>#highlightState</styleUrl>\n"
+            + "    </Pair>\n"
+            + "  </StyleMap>\n"
+            + "  <Placemark>\n"
+            + "    <name>John Hancock Building</name>\n"
+            + "    <styleUrl>#styleMapExample</styleUrl>\n"
+            + "    <Point>\n"
+            + "      <coordinates>-87.62349,41.89863</coordinates>\n"
+            + "    </Point>\n"
+            + "  </Placemark>\n"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
+    assertNotNull(icon);
+    double[] expectedPoints = {-87.62349, 41.89863};
+    TestHelpers.assertPositionEquals(expectedPoints, icon.getLocation().getPosition());
+    assertEquals(AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
+    assertEquals("John Hancock Building", icon.getTitle());
+    String url = "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-128.png";
+    InputStream inputStream = new URL(url).openConnection().getInputStream();
+    assertNotNull(inputStream);
+    Bitmap expected = BitmapFactory.decodeStream(inputStream);
+    assertNotNull(expected);
+    MapImage image = icon.getImage();
+    assertNotNull(image);
+    Bitmap actual = image.getBitmap();
+    assertNotNull(actual);
+    assertTrue(expected.sameAs(actual));
+  }
+
+  @Test
+  public void testStyleMapContainsStyle()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "  <Style id=\"highlightState\">\n"
+            + "    <IconStyle>\n"
+            + "      <Icon>\n"
+            + "        <href>http://maps.google.com/mapfiles/kml/pal3/icon60.png</href>\n"
+            + "      </Icon>\n"
+            + "      <scale>1.1</scale>\n"
+            + "    </IconStyle>\n"
+            + "    <LabelStyle>\n"
+            + "      <scale>1.1</scale>\n"
+            + "      <color>ff0000c0</color>\n"
+            + "    </LabelStyle>\n"
+            + "  </Style>\n"
+            + "  <StyleMap id=\"styleMapExample\">\n"
+            + "    <Pair>\n"
+            + "      <key>normal</key>\n"
+            + "  <Style>\n"
+            + "    <IconStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "      <Icon>\n"
+            + "        <href>https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-128.png</href>\n"
+            + "      </Icon>\n"
+            + "    </IconStyle>\n"
+            + "    <LabelStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "    </LabelStyle>\n"
+            + "  </Style>\n"
+            + "    </Pair>\n"
+            + "    <Pair>\n"
+            + "      <key>highlight</key>\n"
+            + "      <styleUrl>#highlightState</styleUrl>\n"
+            + "    </Pair>\n"
+            + "  </StyleMap>\n"
+            + "  <Placemark>\n"
+            + "    <name>John Hancock Building</name>\n"
+            + "    <styleUrl>#styleMapExample</styleUrl>\n"
+            + "    <Point>\n"
+            + "      <coordinates>-87.62349,41.89863</coordinates>\n"
+            + "    </Point>\n"
+            + "  </Placemark>\n"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    MapIcon icon = (MapIcon) elementCollection.getElements().get(0);
+    assertNotNull(icon);
+    double[] expectedPoints = {-87.62349, 41.89863};
+    TestHelpers.assertPositionEquals(expectedPoints, icon.getLocation().getPosition());
+    assertEquals(AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
+    assertEquals("John Hancock Building", icon.getTitle());
+    String url = "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-128.png";
+    InputStream inputStream = new URL(url).openConnection().getInputStream();
+    assertNotNull(inputStream);
+    Bitmap expected = BitmapFactory.decodeStream(inputStream);
+    assertNotNull(expected);
+    MapImage image = icon.getImage();
+    assertNotNull(image);
+    Bitmap actual = image.getBitmap();
+    assertNotNull(actual);
+    assertTrue(expected.sameAs(actual));
+  }
+
+  @Test
+  public void testStyleInsidePlacemark()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>\n"
+            + "  <Placemark>\n"
+            + "    <Style>\n"
+            + "    <IconStyle>\n"
+            + "      <Icon>\n"
+            + "        <href>https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-128.png</href>\n"
+            + "      </Icon>\n"
+            + "      <scale>1.1</scale>\n"
+            + "    </IconStyle>\n"
+            + "  </Style>\n"
+            + "    <Point>\n"
+            + "      <coordinates>-122,37</coordinates>\n"
+            + "    </Point>\n"
+            + "  </Placemark>\n"
+            + "  <Placemark>\n"
+            + "    <Point>\n"
+            + "      <coordinates>-125,39</coordinates>\n"
+            + "    </Point>\n"
+            + "  </Placemark>\n"
+            + "</Document>\n"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(2, elementCollection.getElements().size());
+    double[][] expectedPoints = {{-122, 37}, {-125, 39}};
+    int index = 0;
+    for (int i = 0; i < elementCollection.getElements().size(); i++) {
+      MapIcon icon = (MapIcon) elementCollection.getElements().get(i);
+      assertNotNull(icon);
+      assertEquals(
+          AltitudeReferenceSystem.SURFACE, icon.getLocation().getAltitudeReferenceSystem());
+      TestHelpers.assertPositionEquals(expectedPoints[index], icon.getLocation().getPosition());
+      if (i == 0) {
+        String url = "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-128.png";
+        InputStream inputStream = new URL(url).openConnection().getInputStream();
+        assertNotNull(inputStream);
+        Bitmap expected = BitmapFactory.decodeStream(inputStream);
+        assertNotNull(expected);
+        MapImage image = icon.getImage();
+        assertNotNull(image);
+        Bitmap actual = image.getBitmap();
+        assertNotNull(actual);
+        assertTrue(expected.sameAs(actual));
+      }
+      index++;
+    }
+  }
+
+  @Test
+  public void testMultipleInlineStyles()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>\n"
+            + "  <Placemark>\n"
+            + "    <Style>\n"
+            + "    <LineStyle>\n"
+            + "      <color>ff4500ff</color>\n"
+            + "    </LineStyle>\n"
+            + "  </Style>\n"
+            + "  <Style id=\"wide\">\n"
+            + "    <LineStyle>\n"
+            + "      <width>10</width>\n"
+            + "    </LineStyle>\n"
+            + "  </Style>\n"
+            + "    <LineString>\n"
+            + "      <coordinates>-122,37 -121,38</coordinates>\n"
+            + "    </LineString>\n"
+            + "  </Placemark>\n"
+            + "</Document>\n"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    double[][] expectedPoints = {{-122, 37}, {-121, 38}};
+    int index = 0;
+    for (MapElement element : elementCollection.getElements()) {
+      MapPolyline line = (MapPolyline) element;
+      assertEquals(10, line.getStrokeWidth());
+      assertEquals(0xffffffff, line.getStrokeColor());
+      assertEquals(AltitudeReferenceSystem.SURFACE, line.getPath().getAltitudeReferenceSystem());
+      for (Geoposition position : line.getPath()) {
+        TestHelpers.assertPositionEquals(expectedPoints[index], position);
+        index++;
+      }
+    }
+  }
+
+  @Test
+  public void testInlineStyleAndSharedStyle()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>\n"
+            + "  <Style id=\"wide\">\n"
+            + "    <LineStyle>\n"
+            + "      <color>eeeeeeee</color>"
+            + "      <width>10</width>\n"
+            + "    </LineStyle>\n"
+            + "  </Style>\n"
+            + "  <Placemark>\n"
+            + "    <Style>\n"
+            + "    <LineStyle>\n"
+            + "      <color>ff4500ff</color>\n"
+            + "    </LineStyle>\n"
+            + "  </Style>\n"
+            + "  <styleUrl>#wide</styleUrl>\n"
+            + "    <LineString>\n"
+            + "      <coordinates>-122,37 -121,38</coordinates>\n"
+            + "    </LineString>\n"
+            + "  </Placemark>\n"
+            + "</Document>\n"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    double[][] expectedPoints = {{-122, 37}, {-121, 38}};
+    int index = 0;
+    for (MapElement element : elementCollection.getElements()) {
+      MapPolyline line = (MapPolyline) element;
+      assertEquals(10, line.getStrokeWidth());
+      assertEquals(0xffff0045, line.getStrokeColor());
+      assertEquals(AltitudeReferenceSystem.SURFACE, line.getPath().getAltitudeReferenceSystem());
+      for (Geoposition position : line.getPath()) {
+        TestHelpers.assertPositionEquals(expectedPoints[index], position);
+        index++;
+      }
+    }
+  }
+
+  @Test
+  public void testSharedAndInlinePolyStyle()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\" xmlns:gx=\"http://www.google.com/kml/ext/2.2\" xmlns:kml=\"http://www.opengis.net/kml/2.2\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n"
+            + "    <Document>\n"
+            + "        <Style id=\"normalState\">\n"
+            + "        <LineStyle>\n"
+            + "            <color>ff0000cc</color>\n"
+            + "            <width>5</width>\n"
+            + "        </LineStyle>\n"
+            + "        <PolyStyle>\n"
+            + "            <color>ffaa00aa</color>\n"
+            + "        </PolyStyle>\n"
+            + "        </Style>\n"
+            + "        <Placemark>\n"
+            + "            <name>city</name>\n"
+            + "            <styleUrl>#normalState</styleUrl>\n"
+            + "            <Polygon>\n"
+            + "                <outerBoundaryIs>\n"
+            + "                    <LinearRing>\n"
+            + "                        <coordinates>\n"
+            + "                            -122,47\n"
+            + "                            -121,48\n"
+            + "                            -128,46\n"
+            + "                            -122,47\n"
+            + "                        </coordinates>\n"
+            + "                    </LinearRing>\n"
+            + "                </outerBoundaryIs>\n"
+            + "            </Polygon>\n"
+            + "            <Style>\n"
+            + "              <PolyStyle>\n"
+            + "                <color>ffaaaaaa</color>\n"
+            + "              </PolyStyle>\n"
+            + "            </Style>\n"
+            + "        </Placemark>\n"
+            + "    </Document>\n"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    double[][] expectedPoints = {{-122, 47}, {-121, 48}, {-128, 46}, {-122, 47}};
+    int index = 0;
+    for (MapElement element : elementCollection.getElements()) {
+      MapPolygon polygon = (MapPolygon) element;
+      assertEquals(5, polygon.getStrokeWidth());
+      assertEquals(0xffcc0000, polygon.getStrokeColor());
+      assertEquals(0xffaaaaaa, polygon.getFillColor());
+      assertEquals(1, polygon.getPaths().size());
+      for (Geopath path : polygon.getPaths()) {
+        assertEquals(AltitudeReferenceSystem.SURFACE, path.getAltitudeReferenceSystem());
+        for (Geoposition position : path) {
+          TestHelpers.assertPositionEquals(expectedPoints[index], position);
+          index++;
+        }
+      }
+    }
+  }
+
+  @Test
+  public void testInlineOverwritesLineStyleForPolygon()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\" xmlns:gx=\"http://www.google.com/kml/ext/2.2\" xmlns:kml=\"http://www.opengis.net/kml/2.2\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n"
+            + "    <Document>\n"
+            + "        <Style id=\"normalState\">\n"
+            + "        <LineStyle>\n"
+            + "            <color>ff0000cc</color>\n"
+            + "            <width>5</width>\n"
+            + "        </LineStyle>\n"
+            + "        <PolyStyle>\n"
+            + "            <color>ffaa00aa</color>\n"
+            + "        </PolyStyle>\n"
+            + "        </Style>\n"
+            + "        <Placemark>\n"
+            + "            <name>city</name>\n"
+            + "            <styleUrl>#normalState</styleUrl>\n"
+            + "            <Polygon>\n"
+            + "                <outerBoundaryIs>\n"
+            + "                    <LinearRing>\n"
+            + "                        <coordinates>\n"
+            + "                            -122,47\n"
+            + "                            -121,48\n"
+            + "                            -128,46\n"
+            + "                            -122,47\n"
+            + "                        </coordinates>\n"
+            + "                    </LinearRing>\n"
+            + "                </outerBoundaryIs>\n"
+            + "            </Polygon>\n"
+            + "            <Style>\n"
+            + "              <PolyStyle>\n"
+            + "                <color>ffaaaaaa</color>\n"
+            + "              </PolyStyle>\n"
+            + "              <LineStyle>\n"
+            + "                 <color>ffaabbcc</color>\n"
+            + "                 <width>3</width>\n"
+            + "              </LineStyle>\n"
+            + "            </Style>\n"
+            + "        </Placemark>\n"
+            + "    </Document>\n"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    double[][] expectedPoints = {{-122, 47}, {-121, 48}, {-128, 46}, {-122, 47}};
+    int index = 0;
+    for (MapElement element : elementCollection.getElements()) {
+      MapPolygon polygon = (MapPolygon) element;
+      assertEquals(3, polygon.getStrokeWidth());
+      assertEquals(0xffccbbaa, polygon.getStrokeColor());
+      assertEquals(0xffaaaaaa, polygon.getFillColor());
+      assertEquals(1, polygon.getPaths().size());
+      for (Geopath path : polygon.getPaths()) {
+        assertEquals(AltitudeReferenceSystem.SURFACE, path.getAltitudeReferenceSystem());
+        for (Geoposition position : path) {
+          TestHelpers.assertPositionEquals(expectedPoints[index], position);
+          index++;
+        }
+      }
+    }
+  }
+
+  @Test
+  public void testPolyStyleInlineOverwritesSharedStyle()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\" xmlns:gx=\"http://www.google.com/kml/ext/2.2\" xmlns:kml=\"http://www.opengis.net/kml/2.2\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n"
+            + "    <Document>\n"
+            + "        <Style id=\"normalState\">\n"
+            + "        <LineStyle>\n"
+            + "            <color>ff0000cc</color>\n"
+            + "            <width>5</width>\n"
+            + "        </LineStyle>\n"
+            + "        <PolyStyle>\n"
+            + "            <fill>false</fill>\n"
+            + "            <outline>false</outline>\n"
+            + "            <color>ffaa00aa</color>\n"
+            + "        </PolyStyle>\n"
+            + "        </Style>\n"
+            + "        <Placemark>\n"
+            + "            <name>city</name>\n"
+            + "            <styleUrl>#normalState</styleUrl>\n"
+            + "            <Polygon>\n"
+            + "                <outerBoundaryIs>\n"
+            + "                    <LinearRing>\n"
+            + "                        <coordinates>\n"
+            + "                            -122,47 -121,48 -128,46 -122,47\n"
+            + "                        </coordinates>\n"
+            + "                    </LinearRing>\n"
+            + "                </outerBoundaryIs>\n"
+            + "            </Polygon>\n"
+            + "            <Style>\n"
+            + "              <PolyStyle>\n"
+            + "                <fill>true</fill>\n"
+            + "                <color>ffaaaaaa</color>\n"
+            + "              </PolyStyle>\n"
+            + "            </Style>\n"
+            + "        </Placemark>\n"
+            + "    </Document>\n"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    double[][] expectedPoints = {{-122, 47}, {-121, 48}, {-128, 46}, {-122, 47}};
+    int index = 0;
+    for (MapElement element : elementCollection.getElements()) {
+      MapPolygon polygon = (MapPolygon) element;
+      assertEquals(0, polygon.getStrokeWidth());
+      assertEquals(0xffaaaaaa, polygon.getFillColor());
+      assertEquals(1, polygon.getPaths().size());
+      for (Geopath path : polygon.getPaths()) {
+        assertEquals(AltitudeReferenceSystem.SURFACE, path.getAltitudeReferenceSystem());
+        for (Geoposition position : path) {
+          TestHelpers.assertPositionEquals(expectedPoints[index], position);
+          index++;
+        }
+      }
+    }
+  }
+
+  @Test
+  public void testPolyStyleInlineOverwritesOutline()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\" xmlns:gx=\"http://www.google.com/kml/ext/2.2\" xmlns:kml=\"http://www.opengis.net/kml/2.2\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n"
+            + "    <Document>\n"
+            + "        <Style id=\"normalState\">\n"
+            + "        <LineStyle>\n"
+            + "            <color>ff0000cc</color>\n"
+            + "            <width>5</width>\n"
+            + "        </LineStyle>\n"
+            + "        <PolyStyle>\n"
+            + "            <fill>false</fill>\n"
+            + "            <outline>false</outline>\n"
+            + "            <color>ffaa00aa</color>\n"
+            + "        </PolyStyle>\n"
+            + "        </Style>\n"
+            + "        <Placemark>\n"
+            + "            <name>city</name>\n"
+            + "            <styleUrl>#normalState</styleUrl>\n"
+            + "            <Polygon>\n"
+            + "                <outerBoundaryIs>\n"
+            + "                    <LinearRing>\n"
+            + "                        <coordinates>\n"
+            + "                            -122,47 -121,48 -128,46 -122,47\n"
+            + "                        </coordinates>\n"
+            + "                    </LinearRing>\n"
+            + "                </outerBoundaryIs>\n"
+            + "            </Polygon>\n"
+            + "            <Style>\n"
+            + "              <PolyStyle>\n"
+            + "                <fill>true</fill>\n"
+            + "                <color>ffaaaaaa</color>\n"
+            + "                <outline>true</outline>"
+            + "              </PolyStyle>\n"
+            + "            </Style>\n"
+            + "        </Placemark>\n"
+            + "    </Document>\n"
+            + "</kml>";
+    MapElementLayer layer = new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+    MockMapElementCollection elementCollection = (MockMapElementCollection) layer.getElements();
+    assertNotNull(elementCollection);
+    assertEquals(1, elementCollection.getElements().size());
+    double[][] expectedPoints = {{-122, 47}, {-121, 48}, {-128, 46}, {-122, 47}};
+    int index = 0;
+    for (MapElement element : elementCollection.getElements()) {
+      MapPolygon polygon = (MapPolygon) element;
+      assertEquals(5, polygon.getStrokeWidth());
+      assertEquals(0xffcc0000, polygon.getStrokeColor());
+      assertEquals(0xffaaaaaa, polygon.getFillColor());
       assertEquals(1, polygon.getPaths().size());
       for (Geopath path : polygon.getPaths()) {
         assertEquals(AltitudeReferenceSystem.SURFACE, path.getAltitudeReferenceSystem());
@@ -2084,7 +2604,7 @@ public class KMLParserTest {
   }
 
   @Test(expected = KMLParseException.class)
-  public void testStyleIdsNotUnique()
+  public void testStyleIdsNotUniqueThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -2126,7 +2646,8 @@ public class KMLParserTest {
   }
 
   @Test(expected = KMLParseException.class)
-  public void testStyleIdsNotFound() throws XmlPullParserException, IOException, KMLParseException {
+  public void testStyleIdsNotFoundThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
     String kml =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
@@ -2146,7 +2667,7 @@ public class KMLParserTest {
   }
 
   @Test(expected = KMLParseException.class)
-  public void testLineStyleWidthNaN()
+  public void testLineStyleWidthNaNThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -2172,7 +2693,7 @@ public class KMLParserTest {
   }
 
   @Test(expected = NumberFormatException.class)
-  public void testLineStyleWidthString()
+  public void testLineStyleWidthStringThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -2198,7 +2719,7 @@ public class KMLParserTest {
   }
 
   @Test(expected = KMLParseException.class)
-  public void testLineStyleWidthNegative()
+  public void testLineStyleWidthNegativeThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -2215,7 +2736,7 @@ public class KMLParserTest {
   }
 
   @Test(expected = KMLParseException.class)
-  public void testLineStyleWidthZero()
+  public void testLineStyleWidthZeroThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -2232,7 +2753,7 @@ public class KMLParserTest {
   }
 
   @Test(expected = KMLParseException.class)
-  public void testLineStyleWidthFraction()
+  public void testLineStyleWidthFractionThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -2249,7 +2770,7 @@ public class KMLParserTest {
   }
 
   @Test(expected = KMLParseException.class)
-  public void testPolygonOutlineInvalidValue()
+  public void testPolygonOutlineInvalidValueThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -2289,7 +2810,7 @@ public class KMLParserTest {
   }
 
   @Test(expected = KMLParseException.class)
-  public void testPolygonFillInvalidValue()
+  public void testPolygonFillInvalidValueThrowsException()
       throws XmlPullParserException, IOException, KMLParseException {
     String kml =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -2324,6 +2845,96 @@ public class KMLParserTest {
             + "            </Polygon>\n"
             + "        </Placemark>\n"
             + "    </Document>\n"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testStyleMapNoPairThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "  <Style id=\"normalState\">\n"
+            + "    <IconStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "      <Icon>\n"
+            + "        <href>https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-128.png</href>\n"
+            + "      </Icon>\n"
+            + "    </IconStyle>\n"
+            + "    <LabelStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "    </LabelStyle>\n"
+            + "  </Style>\n"
+            + "  <Style id=\"highlightState\">\n"
+            + "    <IconStyle>\n"
+            + "      <Icon>\n"
+            + "        <href>http://maps.google.com/mapfiles/kml/pal3/icon60.png</href>\n"
+            + "      </Icon>\n"
+            + "      <scale>1.1</scale>\n"
+            + "    </IconStyle>\n"
+            + "    <LabelStyle>\n"
+            + "      <scale>1.1</scale>\n"
+            + "      <color>ff0000c0</color>\n"
+            + "    </LabelStyle>\n"
+            + "  </Style>\n"
+            + "  <StyleMap id=\"styleMapExample\">\n"
+            + "  </StyleMap>\n"
+            + "  <Placemark>\n"
+            + "    <name>John Hancock Building</name>\n"
+            + "    <styleUrl>#styleMapExample</styleUrl>\n"
+            + "    <Point>\n"
+            + "      <coordinates>-87.62349,41.89863</coordinates>\n"
+            + "    </Point>\n"
+            + "  </Placemark>\n"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
+
+  @Test(expected = KMLParseException.class)
+  public void testStyleMapForPointKeyInvalidValueThrowsException()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "  <Style id=\"normalState\">\n"
+            + "    <IconStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "      <Icon>\n"
+            + "        <href>https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-128.png</href>\n"
+            + "      </Icon>\n"
+            + "    </IconStyle>\n"
+            + "    <LabelStyle>\n"
+            + "      <scale>1.0</scale>\n"
+            + "    </LabelStyle>\n"
+            + "  </Style>\n"
+            + "  <Style id=\"highlightState\">\n"
+            + "    <IconStyle>\n"
+            + "      <Icon>\n"
+            + "        <href>http://maps.google.com/mapfiles/kml/pal3/icon60.png</href>\n"
+            + "      </Icon>\n"
+            + "      <scale>1.1</scale>\n"
+            + "    </IconStyle>\n"
+            + "    <LabelStyle>\n"
+            + "      <scale>1.1</scale>\n"
+            + "      <color>ff0000c0</color>\n"
+            + "    </LabelStyle>\n"
+            + "  </Style>\n"
+            + "  <StyleMap id=\"styleMapExample\">\n"
+            + "    <Pair>\n"
+            + "      <key>celery</key>\n"
+            + "      <styleUrl>#normalState</styleUrl>\n"
+            + "    </Pair>\n"
+            + "    <Pair>\n"
+            + "      <key>highlight</key>\n"
+            + "      <styleUrl>#highlightState</styleUrl>\n"
+            + "    </Pair>\n"
+            + "  </StyleMap>\n"
+            + "  <Placemark>\n"
+            + "    <name>John Hancock Building</name>\n"
+            + "    <styleUrl>#styleMapExample</styleUrl>\n"
+            + "    <Point>\n"
+            + "      <coordinates>-87.62349,41.89863</coordinates>\n"
+            + "    </Point>\n"
+            + "  </Placemark>\n"
             + "</kml>";
     new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
   }

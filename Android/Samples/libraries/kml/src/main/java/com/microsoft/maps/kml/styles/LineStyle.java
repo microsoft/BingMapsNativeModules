@@ -5,7 +5,9 @@ package com.microsoft.maps.kml.styles;
 
 public class LineStyle {
 
+  private boolean mUseWidth = false;
   private int mWidth = 1;
+  private boolean mUseStrokeColor = false;
   private int mStrokeColor = 0xffffffff;
 
   public LineStyle() {}
@@ -24,5 +26,21 @@ public class LineStyle {
 
   public int getStrokeColor() {
     return mStrokeColor;
+  }
+
+  public boolean useWidth() {
+    return mUseWidth;
+  }
+
+  public void setUseWidth(boolean useWidth) {
+    mUseWidth = useWidth;
+  }
+
+  public boolean useStrokeColor() {
+    return mUseStrokeColor;
+  }
+
+  public void setUseStrokeColor(boolean useStrokeColor) {
+    mUseStrokeColor = useStrokeColor;
   }
 }

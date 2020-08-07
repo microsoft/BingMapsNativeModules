@@ -161,6 +161,19 @@ public class MockParserMapFactories implements MapFactories {
 
     doAnswer(invocation -> strokeColor.get()).when(polygon).getStrokeColor();
 
+    final AtomicReference<Integer> strokeWidth = new AtomicReference();
+    // set the default value
+    strokeWidth.set(1);
+    doAnswer(
+            invocation -> {
+              strokeWidth.set(invocation.getArgument(0));
+              return true;
+            })
+        .when(polygon)
+        .setStrokeWidth(Mockito.anyInt());
+
+    doAnswer(invocation -> strokeWidth.get()).when(polygon).getStrokeWidth();
+
     return polygon;
   }
 
