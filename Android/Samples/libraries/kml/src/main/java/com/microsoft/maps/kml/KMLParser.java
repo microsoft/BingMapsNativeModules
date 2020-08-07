@@ -49,7 +49,7 @@ public class KMLParser {
   private boolean mDidWarn;
   private String mNameSpace;
   private final XmlPullParser mParser = Xml.newPullParser();
-  private final Map<String, StylesHolder> mMapStylesHolders = new HashMap<>();
+  private final Map<String, StylesHolder> mSharedStyles = new HashMap<>();
   private final Map<String, ArrayList<MapElement>> mMapElementStyles = new HashMap<>();
   private final Map<String, String> mKmlStyleMap = new HashMap<>();
   private final Map<MapElement, StylesHolder> mInlineStyles = new HashMap<>();
@@ -97,7 +97,7 @@ public class KMLParser {
       mParser.nextTag();
       mNameSpace = mParser.getNamespace();
       parseOuterLayer();
-      mergeStyles();
+      mergeSharedStyleIntoInlineStyle();
       applyStyles();
     }
     return mLayer;
@@ -133,8 +133,8 @@ public class KMLParser {
   private void parseStyleAddToMapStylesHolders()
       throws XmlPullParserException, IOException, KMLParseException {
     String id = mParser.getAttributeValue(null, "id");
-    verifyIdNotInMap(mMapStylesHolders, id);
-    mMapStylesHolders.put(id, parseStyle());
+    verifyIdNotInMap(mSharedStyles, id);
+    mSharedStyles.put(id, parseStyle());
   }
 
   @NonNull
@@ -252,7 +252,7 @@ public class KMLParser {
   private void parseStyleMap() throws XmlPullParserException, IOException, KMLParseException {
     String id = mParser.getAttributeValue(null, "id");
     int numPair = 0;
-    verifyIdNotInMap(mMapStylesHolders, id);
+    verifyIdNotInMap(mSharedStyles, id);
     while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
         continue;
@@ -276,7 +276,8 @@ public class KMLParser {
 
   private void parsePair(@NonNull String styleMapId)
       throws XmlPullParserException, IOException, KMLParseException {
-    String key = null, styleUrl = null;
+    String key = null;
+    String styleUrl = null;
     StylesHolder stylesHolder = null;
     while (moveToNext() != XmlPullParser.END_TAG) {
       if (mParser.getEventType() != XmlPullParser.START_TAG) {
@@ -311,8 +312,8 @@ public class KMLParser {
       if (styleUrl != null) {
         mKmlStyleMap.put(styleMapId, styleUrl);
       } else if (stylesHolder != null) {
-        verifyIdNotInMap(mMapStylesHolders, key);
-        mMapStylesHolders.put(styleMapId, stylesHolder);
+        verifyIdNotInMap(mSharedStyles, key);
+        mSharedStyles.put(styleMapId, stylesHolder);
       }
     }
   }
@@ -357,10 +358,12 @@ public class KMLParser {
         }
       } else {
         if (styleId != null) {
-          if (!mMapElementStyles.containsKey(styleId)) {
-            mMapElementStyles.put(styleId, new ArrayList<MapElement>());
+          ArrayList<MapElement> stylesList = mMapElementStyles.get(styleId);
+          if (stylesList == null) {
+            stylesList = new ArrayList<>();
+            mMapElementStyles.put(styleId, stylesList);
           }
-          mMapElementStyles.get(styleId).add(element);
+          stylesList.add(element);
         }
       }
       mLayer.getElements().add(element);
@@ -699,9 +702,11 @@ public class KMLParser {
     }
   }
 
-  private void mergeStyles() {
+  /* When style tags are set by the shared style and not set by the inline style, the
+   * inline style inherits those values set by the shared style.*/
+  private void mergeSharedStyleIntoInlineStyle() {
     for (StylesHolder inlineStyle : mMergeStyles.keySet()) {
-      StylesHolder sharedStyle = mMapStylesHolders.get(mMergeStyles.get(inlineStyle));
+      StylesHolder sharedStyle = mSharedStyles.get(mMergeStyles.get(inlineStyle));
       if (sharedStyle.getIconStyle().getImage() != null) {
         inlineStyle.getIconStyle().setImage(sharedStyle.getIconStyle().getImage());
       }
@@ -730,10 +735,14 @@ public class KMLParser {
 
   private void applyStyles() throws KMLParseException {
     for (String id : mMapElementStyles.keySet()) {
-      StylesHolder stylesHolder =
-          mMapStylesHolders.containsKey(id)
-              ? mMapStylesHolders.get(id)
-              : mMapStylesHolders.get(mKmlStyleMap.get(id));
+      // The styleUrl of a Placemark can either point to a Style element or a StyleMap element.
+      // The id is first looked for in the SharedStyles map (which holds all individual shared Style
+      // elements). If the id is not found, it is looked for in the StyleMaps map. The StyleMap
+      // points to a Style element id. If the id is not found in either map, an exception is thrown.
+      StylesHolder stylesHolder = mSharedStyles.get(id);
+      if (stylesHolder == null) {
+        stylesHolder = mSharedStyles.get(mKmlStyleMap.get(id));
+      }
       if (stylesHolder == null) {
         throw new KMLParseException("Style id " + id + " not found.");
       }

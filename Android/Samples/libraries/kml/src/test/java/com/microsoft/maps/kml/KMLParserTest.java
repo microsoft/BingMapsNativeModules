@@ -2938,4 +2938,24 @@ public class KMLParserTest {
             + "</kml>";
     new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
   }
+
+  @Test(expected = KMLParseException.class)
+  public void testStyleMapDoesNotExist()
+      throws XmlPullParserException, IOException, KMLParseException {
+    String kml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
+            + "<Document>"
+            + "<Placemark>\n"
+            + "    <styleUrl>#notFound</styleUrl>\n"
+            + "    <Point>\n"
+            + "        <coordinates>\n"
+            + "            -107.55,43\n"
+            + "        </coordinates>\n"
+            + "    </Point>\n"
+            + "</Placemark>\n"
+            + "</Document>"
+            + "</kml>";
+    new KMLParser(MOCK_MAP_FACTORIES).internalParse(kml);
+  }
 }
